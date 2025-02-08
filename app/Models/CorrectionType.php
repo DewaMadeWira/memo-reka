@@ -14,6 +14,6 @@ class CorrectionType extends Model
     ];
     public function letter_type(): HasMany
     {
-        return $this->hasMany(ApprovalType::class, 'correction_id', 'id');
+        return $this->hasMany(LetterType::class, 'correction_id', 'id');
     }
 }

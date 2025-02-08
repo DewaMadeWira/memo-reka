@@ -14,6 +14,6 @@ class ApprovalType extends Model
     ];
     public function letter_type(): HasMany
     {
-        return $this->hasMany(ApprovalType::class, 'approval_id', 'id');
+        return $this->hasMany(LetterType::class, 'approval_id', 'id');
     }
 }
