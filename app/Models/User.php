@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -33,6 +34,10 @@ class User extends Authenticatable
     public function division(): BelongsTo
     {
         return $this->belongsTo(role::class, 'division_id', 'id');
+    }
+    public function request_stages(): HasMany
+    {
+        return $this->hasMany(RequestStages::class, 'approver_id', 'id');
     }
 
     /**

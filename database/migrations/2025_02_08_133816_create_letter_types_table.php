@@ -20,6 +20,10 @@ return new class extends Migration
             $table->foreign('approval_id')->references('id')->on('approval_types');
             $table->foreign('correction_id')->references('id')->on('correction_types');
         });
+        Schema::table('memo_letters', function (Blueprint $table) {
+
+            $table->foreign('letter_id')->references('id')->on('letter_types');
+        });
     }
 
     /**

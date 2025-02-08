@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LetterType extends Model
 {
@@ -16,6 +17,10 @@ class LetterType extends Model
     public function approval_type(): BelongsTo
     {
         return $this->belongsTo(ApprovalType::class, 'approval_id', 'id');
+    }
+    public function request_stages(): HasMany
+    {
+        return $this->hasMany(LetterType::class, 'letter_id', 'id');
     }
     public function correction_type(): BelongsTo
     {
