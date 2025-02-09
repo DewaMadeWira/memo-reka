@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('to_stage_id');
             $table->timestamps();
             $table->foreign('letter_id')->references('id')->on('letter_types');
-            $table->foreign('approver_id')->references('id')->on('users');
+            $table->foreign('approver_id')->references('id')->on('roles');
             $table->foreign('to_stage_id')->references('id')->on('request_stages');
         });
     }
