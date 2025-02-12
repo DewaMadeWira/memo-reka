@@ -22,6 +22,10 @@ class LetterType extends Model
     {
         return $this->hasMany(LetterType::class, 'letter_id', 'id');
     }
+    public function memo(): HasMany
+    {
+        return $this->hasMany(MemoLetter::class, 'letter_id', 'id');
+    }
     public function correction_type(): BelongsTo
     {
         return $this->belongsTo(CorrectionType::class, 'correction_id', 'id');

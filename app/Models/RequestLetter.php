@@ -17,14 +17,14 @@ class RequestLetter extends Model
     ];
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'idstatus');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
     public function status(): BelongsTo
     {
-        return $this->belongsTo(RequestStatus::class, 'status_id', 'idstatus');
+        return $this->belongsTo(RequestStatus::class, 'status_id', 'id');
     }
     public function stages(): BelongsTo
     {
-        return $this->belongsTo(RequestStages::class, 'stages_id', 'idstatus');
+        return $this->belongsTo(RequestStages::class, 'stages_id', 'id');
     }
 }

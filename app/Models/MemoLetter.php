@@ -12,7 +12,7 @@ class MemoLetter extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'memo_number',
-        'letter_type',
+        'letter_id',
         'from_division',
         'to_division',
     ];
@@ -23,5 +23,9 @@ class MemoLetter extends Model
     public function to_division(): BelongsTo
     {
         return $this->belongsTo(Division::class, 'from_division', 'id');
+    }
+    public function letter(): BelongsTo
+    {
+        return $this->belongsTo(LetterType::class, 'letter_id', 'id');
     }
 }

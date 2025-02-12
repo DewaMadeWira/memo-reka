@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RequestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,5 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::middleware('auth')->group(function () {});
+Route::get('/user', [RequestController::class, 'index'])->name('user.index');
+Route::get('/memo', [RequestController::class, 'create'])->name('user.create');
+Route::get('/memo-show', [RequestController::class, 'show'])->name('memo.show');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
