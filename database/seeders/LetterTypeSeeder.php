@@ -15,10 +15,10 @@ class LetterTypeSeeder extends Seeder
     public function run(): void
     {
         //
-        DB::table('letter_types')->insert([
-            'letter_name' => "Memo",
-            'approval_id' => 2,
-            'correction_id' => 2,
-        ]);
+        // DB::table('letter_types')->insert([
+        //     'letter_name' => "Memo",
+        //     'approval_id' => 2,
+        //     'correction_id' => 2,
+        // ]);
     }
 }
