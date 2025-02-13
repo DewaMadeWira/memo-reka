@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RequestStages extends Model
@@ -21,6 +22,7 @@ class RequestStages extends Model
     public function letter_type(): BelongsTo
     {
         return $this->belongsTo(LetterType::class, 'letter_id', 'id');
+        // return $this->hasMany(LetterType::class, '_id', 'id');
     }
     public function approver(): BelongsTo
     {

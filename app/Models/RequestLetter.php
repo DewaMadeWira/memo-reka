@@ -14,6 +14,8 @@ class RequestLetter extends Model
         'user_id',
         'status_id',
         'stages_id',
+        'memo_id',
+        'letter_type_id',
     ];
     public function user(): BelongsTo
     {
@@ -26,5 +28,9 @@ class RequestLetter extends Model
     public function stages(): BelongsTo
     {
         return $this->belongsTo(RequestStages::class, 'stages_id', 'id');
+    }
+    public function memo(): BelongsTo
+    {
+        return $this->belongsTo(MemoLetter::class, 'memo_id', 'id');
     }
 }

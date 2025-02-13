@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LetterType extends Model
 {
     //
-    protected $primaryKey = 'idstatus';
+    // protected $primaryKey = 'idstatus';
     protected $fillable = [
         'letter_name',
         'approval_id',
@@ -20,7 +20,7 @@ class LetterType extends Model
     }
     public function request_stages(): HasMany
     {
-        return $this->hasMany(LetterType::class, 'letter_id', 'id');
+        return $this->hasMany(RequestStages::class, 'letter_id', 'id');
     }
     public function memo(): HasMany
     {
