@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "build",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: build",
+            "detail": "tsc && vite build"
+        },
+        {
+            "label": "RUN PHP SERVER AND CLIENT",
+            "type": "shell",
+            // "command": "${workspaceFolder}\\start.bat",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                "& { cmd /c '${workspaceFolder}/start.bat' }"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "group": { "kind": "build", "isDefault": true }
+        }
+    ]
+}
