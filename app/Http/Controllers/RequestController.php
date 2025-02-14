@@ -6,8 +6,10 @@ use App\Models\LetterType;
 use App\Models\MemoLetter;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class RequestController extends Controller
 {
@@ -18,6 +20,7 @@ class RequestController extends Controller
     {
         //
         $user = Auth::user();
+        $user = User::with('role')->with('division')->where("id", $user->id)->get();
         return $user;
     }
 
@@ -57,6 +60,9 @@ class RequestController extends Controller
     {
         //
         // $id = $request->id;
+        if (!Gate::allows('admin')) {
+            abort(403);
+        }
         $request = RequestLetter::with('stages')->find($id);
 
         $request->update([
