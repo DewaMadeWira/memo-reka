@@ -28,5 +28,6 @@ Route::middleware('auth')->group(function () {});
 Route::get('/user', [RequestController::class, 'index'])->name('user.index');
 Route::get('/memo', [RequestController::class, 'create'])->name('user.create');
 Route::get('/memo-show', [RequestController::class, 'show'])->name('memo.show');
+Route::get('/memo-approve/{id}', [RequestController::class, 'store'])->name('memo.store');
 
 require __DIR__ . '/auth.php';

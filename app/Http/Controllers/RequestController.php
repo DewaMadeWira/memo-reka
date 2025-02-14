@@ -36,13 +36,14 @@ class RequestController extends Controller
             'from_division' => 1,
             'to_division' => 2
         ]);
+        $stages = MemoLetter::with('letter')->with('letter.request_stages')->get();
         // return $memo;
         $request = RequestLetter::create([
-            "request_name" => "Test Request",
+            "request_name" => "Test Request Baru",
             "user_id" => $user->id,
             "status_id" => 1,
-            "stages_id" => 1,
-            "letter_type_id" => 1,
+            "stages_id" => $stages[0]->letter->request_stages[0]->id,
+            "letter_type_id" => $memo->letter_id,
             "memo_id" => $memo->id,
         ]);
         $requestCreated = RequestLetter::with('user')->with("memo")->with("status")->with("stages")->get();
@@ -52,9 +53,18 @@ class RequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         //
+        // $id = $request->id;
+        $request = RequestLetter::with('stages')->find($id);
+
+        $request->update([
+            "status_id" => 2,
+            "stages_id" => $request->stages->to_stage_id,
+        ]);
+        $request->save();
+        return $request;
     }
 
     /**
@@ -63,10 +73,13 @@ class RequestController extends Controller
     // public function show(string $id)
     public function show()
     {
-        $stages = MemoLetter::with('letter')->with('letter.request_stages')->get();
+        // $stages = MemoLetter::with('letter')->with('letter.request_stages')->get();
         // $stages = LetterType::with('request_stages')->get();
         // $stages = RequestStages::with('letter_type')->get();
+        $stages = RequestLetter::with('status')->with('stages')->with('memo')->get();
+
         return $stages;
+        // return $stages[0]->letter->request_stages[0]->id;
         //
         // $requestCreated = RequestLetter::with('user')->with("status")->with("stages")->with("stages.letter_type")->with("stages.letter_type.memo")->first();
         // return $requestCreated;
