@@ -24,6 +24,7 @@ class StagesSeeder extends Seeder
             'letter_id' => 1,
             'approver_id' => 2,
             'to_stage_id' => 2,
+            'status_id' => 1,
         ]);
         DB::table('request_stages')->insert([
             'id' => 2,
@@ -33,15 +34,27 @@ class StagesSeeder extends Seeder
             'letter_id' => 1,
             'approver_id' => 1,
             'to_stage_id' => 2,
+            'status_id' => 2,
         ]);
         DB::table('request_stages')->insert([
             'id' => 3,
-            'stage_name' => "Memo Eksternal",
+            'stage_name' => "Memo Eksternal Diproses",
             'sequence' => 3,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
             'approver_id' => 1,
             'to_stage_id' => 1,
+            'status_id' => 3,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 4,
+            'stage_name' => "Memo Eksternal Selesai",
+            'sequence' => 3,
+            'conditions' => "Approval Manajer Eksternal",
+            'letter_id' => 1,
+            'approver_id' => 1,
+            'to_stage_id' => 1,
+            'status_id' => 5,
         ]);
         Schema::enableForeignKeyConstraints();
     }

@@ -15,16 +15,25 @@ class StatusSeeder extends Seeder
     {
         //
         DB::table('request_statuses')->insert([
-            'status_name' => "Menunggu Persetujuan",
+            'status_name' => "Menunggu Persetujuan Manajer",
         ]);
         DB::table('request_statuses')->insert([
-            'status_name' => "Ditolak",
+            'status_name' => "Menunggu Persetujuan Divisi Tujuan",
         ]);
         DB::table('request_statuses')->insert([
             'status_name' => "Diproses",
         ]);
         DB::table('request_statuses')->insert([
-            'status_name' => "Disetujui",
+            'status_name' => "Ditolak",
+        ]);
+        // DB::table('request_statuses')->insert([
+        //     'status_name' => "Disetujui",
+        // ]);
+        DB::table('request_statuses')->insert([
+            'status_name' => "Selesai",
+        ]);
+        DB::table('request_statuses')->insert([
+            'status_name' => "Tidak Sesuai",
         ]);
     }
 }

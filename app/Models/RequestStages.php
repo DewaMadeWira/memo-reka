@@ -18,6 +18,7 @@ class RequestStages extends Model
         'conditions',
         'letter_id',
         'approver_id',
+        'status_id',
     ];
     public function letter_type(): BelongsTo
     {
@@ -27,6 +28,10 @@ class RequestStages extends Model
     public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approver_id', 'id');
+    }
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(RequestStatus::class, 'status_id', 'id');
     }
     public function request_stages(): HasOne
     {
