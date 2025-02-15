@@ -21,10 +21,10 @@ class RequestLetter extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    public function status(): BelongsTo
-    {
-        return $this->belongsTo(RequestStatus::class, 'status_id', 'id');
-    }
+    // public function status(): BelongsTo
+    // {
+    //     return $this->belongsTo(RequestStatus::class, 'status_id', 'id');
+    // }
     public function stages(): BelongsTo
     {
         return $this->belongsTo(RequestStages::class, 'stages_id', 'id');

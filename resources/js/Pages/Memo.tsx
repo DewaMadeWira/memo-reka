@@ -2,10 +2,10 @@ import { router } from "@inertiajs/react";
 import React from "react";
 import { usePage } from "@inertiajs/react";
 
-export default function Memo({ memo }: { memo: any }) {
+export default function Memo({ request }: { request: any }) {
     const { user } = usePage().props.auth;
     console.log(user);
-    console.log(memo);
+    console.log(request);
     const handleSubmit = () => {
         router.post("/memo");
     };
@@ -28,21 +28,23 @@ export default function Memo({ memo }: { memo: any }) {
                         Approval
                     </th>
                 </tr>
-                {memo.map((memo: any) => (
+                {request.map((request: any) => (
                     //{" "}
-                    <tr key={memo.id} className="">
-                        <td className="">{memo.id}</td>
-                        <td className="">{memo.request_name}</td>
+                    <tr key={request.id} className="">
+                        <td className="">{request.id}</td>
+                        <td className="">{request.request_name}</td>
                         <td className="text-center">
-                            {memo.stages.stage_name}
+                            {request.stages.stage_name}
                         </td>
                         <td className="text-center">
-                            {memo.status.status_name}
+                            {request.stages.status.status_name}
                         </td>
                         <td className={`${user.role_id == 1 ? "" : "hidden"}`}>
                             <div className="flex gap-2">
                                 <button
-                                    onClick={() => handleApprove(memo.id)}
+                                    onClick={() =>
+                                        handleApprove(request.memo.id)
+                                    }
                                     className={`bg-green-500 p-2 mt-2 text-white rounded-lg 
                                     `}
                                 >

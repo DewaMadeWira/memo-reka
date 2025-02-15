@@ -20,12 +20,12 @@ class MemoController extends Controller
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
         // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->where("from_division", $user[0]->division->id)->first();
         // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->first();
-        $memo = RequestLetter::with('user', 'status', 'stages', 'memo')->whereHas('memo', function ($q) use ($user) {
+        $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo')->whereHas('memo', function ($q) use ($user) {
             $q->where('from_division', $user->division->id);
         })->get();
         // return $memo;
         return Inertia::render('Memo', [
-            'memo' => $memo
+            'request' => $memo
         ]);
     }
     public function approve($id)
@@ -37,14 +37,19 @@ class MemoController extends Controller
         // $request = RequestLetter::with('stages', 'memo')->whereHas('memo', function ($q) use ($id) {
         //     $q->where('id', $id);
         // })->first();
-        $request = RequestLetter::with('stages', 'memo')->where('memo_id', $id)->first();
+        $request = RequestLetter::with('memo', 'memo.letter.request_stages')->where('memo_id', $id)->first();
+        $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
+        // dd($nextStage->to_stage_id);
+        // return $nextStage->to_stage_id;
+        // return $nextStage;
 
         $request->update([
-            "status_id" => 2,
-            "stages_id" => $request->stages->to_stage_id,
+            // "stages_id" => $request->stages->to_stage_id,
+            "stages_id" => $nextStage->to_stage_id,
         ]);
         $request->save();
-        return $request;
+        return to_route('memo.index');
+        // return $request;
     }
     public function create()
     {
@@ -63,17 +68,18 @@ class MemoController extends Controller
             'from_division' => $user->division->id,
             'to_division' => 2
         ]);
-        $stages = MemoLetter::with('letter')->with('letter.request_stages')->first();
+        $stages = MemoLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
         // return $memo;
+        // return $stages;
         $request = RequestLetter::create([
             "request_name" => "Test Request Baru",
             "user_id" => $user->id,
-            "status_id" => 1,
+            // "status_id" => $stages->letter->request_stages[0]->status_id,
             "stages_id" => $stages->letter->request_stages[0]->id,
             "letter_type_id" => $memo->letter_id,
             "memo_id" => $memo->id,
         ]);
-        $requestCreated = RequestLetter::with('user')->with("memo")->with("status")->with("stages")->get();
+        // $requestCreated = RequestLetter::with('user')->with("memo")->with("status")->with("stages")->get();
         return to_route('memo.index');
         // return $requestCreated;
     }

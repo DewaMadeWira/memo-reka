@@ -33,7 +33,7 @@ class StagesSeeder extends Seeder
             'conditions' => "Approval Manajer Internal",
             'letter_id' => 1,
             'approver_id' => 1,
-            'to_stage_id' => 2,
+            'to_stage_id' => 3,
             'status_id' => 2,
         ]);
         DB::table('request_stages')->insert([
@@ -43,7 +43,7 @@ class StagesSeeder extends Seeder
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
             'approver_id' => 1,
-            'to_stage_id' => 1,
+            'to_stage_id' => 4,
             'status_id' => 3,
         ]);
         DB::table('request_stages')->insert([
