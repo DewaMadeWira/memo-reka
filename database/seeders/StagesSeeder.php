@@ -14,7 +14,6 @@ class StagesSeeder extends Seeder
      */
     public function run(): void
     {
-        //
         Schema::disableForeignKeyConstraints();
         DB::table('request_stages')->insert([
             'id' => 1,
@@ -26,6 +25,8 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 2,
             'status_id' => 1,
         ]);
+        // May use is rejectable 
+        // If Rejected Didn't go anywhere change status to Rejected
         DB::table('request_stages')->insert([
             'id' => 2,
             'stage_name' => "Memo Internal",
@@ -36,6 +37,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 3,
             'status_id' => 2,
         ]);
+        // If Rejected Go Mark as Rejected and Done
         DB::table('request_stages')->insert([
             'id' => 3,
             'stage_name' => "Memo Eksternal Diproses",
@@ -46,6 +48,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 4,
             'status_id' => 3,
         ]);
+        // If rejected didn't go anywhere 
         DB::table('request_stages')->insert([
             'id' => 4,
             'stage_name' => "Memo Eksternal Selesai",
@@ -56,6 +59,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 1,
             'status_id' => 5,
         ]);
+        // If rejected mark as rejected and done
         Schema::enableForeignKeyConstraints();
     }
 }

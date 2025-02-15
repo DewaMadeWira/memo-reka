@@ -51,6 +51,24 @@ class MemoController extends Controller
         return to_route('memo.index');
         // return $request;
     }
+    public function reject($id)
+    {
+        if (!Gate::allows('admin')) {
+            abort(403);
+        }
+        $request = RequestLetter::with('memo', 'stages')->where('memo_id', $id)->first();
+        $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
+        // dd($nextStage->to_stage_id);
+        // return $nextStage->to_stage_id;
+        $request->update([
+            // "stages_id" => $request->stages->to_stage_id,
+            // "stages_id" => $nextStage->to_stage_id,
+        ]);
+        // $request->save();
+        return $request;
+        return to_route('memo.index');
+        // return $nextStage;
+    }
     public function create()
     {
         if (Gate::allows('admin')) {
