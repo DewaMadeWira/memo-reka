@@ -62,10 +62,10 @@ class MemoController extends Controller
         // return $nextStage->to_stage_id;
         $request->update([
             // "stages_id" => $request->stages->to_stage_id,
-            // "stages_id" => $nextStage->to_stage_id,
+            "stages_id" => $nextStage->rejected_id,
         ]);
-        // $request->save();
-        return $request;
+        $request->save();
+        // return $nextStage;
         return to_route('memo.index');
         // return $nextStage;
     }

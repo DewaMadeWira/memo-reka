@@ -22,13 +22,26 @@ class StagesSeeder extends Seeder
             'conditions' => "Pembuatan / Edit Memo",
             'letter_id' => 1,
             'approver_id' => 2,
-            'to_stage_id' => 2,
+            'to_stage_id' => 3,
             'status_id' => 1,
+            'rejected_id' => 2,
         ]);
         // May use is rejectable 
         // If Rejected Didn't go anywhere change status to Rejected
         DB::table('request_stages')->insert([
             'id' => 2,
+            'stage_name' => "Memo Internal Ditolak",
+            'sequence' => 1,
+            'conditions' => "Pembuatan / Edit Memo",
+            'letter_id' => 1,
+            'approver_id' => 2,
+            'to_stage_id' => 1,
+            'status_id' => 4,
+            'rejected_id' => NULL,
+        ]);
+
+        DB::table('request_stages')->insert([
+            'id' => 3,
             'stage_name' => "Memo Internal",
             'sequence' => 2,
             'conditions' => "Approval Manajer Internal",
@@ -36,10 +49,22 @@ class StagesSeeder extends Seeder
             'approver_id' => 1,
             'to_stage_id' => 3,
             'status_id' => 2,
+            'rejected_id' => 4,
         ]);
         // If Rejected Go Mark as Rejected and Done
         DB::table('request_stages')->insert([
-            'id' => 3,
+            'id' => 4,
+            'stage_name' => "Memo Internal",
+            'sequence' => 2,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 1,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 6,
+            'rejected_id' => NULL,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 5,
             'stage_name' => "Memo Eksternal Diproses",
             'sequence' => 3,
             'conditions' => "Approval Manajer Eksternal",
@@ -47,17 +72,30 @@ class StagesSeeder extends Seeder
             'approver_id' => 1,
             'to_stage_id' => 4,
             'status_id' => 3,
+            'rejected_id' => 6,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 6,
+            'stage_name' => "Memo Eksternal Ditolak",
+            'sequence' => 3,
+            'conditions' => "Approval Manajer Eksternal",
+            'letter_id' => 1,
+            'approver_id' => 1,
+            'to_stage_id' => 5,
+            'status_id' => 4,
+            'rejected_id' => NULL,
         ]);
         // If rejected didn't go anywhere 
         DB::table('request_stages')->insert([
-            'id' => 4,
+            'id' => 7,
             'stage_name' => "Memo Eksternal Selesai",
             'sequence' => 3,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
             'approver_id' => 1,
-            'to_stage_id' => 1,
+            'to_stage_id' => NULL,
             'status_id' => 5,
+            'rejected_id' => NULL,
         ]);
         // If rejected mark as rejected and done
         Schema::enableForeignKeyConstraints();

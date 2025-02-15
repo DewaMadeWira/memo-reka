@@ -15,6 +15,9 @@ export default function Memo({ request }: { request: any }) {
     function handleApprove(id: number) {
         router.post("/memo-approve/" + id);
     }
+    function handleReject(id: number) {
+        router.post("/memo-reject/" + id);
+    }
     return (
         <div className="w-full ">
             <h1 className="text-2xl font-bold">Memo</h1>
@@ -51,7 +54,9 @@ export default function Memo({ request }: { request: any }) {
                                     Approve
                                 </button>
                                 <button
-                                    onClick={handleSubmit}
+                                    onClick={() =>
+                                        handleReject(request.memo.id)
+                                    }
                                     className={`bg-red-500 p-2 mt-2 text-white rounded-lg 
                                     `}
                                 >
