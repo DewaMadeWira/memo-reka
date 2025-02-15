@@ -34,7 +34,10 @@ class MemoController extends Controller
         if (!Gate::allows('admin')) {
             abort(403);
         }
-        $request = RequestLetter::with('stages')->find($id);
+        // $request = RequestLetter::with('stages', 'memo')->whereHas('memo', function ($q) use ($id) {
+        //     $q->where('id', $id);
+        // })->first();
+        $request = RequestLetter::with('stages', 'memo')->where('memo_id', $id)->first();
 
         $request->update([
             "status_id" => 2,

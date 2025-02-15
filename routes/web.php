@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');
 Route::post('/memo', [MemoController::class, 'create'])->name('memo.create');
-Route::post('/memo-approve', [MemoController::class, 'approve'])->name('memo.approve');
+Route::post('/memo-approve/{id}', [MemoController::class, 'approve'])->name('memo.approve');
 
 // Test
 Route::middleware('auth')->group(function () {});
