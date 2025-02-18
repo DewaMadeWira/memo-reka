@@ -15,6 +15,7 @@ class RequestStages extends Model
         'stage_name',
         'sequence',
         'to_stage_id',
+        'rejected_id',
         'conditions',
         'letter_id',
         'approver_id',
@@ -33,8 +34,12 @@ class RequestStages extends Model
     {
         return $this->belongsTo(RequestStatus::class, 'status_id', 'id');
     }
-    public function request_stages(): HasOne
+    public function request_approved(): HasOne
     {
         return $this->hasOne(RequestStages::class, 'to_stage_id', 'id');
+    }
+    public function request_rejected(): HasOne
+    {
+        return $this->hasOne(RequestStages::class, 'rejected_id', 'id');
     }
 }

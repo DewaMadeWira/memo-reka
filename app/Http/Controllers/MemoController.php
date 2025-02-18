@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class MemoController extends Controller
@@ -42,6 +43,12 @@ class MemoController extends Controller
         // dd($nextStage->to_stage_id);
         // return $nextStage->to_stage_id;
         // return $nextStage;
+        // dump($request, $nextStage);
+        // dd($nextStage);
+        // Log::info($request);
+        if ($nextStage->to_stage_id == null) {
+            return to_route('memo.index');
+        }
 
         $request->update([
             // "stages_id" => $request->stages->to_stage_id,
@@ -56,10 +63,14 @@ class MemoController extends Controller
         if (!Gate::allows('admin')) {
             abort(403);
         }
-        $request = RequestLetter::with('memo', 'stages')->where('memo_id', $id)->first();
+        $request = RequestLetter::with('memo', 'memo.letter.request_stages')->where('memo_id', $id)->first();
         $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
         // dd($nextStage->to_stage_id);
         // return $nextStage->to_stage_id;
+        if ($nextStage->rejected_id == null) {
+            return to_route('memo.index');
+        }
+
         $request->update([
             // "stages_id" => $request->stages->to_stage_id,
             "stages_id" => $nextStage->rejected_id,

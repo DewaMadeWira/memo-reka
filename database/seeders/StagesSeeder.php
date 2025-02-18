@@ -47,9 +47,9 @@ class StagesSeeder extends Seeder
             'conditions' => "Approval Manajer Internal",
             'letter_id' => 1,
             'approver_id' => 1,
-            'to_stage_id' => 3,
+            'to_stage_id' => 5,
             'status_id' => 2,
-            'rejected_id' => 4,
+            'rejected_id' => 7,
         ]);
         // If Rejected Go Mark as Rejected and Done
         DB::table('request_stages')->insert([
@@ -70,7 +70,7 @@ class StagesSeeder extends Seeder
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
             'approver_id' => 1,
-            'to_stage_id' => 4,
+            'to_stage_id' => 7,
             'status_id' => 3,
             'rejected_id' => 6,
         ]);
