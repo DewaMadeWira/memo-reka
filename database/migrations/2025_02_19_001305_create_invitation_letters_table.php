@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('memo_letters', function (Blueprint $table) {
+        Schema::create('invitation_letters', function (Blueprint $table) {
             $table->id();
-            $table->string("memo_number");
+            $table->timestamps();
+            $table->string("invitation_name");
+            $table->string("invitation_number");
             $table->foreignId("letter_id");
             $table->foreignId("from_division");
             $table->foreignId("to_division");
-            $table->timestamps();
             $table->foreign('from_division')->references('id')->on('divisions');
             $table->foreign('to_division')->references('id')->on('divisions');
-            // $table->foreign('letter_id')->references('id')->on('letter_types');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('memo_letters');
+        Schema::dropIfExists('invitation_letters');
     }
 };

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId("stages_id");
             $table->foreignId("letter_type_id");
             $table->foreignId("memo_id")->nullable();
+            $table->foreignId("invitation_id")->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             // $table->foreign('status_id')->references('id')->on('request_statuses');
