@@ -17,7 +17,7 @@ class StagesSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
         DB::table('request_stages')->insert([
             'id' => 1,
-            'stage_name' => "Memo Internal",
+            'stage_name' => "Pembuatan Memo Internal",
             'sequence' => 1,
             'conditions' => "Pembuatan / Edit Memo",
             'letter_id' => 1,
@@ -97,7 +97,51 @@ class StagesSeeder extends Seeder
             'status_id' => 5,
             'rejected_id' => NULL,
         ]);
-        // If rejected mark as rejected and done
+        DB::table('request_stages')->insert([
+            'id' => 8,
+            'stage_name' => "Undangan Rapat",
+            'sequence' => 3,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 1,
+            'approver_id' => 1,
+            'to_stage_id' => 10,
+            'status_id' => 1,
+            'rejected_id' => 9,
+        ]);
+        // If rejected mark as rejected 
+        DB::table('request_stages')->insert([
+            'id' => 9,
+            'stage_name' => "Undangan Rapat Ditolak",
+            'sequence' => 3,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 2,
+            'approver_id' => 1,
+            'to_stage_id' => 8,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 10,
+            'stage_name' => "Undangan Rapat Disetujui",
+            'sequence' => 3,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 2,
+            'approver_id' => 1,
+            'to_stage_id' => 11,
+            'status_id' => 3,
+            'rejected_id' => NULL,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 11,
+            'stage_name' => "Undangan Rapat Diterima",
+            'sequence' => 3,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 2,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+        ]);
         Schema::enableForeignKeyConstraints();
     }
 }
