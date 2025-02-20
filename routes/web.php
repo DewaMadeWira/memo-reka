@@ -32,6 +32,10 @@ Route::post('/memo', [MemoController::class, 'create'])->name('memo.create');
 Route::post('/memo-approve/{id}', [MemoController::class, 'approve'])->name('memo.approve');
 Route::post('/memo-reject/{id}', [MemoController::class, 'reject'])->name('memo.reject');
 
+// invitation
+Route::get('/invite', [MemoController::class, 'createInvite'])->name('memo.create-invite');
+Route::get('/invite-approve/{id}', [MemoController::class, 'approveInvite'])->name('memo.approve-invite');
+
 // Test
 Route::middleware('auth')->group(function () {});
 // Route::get('/user', [RequestController::class, 'index'])->name('user.index');

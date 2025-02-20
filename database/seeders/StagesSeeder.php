@@ -31,7 +31,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 2,
             'stage_name' => "Memo Internal Ditolak",
-            'sequence' => 1,
+            'sequence' => 0,
             'conditions' => "Pembuatan / Edit Memo",
             'letter_id' => 1,
             'approver_id' => 2,
@@ -43,7 +43,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 3,
             'stage_name' => "Memo Internal",
-            'sequence' => 2,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Internal",
             'letter_id' => 1,
             'approver_id' => 1,
@@ -55,7 +55,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 4,
             'stage_name' => "Memo Internal",
-            'sequence' => 2,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Internal",
             'letter_id' => 1,
             'approver_id' => 1,
@@ -66,7 +66,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 5,
             'stage_name' => "Memo Eksternal Diproses",
-            'sequence' => 3,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
             'approver_id' => 1,
@@ -77,7 +77,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 6,
             'stage_name' => "Memo Eksternal Ditolak",
-            'sequence' => 3,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
             'approver_id' => 1,
@@ -89,7 +89,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 7,
             'stage_name' => "Memo Eksternal Selesai",
-            'sequence' => 3,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
             'approver_id' => 1,
@@ -100,9 +100,9 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 8,
             'stage_name' => "Undangan Rapat",
-            'sequence' => 3,
+            'sequence' => 1,
             'conditions' => "Approval Manajer Internal",
-            'letter_id' => 1,
+            'letter_id' => 2,
             'approver_id' => 1,
             'to_stage_id' => 10,
             'status_id' => 1,
@@ -112,7 +112,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 9,
             'stage_name' => "Undangan Rapat Ditolak",
-            'sequence' => 3,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Internal",
             'letter_id' => 2,
             'approver_id' => 1,
@@ -123,7 +123,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 10,
             'stage_name' => "Undangan Rapat Disetujui",
-            'sequence' => 3,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Internal",
             'letter_id' => 2,
             'approver_id' => 1,
@@ -134,7 +134,7 @@ class StagesSeeder extends Seeder
         DB::table('request_stages')->insert([
             'id' => 11,
             'stage_name' => "Undangan Rapat Diterima",
-            'sequence' => 3,
+            'sequence' => 0,
             'conditions' => "Approval Manajer Internal",
             'letter_id' => 2,
             'approver_id' => 1,
