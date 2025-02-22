@@ -16,12 +16,14 @@ class RequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $intent = $request->get("intent");
+        return $intent;
         //
-        $user = Auth::user();
-        $user = User::with('role')->with('division')->where("id", $user->id)->get();
-        return $user;
+        // $user = Auth::user();
+        // $user = User::with('role')->with('division')->where("id", $user->id)->get();
+        // return $user;
     }
 
     /**

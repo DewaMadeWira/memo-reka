@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/request', [RequestController::class, 'index'])->name('request.index');
+
 
 Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');
 Route::post('/memo', [MemoController::class, 'create'])->name('memo.create');
