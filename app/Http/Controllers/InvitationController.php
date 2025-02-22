@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\InvitationService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InvitationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    protected $invitationService;
+    //
+    public function __construct(InvitationService $invitationService)
+    {
+        $this->invitationService = $invitationService;
+    }
     public function index()
     {
-        //
+        $data = $this->invitationService->index();
+
+        return Inertia::render('Invitation/Index', [
+            'request' => $data
+        ]);
     }
 
     /**

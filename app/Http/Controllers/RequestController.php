@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\InvitationService;
 use App\Models\LetterType;
 use App\Models\MemoLetter;
 use App\Models\RequestLetter;
@@ -15,11 +16,12 @@ use Inertia\Inertia;
 
 class RequestController extends Controller
 {
-    protected $memoService;
+    protected $memoService, $invitationService;
     //
-    public function __construct(MemoService $memoService)
+    public function __construct(MemoService $memoService, InvitationService $invitationService)
     {
         $this->memoService = $memoService;
+        $this->invitationService = $invitationService;
     }
 
     public function index(Request $request)
@@ -99,7 +101,9 @@ class RequestController extends Controller
             case 'memo.create':
                 $memo = $this->memoService->create();
                 return to_route('memo.index');
-
+            case 'invitation.create':
+                $invitation = $this->invitationService->create();
+                return to_route('undangan-rapat.index');
 
             default:
                 return response()->json(['error' => 'Invalid letter type'], 400);
@@ -156,6 +160,12 @@ class RequestController extends Controller
             case 'memo.reject':
                 $memo = $this->memoService->reject($id);
                 return to_route('memo.index');
+            case 'invitation.approve':
+                $invite = $this->invitationService->approve($id);
+                return to_route('undangan-rapat.index');
+            case 'invitation.reject':
+                $invite = $this->invitationService->reject($id);
+                return to_route('undangan-rapat.index');
 
             default:
                 return response()->json(['error' => 'Invalid letter type'], 400);

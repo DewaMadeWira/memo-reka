@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
 Route::resource('memo', MemoController::class);
+Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
 
 // Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');

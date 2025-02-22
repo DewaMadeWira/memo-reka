@@ -7,16 +7,16 @@ export default function Index({ request }: { request: any }) {
     console.log(user);
     console.log(request);
     const handleSubmit = () => {
-        router.post("/invite");
+        router.post("/request?intent=invitation.create");
     };
     // const handleApprove = ({ id }: { id: number }) => {
     //     router.post("/invite-approve/" + id);
     // };
     function handleApprove(id: number) {
-        router.post("/invite-approve/" + id);
+        router.put("/request/" + id + "?intent=invitation.approve");
     }
     function handleReject(id: number) {
-        router.post("/invite-reject/" + id);
+        router.put("/request/" + id + "?intent=invitation.reject");
     }
     return (
         <div className="w-full ">
