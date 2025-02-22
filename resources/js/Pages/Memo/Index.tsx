@@ -2,12 +2,12 @@ import { router } from "@inertiajs/react";
 import React from "react";
 import { usePage } from "@inertiajs/react";
 
-export default function Memo({ request }: { request: any }) {
+export default function Index({ request }: { request: any }) {
     const { user } = usePage().props.auth;
     console.log(user);
     console.log(request);
     const handleSubmit = () => {
-        router.post("/memo");
+        router.post("/request?intent=memo.create");
     };
     // const handleApprove = ({ id }: { id: number }) => {
     //     router.post("/memo-approve/" + id);

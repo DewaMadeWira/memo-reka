@@ -26,19 +26,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/request', [RequestController::class, 'index'])->name('request.index');
+// Route::get('/request', [RequestController::class, 'index'])->name('request.index');
+Route::resource('memo', MemoController::class);
+Route::resource('request', RequestController::class);
 
-
-Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');
-Route::post('/memo', [MemoController::class, 'create'])->name('memo.create');
-Route::post('/memo-approve/{id}', [MemoController::class, 'approve'])->name('memo.approve');
-Route::post('/memo-reject/{id}', [MemoController::class, 'reject'])->name('memo.reject');
+// Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');
+// Route::post('/memo', [MemoController::class, 'create'])->name('memo.create');
+// Route::post('/memo-approve/{id}', [MemoController::class, 'approve'])->name('memo.approve');
+// Route::post('/memo-reject/{id}', [MemoController::class, 'reject'])->name('memo.reject');
 
 // invitation
-Route::get('/invite-all', [MemoController::class, 'indexInvite'])->name('invite.index');
-Route::post('/invite', [MemoController::class, 'createInvite'])->name('memo.create-invite');
-Route::post('/invite-approve/{id}', [MemoController::class, 'approveInvite'])->name('invite.approve-invite');
-Route::post('/invite-reject/{id}', [MemoController::class, 'rejectInvite'])->name('invite.reject-invite');
+// Route::get('/invite-all', [MemoController::class, 'indexInvite'])->name('invite.index');
+// Route::post('/invite', [MemoController::class, 'createInvite'])->name('memo.create-invite');
+// Route::post('/invite-approve/{id}', [MemoController::class, 'approveInvite'])->name('invite.approve-invite');
+// Route::post('/invite-reject/{id}', [MemoController::class, 'rejectInvite'])->name('invite.reject-invite');
 
 // Test
 Route::middleware('auth')->group(function () {});

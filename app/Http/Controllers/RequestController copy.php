@@ -24,19 +24,19 @@ class RequestController extends Controller
 
     public function index(Request $request)
     {
-        // $intent = $request->get("intent");
-        // // $data = null;
+        $intent = $request->get("intent");
+        // $data = null;
 
-        // switch ($intent) {
-        //     case 'memo.index':
-        //         $data = $this->memoService->index();
-        //         return Inertia::render('Memo', [
-        //             'request' => $data
-        //         ]);
+        switch ($intent) {
+            case 'memo.index':
+                $data = $this->memoService->index();
+                return Inertia::render('Memo', [
+                    'request' => $data
+                ]);
 
-        //     default:
-        //         return response()->json(['error' => 'Invalid letter type'], 400);
-        // }
+            default:
+                return response()->json(['error' => 'Invalid letter type'], 400);
+        }
         // return $intent;
         //
         // $user = Auth::user();
@@ -47,20 +47,12 @@ class RequestController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create()
     {
-        $intent = $request->get("intent");
         $user = Auth::user();
         // Create Memo
         // Create memo assign stages
         // Can add try catch
-        switch ($intent) {
-            case 'memo.create':
-
-
-            default:
-                return response()->json(['error' => 'Invalid letter type'], 400);
-        }
         $memo = MemoLetter::create([
             'memo_number' => '1234',
             'letter_id' => 1,
@@ -84,35 +76,21 @@ class RequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         //
         // $id = $request->id;
-        if (Gate::allows('admin')) {
+        if (!Gate::allows('admin')) {
             abort(403);
         }
-        $intent = $request->get("intent");
-        $user = Auth::user();
-        // Create Memo
-        // Create memo assign stages
-        // Can add try catch
-        switch ($intent) {
-            case 'memo.create':
-                $memo = $this->memoService->create();
-                return to_route('memo.index');
+        $request = RequestLetter::with('stages')->find($id);
 
-
-            default:
-                return response()->json(['error' => 'Invalid letter type'], 400);
-        }
-        // $request = RequestLetter::with('stages')->find($id);
-
-        // $request->update([
-        //     "status_id" => 2,
-        //     "stages_id" => $request->stages->to_stage_id,
-        // ]);
-        // $request->save();
-        // return $request;
+        $request->update([
+            "status_id" => 2,
+            "stages_id" => $request->stages->to_stage_id,
+        ]);
+        $request->save();
+        return $request;
     }
 
     /**
