@@ -2,7 +2,7 @@ import { router } from "@inertiajs/react";
 import React from "react";
 import { usePage } from "@inertiajs/react";
 
-export default function Invitation({ request }: { request: any }) {
+export default function Index({ request }: { request: any }) {
     const { user } = usePage().props.auth;
     console.log(user);
     console.log(request);

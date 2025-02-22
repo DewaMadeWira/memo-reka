@@ -92,7 +92,6 @@ class RequestController extends Controller
             abort(403);
         }
         $intent = $request->get("intent");
-        $user = Auth::user();
         // Create Memo
         // Create memo assign stages
         // Can add try catch
@@ -144,9 +143,23 @@ class RequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        if (!Gate::allows('admin')) {
+            abort(403);
+        }
+        $intent = $request->get("intent");
+        switch ($intent) {
+            case 'memo.approve':
+                $memo = $this->memoService->approve($id);
+                return to_route('memo.index');
+            case 'memo.reject':
+                $memo = $this->memoService->reject($id);
+                return to_route('memo.index');
+
+            default:
+                return response()->json(['error' => 'Invalid letter type'], 400);
+        }
     }
 
     /**

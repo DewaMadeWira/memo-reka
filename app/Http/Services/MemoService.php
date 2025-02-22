@@ -54,4 +54,30 @@ class MemoService
             "memo_id" => $memo->id,
         ]);
     }
+    public function approve($id)
+    {
+        $request = RequestLetter::with('memo', 'memo.letter.request_stages')->where('memo_id', $id)->first();
+        $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
+        if ($nextStage->to_stage_id == null) {
+            return null;
+        }
+        $request->update([
+            // "stages_id" => $request->stages->to_stage_id,
+            "stages_id" => $nextStage->to_stage_id,
+        ]);
+        $request->save();
+    }
+    public function reject($id)
+    {
+        $request = RequestLetter::with('memo', 'memo.letter.request_stages')->where('memo_id', $id)->first();
+        $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
+        if ($nextStage->rejected_id == null) {
+            return to_route('memo.index');
+        }
+
+        $request->update([
+            "stages_id" => $nextStage->rejected_id,
+        ]);
+        $request->save();
+    }
 }

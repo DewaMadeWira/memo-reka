@@ -13,10 +13,10 @@ export default function Index({ request }: { request: any }) {
     //     router.post("/memo-approve/" + id);
     // };
     function handleApprove(id: number) {
-        router.post("/memo-approve/" + id);
+        router.put("/request/" + id + "?intent=memo.approve");
     }
     function handleReject(id: number) {
-        router.post("/memo-reject/" + id);
+        router.put("/request/" + id + "?intent=memo.reject");
     }
     return (
         <div className="w-full ">
