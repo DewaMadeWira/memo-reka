@@ -2,25 +2,25 @@ import { router } from "@inertiajs/react";
 import React from "react";
 import { usePage } from "@inertiajs/react";
 
-export default function Memo({ request }: { request: any }) {
+export default function Invitation({ request }: { request: any }) {
     const { user } = usePage().props.auth;
     console.log(user);
     console.log(request);
     const handleSubmit = () => {
-        router.post("/memo");
+        router.post("/invite");
     };
     // const handleApprove = ({ id }: { id: number }) => {
-    //     router.post("/memo-approve/" + id);
+    //     router.post("/invite-approve/" + id);
     // };
     function handleApprove(id: number) {
-        router.post("/memo-approve/" + id);
+        router.post("/invite-approve/" + id);
     }
     function handleReject(id: number) {
-        router.post("/memo-reject/" + id);
+        router.post("/invite-reject/" + id);
     }
     return (
         <div className="w-full ">
-            <h1 className="text-2xl font-bold">Memo</h1>
+            <h1 className="text-2xl font-bold">Undangan Rapat</h1>
             <table className="w-[80%]">
                 <tr>
                     <th>Id</th>
@@ -46,7 +46,7 @@ export default function Memo({ request }: { request: any }) {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() =>
-                                        handleApprove(request.memo.id)
+                                        handleApprove(request.invite.id)
                                     }
                                     className={`bg-green-500 p-2 mt-2 text-white rounded-lg 
                                     `}
@@ -55,7 +55,7 @@ export default function Memo({ request }: { request: any }) {
                                 </button>
                                 <button
                                     onClick={() =>
-                                        handleReject(request.memo.id)
+                                        handleReject(request.invite.id)
                                     }
                                     className={`bg-red-500 p-2 mt-2 text-white rounded-lg 
                                     `}

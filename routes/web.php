@@ -33,8 +33,10 @@ Route::post('/memo-approve/{id}', [MemoController::class, 'approve'])->name('mem
 Route::post('/memo-reject/{id}', [MemoController::class, 'reject'])->name('memo.reject');
 
 // invitation
-Route::get('/invite', [MemoController::class, 'createInvite'])->name('memo.create-invite');
-Route::get('/invite-approve/{id}', [MemoController::class, 'approveInvite'])->name('memo.approve-invite');
+Route::get('/invite-all', [MemoController::class, 'indexInvite'])->name('invite.index');
+Route::post('/invite', [MemoController::class, 'createInvite'])->name('memo.create-invite');
+Route::post('/invite-approve/{id}', [MemoController::class, 'approveInvite'])->name('invite.approve-invite');
+Route::post('/invite-reject/{id}', [MemoController::class, 'rejectInvite'])->name('invite.reject-invite');
 
 // Test
 Route::middleware('auth')->group(function () {});

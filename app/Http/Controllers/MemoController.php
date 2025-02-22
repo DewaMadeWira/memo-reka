@@ -30,6 +30,19 @@ class MemoController extends Controller
             'request' => $memo
         ]);
     }
+    public function indexInvite()
+    {
+
+        $user = Auth::user();
+        $user = User::with('role')->with('division')->where("id", $user->id)->first();
+        $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
+            $q->where('from_division', $user->division->id);
+        })->get();
+        // return $invite;
+        return Inertia::render('Invitation', [
+            'request' => $invite
+        ]);
+    }
     public function approve($id)
     {
 
@@ -89,8 +102,8 @@ class MemoController extends Controller
             "stages_id" => $nextStage->to_stage_id,
         ]);
         $request->save();
-        // return to_route('memo.index');
-        return $request;
+        return to_route('invite.index');
+        // return $request;
     }
     public function reject($id)
     {
@@ -112,6 +125,28 @@ class MemoController extends Controller
         $request->save();
         // return $nextStage;
         return to_route('memo.index');
+        // return $nextStage;
+    }
+    public function rejectInvite($id)
+    {
+        if (!Gate::allows('admin')) {
+            abort(403);
+        }
+        $request = RequestLetter::with('invite', 'invite.letter.request_stages')->where('invitation_id', $id)->first();
+        $nextStage = $request->invite->letter->request_stages->where('id', $request->stages_id)->first();
+        // dd($nextStage->to_stage_id);
+        // return $nextStage->to_stage_id;
+        if ($nextStage->rejected_id == null) {
+            return to_route('invite.index');
+        }
+
+        $request->update([
+            // "stages_id" => $request->stages->to_stage_id,
+            "stages_id" => $nextStage->rejected_id,
+        ]);
+        $request->save();
+        // return $nextStage;
+        return to_route('invite.index');
         // return $nextStage;
     }
     public function create()
@@ -138,7 +173,7 @@ class MemoController extends Controller
             "request_name" => "Test Request Baru",
             "user_id" => $user->id,
             // "status_id" => $stages->letter->request_stages[0]->status_id,
-            "stages_id" => $stages->letter->request_stages->where('sequence', 1)->id,
+            "stages_id" => $stages->letter->request_stages->where('sequence', 1)->first()->id,
             "letter_type_id" => $memo->letter_id,
             "memo_id" => $memo->id,
         ]);
