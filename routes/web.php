@@ -32,6 +32,10 @@ Route::resource('memo', MemoController::class);
 Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
 
+Route::get('pdf', function () {
+    return Inertia::render('Pdf/Index', []);
+});
+
 // Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');
 // Route::post('/memo', [MemoController::class, 'create'])->name('memo.create');
 // Route::post('/memo-approve/{id}', [MemoController::class, 'approve'])->name('memo.approve');
