@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Page,
     Text,
@@ -7,7 +7,10 @@ import {
     StyleSheet,
     PDFViewer,
     Image,
+    pdf,
 } from "@react-pdf/renderer";
+import { router } from "@inertiajs/react";
+import Template from "./Template";
 
 const styles = StyleSheet.create({
     page: {
@@ -44,192 +47,32 @@ const styles = StyleSheet.create({
 });
 
 export default function Index({ data }: { data: any }) {
-    console.log(data);
+    const [values, setValues] = useState<{ file: File | undefined }>({
+        file: undefined,
+    });
+    const [pdfDoc, setPdfDoc] = useState<JSX.Element | null>(null);
+    const generateAndSendPDF = async () => {
+        try {
+            const blob = await pdf(<Template data={data}></Template>).toBlob();
+
+            const formData = new FormData();
+            formData.append("pdf", blob, "memo.pdf");
+
+            router.post("/upload", formData, {
+                preserveScroll: true,
+                // onSuccess: () => alert("PDF uploaded successfully!"),
+            });
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+        }
+    };
+
     return (
-        <PDFViewer className="w-full h-screen">
-            <Document>
-                <Page size="A4" style={styles.page}>
-                    <Image
-                        style={styles.header}
-                        src="assets/images/header_all.jpg"
-                    />
-                    <View style={styles.section}>
-                        <Text>MEMO</Text>
-                    </View>
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 10,
-                            paddingLeft: 25,
-                        }}
-                    >
-                        <View style={styles.section_identity}>
-                            <Text>Tanggal </Text>
-                            <Text>:</Text>
-                        </View>
-                        <Text style={{ fontSize: 11 }}>{data.created_at}</Text>
-                    </View>
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 10,
-                            paddingLeft: 25,
-                        }}
-                    >
-                        <View style={styles.section_identity}>
-                            <Text>Nomor</Text>
-                            <Text>:</Text>
-                        </View>
-                        <Text style={{ fontSize: 11 }}>{data.memo_number}</Text>
-                    </View>
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 10,
-                            paddingLeft: 25,
-                        }}
-                    >
-                        <View style={styles.section_identity}>
-                            <Text>Perihal</Text>
-                            <Text>:</Text>
-                        </View>
-                        <Text style={{ fontSize: 11 }}>{data.perihal}</Text>
-                    </View>
-                    <View
-                        style={{
-                            marginTop: 10,
-                            marginBottom: 10,
-                            width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-                        <View
-                            style={{
-                                borderTop: "2px",
-                                borderBottom: "2px",
-                                borderColor: "black",
-                                width: "90%",
-                                height: 40,
-                                display: "flex",
-                                flexDirection: "row",
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: "50%",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    borderRight: "2px",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 11,
-                                        paddingLeft: "10px",
-                                    }}
-                                >
-                                    Dari : {data.from_division.division_name}
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    width: "50%",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 11,
-                                        paddingLeft: "10px",
-                                    }}
-                                >
-                                    Kepada : {data.to_division.division_name}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View
-                        style={{
-                            width: "100%",
-                            flexDirection: "row",
-                            display: "flex",
-                            justifyContent: "center",
-                            marginTop: 30,
-                        }}
-                    >
-                        <View
-                            style={{
-                                // paddingLeft: 45,
-                                width: "80%",
-                                fontSize: 11.5,
-                            }}
-                        >
-                            <Text style={{ marginBottom: 10 }}>
-                                Dengan Hormat,
-                            </Text>
-                            <Text>{data.content}</Text>
-                            {/* <Text style={{ marginVertical: 10 }}>
-                                Berdasarkan kegiatan Preventive Maintenance
-                                fasilitas TI maka Teknologi Informasi
-                                membutuhkan kebutuhan sebagai berikut:
-                            </Text>
-                            <Text>
-                                Lorem, ipsum dolor sit amet consectetur
-                                adipisicing elit. Veritatis totam ducimus quasi
-                                tenetur excepturi harum minus, sapiente
-                                doloremque fugiat itaque rem impedit saepe omnis
-                                ipsam odit hic mollitia porro quis vel obcaecati
-                                quos assumenda facilis officia! Ducimus modi
-                                amet odio accusamus unde deserunt, aspernatur
-                                quas id sequi, fugiat natus cumque.
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                Maka bersama memo ini kami memohon agar dapat
-                                dilakukan pengadaan kebutuhan fasilitas TI
-                                tersebut.
-                            </Text> */}
-                            <Text style={{ marginVertical: 10 }}>
-                                Demikian memo ini kami sampaikan, atas perhatian
-                                dan kerjasamanya kami ucapkan terima kasih.
-                            </Text>
-                        </View>
-                    </View>
-                    <View
-                        style={{
-                            position: "absolute",
-                            bottom: 150,
-                            // backgroundColor: "red",
-                            right: 50,
-                            textAlign: "center",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Text style={{ fontSize: 12 }}>Hormat Kami,</Text>
-                        <Text style={{ fontSize: 12 }}>M QMSHETI</Text>
-                        <Text
-                            style={{
-                                fontSize: 12,
-                                textDecoration: "underline",
-                                marginTop: 70,
-                            }}
-                        >
-                            {data.signatory.name}
-                        </Text>
-                    </View>
-                    <Image
-                        style={styles.footer}
-                        src="assets/images/footer_reka.jpg"
-                    ></Image>
-                </Page>
-            </Document>
-        </PDFViewer>
+        <div className="">
+            <PDFViewer className="w-full h-[80vh]">
+                <Template data={data} />
+            </PDFViewer>
+            <button onClick={generateAndSendPDF}>Submit</button>
+        </div>
     );
 }

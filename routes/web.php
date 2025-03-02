@@ -5,8 +5,12 @@ use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Models\MemoLetter;
+use Faker\Core\File;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File as FacadesFile;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -39,6 +43,19 @@ Route::get('pdf', function () {
     // return $request;
     // dd($request);
     return Inertia::render('Pdf/Index', ["data" => $request]);
+});
+Route::get('upload', function () {
+
+    return Inertia::render('Upload/Index');
+});
+Route::post('upload', function (Request $request) {
+    $file = $request['pdf'];
+    $ext = $file->getClientOriginalExtension();
+    $filename = rand(100000000, 999999999) . '.' . $ext;
+    Storage::disk('local')->put('private/' . $filename, FacadesFile::get($file));
+    // $data['file'] = $filename;
+    // dd($file);
+    return $file;
 });
 
 // Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');
