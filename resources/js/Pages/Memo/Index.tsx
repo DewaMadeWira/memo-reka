@@ -62,6 +62,7 @@ export default function Index({
                     <th>Request Name</th>
                     <th>Stages</th>
                     <th>Status</th>
+                    <th>PDF</th>
                     <th className={`${user.role_id == 1 ? "" : "hidden"}`}>
                         Approval
                     </th>
@@ -76,6 +77,15 @@ export default function Index({
                         </td>
                         <td className="text-center">
                             {request.stages.status.status_name}
+                        </td>
+                        <td className="text-center">
+                            <button
+                                // onClick={() => handleApprove(request.memo.id)}
+                                className={`bg-blue-500 p-2 mt-2 text-white rounded-lg 
+                                    `}
+                            >
+                                Lihat PDF
+                            </button>
                         </td>
                         <td className={`${user.role_id == 1 ? "" : "hidden"}`}>
                             <div className="flex gap-2">
@@ -109,7 +119,7 @@ export default function Index({
                         user.role_id == 1 ? "hidden" : ""
                     }`}
                 >
-                    Open
+                    Buat Memo
                 </AlertDialogTrigger>
                 <AlertDialogContent className="w-[300rem]">
                     <AlertDialogHeader>
