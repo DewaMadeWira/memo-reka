@@ -4,6 +4,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
+use App\Models\MemoLetter;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,7 +34,11 @@ Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
 
 Route::get('pdf', function () {
-    return Inertia::render('Pdf/Index', []);
+
+    $request = MemoLetter::with("from_division", "to_division", "signatory")->first();
+    // return $request;
+    // dd($request);
+    return Inertia::render('Pdf/Index', ["data" => $request]);
 });
 
 // Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');

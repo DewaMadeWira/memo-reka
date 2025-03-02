@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function Index() {
+export default function Index({ data }: { data: any }) {
+    console.log(data);
     return (
         <PDFViewer className="w-full h-screen">
             <Document>
@@ -67,7 +68,7 @@ export default function Index() {
                             <Text>Tanggal </Text>
                             <Text>:</Text>
                         </View>
-                        <Text style={{ fontSize: 11 }}>26 Februari 2025</Text>
+                        <Text style={{ fontSize: 11 }}>{data.created_at}</Text>
                     </View>
                     <View
                         style={{
@@ -81,9 +82,7 @@ export default function Index() {
                             <Text>Nomor</Text>
                             <Text>:</Text>
                         </View>
-                        <Text style={{ fontSize: 11 }}>
-                            171.21/REKA/GEN/QMSHE-TI/X/2024
-                        </Text>
+                        <Text style={{ fontSize: 11 }}>{data.memo_number}</Text>
                     </View>
                     <View
                         style={{
@@ -97,9 +96,7 @@ export default function Index() {
                             <Text>Perihal</Text>
                             <Text>:</Text>
                         </View>
-                        <Text style={{ fontSize: 11 }}>
-                            Permintaan Fasilitas Teknologi Informasi
-                        </Text>
+                        <Text style={{ fontSize: 11 }}>{data.perihal}</Text>
                     </View>
                     <View
                         style={{
@@ -130,8 +127,13 @@ export default function Index() {
                                     borderRight: "2px",
                                 }}
                             >
-                                <Text style={{ fontSize: 11, paddingLeft: "10px" }}> 
-                                    Dari : QMSHETI
+                                <Text
+                                    style={{
+                                        fontSize: 11,
+                                        paddingLeft: "10px",
+                                    }}
+                                >
+                                    Dari : {data.from_division.division_name}
                                 </Text>
                             </View>
                             <View
@@ -142,9 +144,12 @@ export default function Index() {
                                 }}
                             >
                                 <Text
-                                    style={{ fontSize: 11, paddingLeft: "10px" }}
+                                    style={{
+                                        fontSize: 11,
+                                        paddingLeft: "10px",
+                                    }}
                                 >
-                                    Kepada Yth. General Affair
+                                    Kepada : {data.to_division.division_name}
                                 </Text>
                             </View>
                         </View>
@@ -165,8 +170,11 @@ export default function Index() {
                                 fontSize: 11.5,
                             }}
                         >
-                            <Text style={{}}>Dengan Hormat,</Text>
-                            <Text style={{ marginVertical: 10 }}>
+                            <Text style={{ marginBottom: 10 }}>
+                                Dengan Hormat,
+                            </Text>
+                            <Text>{data.content}</Text>
+                            {/* <Text style={{ marginVertical: 10 }}>
                                 Berdasarkan kegiatan Preventive Maintenance
                                 fasilitas TI maka Teknologi Informasi
                                 membutuhkan kebutuhan sebagai berikut:
@@ -185,7 +193,7 @@ export default function Index() {
                                 Maka bersama memo ini kami memohon agar dapat
                                 dilakukan pengadaan kebutuhan fasilitas TI
                                 tersebut.
-                            </Text>
+                            </Text> */}
                             <Text style={{ marginVertical: 10 }}>
                                 Demikian memo ini kami sampaikan, atas perhatian
                                 dan kerjasamanya kami ucapkan terima kasih.
@@ -201,7 +209,7 @@ export default function Index() {
                             textAlign: "center",
                             display: "flex",
                             flexDirection: "column",
-                            alignItems:"center"
+                            alignItems: "center",
                         }}
                     >
                         <Text style={{ fontSize: 12 }}>Hormat Kami,</Text>
@@ -213,7 +221,7 @@ export default function Index() {
                                 marginTop: 70,
                             }}
                         >
-                            Hisyam Syafiq A
+                            {data.signatory.name}
                         </Text>
                     </View>
                     <Image
@@ -225,4 +233,3 @@ export default function Index() {
         </PDFViewer>
     );
 }
-

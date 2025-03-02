@@ -23,6 +23,7 @@ class AllSeeder extends Seeder
             StatusSeeder::class,
             StagesSeeder::class,
             LetterType::class,
+            MemoSeeder::class,
 
         ]);
     }

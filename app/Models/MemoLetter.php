@@ -22,10 +22,14 @@ class MemoLetter extends Model
     }
     public function to_division(): BelongsTo
     {
-        return $this->belongsTo(Division::class, 'from_division', 'id');
+        return $this->belongsTo(Division::class, 'to_division', 'id');
     }
     public function letter(): BelongsTo
     {
         return $this->belongsTo(LetterType::class, 'letter_id', 'id');
+    }
+    public function signatory(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'signatory', 'id');
     }
 }
