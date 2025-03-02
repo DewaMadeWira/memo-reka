@@ -99,7 +99,7 @@ class RequestController extends Controller
         // Can add try catch
         switch ($intent) {
             case 'memo.create':
-                $memo = $this->memoService->create();
+                $memo = $this->memoService->create($request);
                 return to_route('memo.index');
             case 'invitation.create':
                 $invitation = $this->invitationService->create();
