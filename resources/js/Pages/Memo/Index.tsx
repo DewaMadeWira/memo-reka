@@ -79,13 +79,14 @@ export default function Index({
                             {request.stages.status.status_name}
                         </td>
                         <td className="text-center">
-                            <button
-                                // onClick={() => handleApprove(request.memo.id)}
+                            <a
+                                href={`/memo/${request.memo.id}`}
+                                // onClick={() => router.re}
                                 className={`bg-blue-500 p-2 mt-2 text-white rounded-lg 
                                     `}
                             >
                                 Lihat PDF
-                            </button>
+                            </a>
                         </td>
                         <td className={`${user.role_id == 1 ? "" : "hidden"}`}>
                             <div className="flex gap-2">

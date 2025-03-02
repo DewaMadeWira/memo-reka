@@ -106,7 +106,7 @@ class MemoController extends Controller
         // return $id;
         $request = MemoLetter::with("from_division", "to_division", "signatory")->where("id", $id)->first();
         return Inertia::render('Pdf/Index', ["data" => $request]);
-        // return $request;
+        return $request;
     }
 
     /**

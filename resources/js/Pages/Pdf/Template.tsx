@@ -6,6 +6,8 @@ import {
     StyleSheet,
     Image,
 } from "@react-pdf/renderer";
+import headerImage from "/public/assets/images/header_all.jpg";
+import footerImage from "/public/assets/images/footer_reka.jpg";
 const styles = StyleSheet.create({
     page: {
         flexDirection: "column",
@@ -44,10 +46,7 @@ export default function Template({ data }: { data: any }) {
     return (
         <Document>
             <Page size="A4" style={styles.page}>
-                <Image
-                    style={styles.header}
-                    src="assets/images/header_all.jpg"
-                />
+                <Image style={styles.header} src={headerImage} />
                 <View style={styles.section}>
                     <Text>MEMO</Text>
                 </View>
@@ -197,10 +196,7 @@ export default function Template({ data }: { data: any }) {
                         {data.signatory.name}
                     </Text>
                 </View>
-                <Image
-                    style={styles.footer}
-                    src="assets/images/footer_reka.jpg"
-                ></Image>
+                <Image style={styles.footer} src={footerImage}></Image>
             </Page>
         </Document>
     );
