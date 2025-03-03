@@ -17,7 +17,7 @@ class StagesSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
         DB::table('request_stages')->insert([
             'id' => 1,
-            'stage_name' => "Pembuatan Memo Internal",
+            'stage_name' => "Memo Internal",
             'sequence' => 1,
             'conditions' => "Pembuatan / Edit Memo",
             'letter_id' => 1,
@@ -30,7 +30,7 @@ class StagesSeeder extends Seeder
         // If Rejected Didn't go anywhere change status to Rejected
         DB::table('request_stages')->insert([
             'id' => 2,
-            'stage_name' => "Memo Internal Ditolak",
+            'stage_name' => "Memo Internal",
             'sequence' => 0,
             'conditions' => "Pembuatan / Edit Memo",
             'letter_id' => 1,
@@ -65,7 +65,7 @@ class StagesSeeder extends Seeder
         ]);
         DB::table('request_stages')->insert([
             'id' => 5,
-            'stage_name' => "Memo Eksternal Diproses",
+            'stage_name' => "Memo Eksternal",
             'sequence' => 0,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
@@ -76,7 +76,7 @@ class StagesSeeder extends Seeder
         ]);
         DB::table('request_stages')->insert([
             'id' => 6,
-            'stage_name' => "Memo Eksternal Ditolak",
+            'stage_name' => "Memo Eksternal",
             'sequence' => 0,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,
@@ -88,7 +88,7 @@ class StagesSeeder extends Seeder
         // If rejected didn't go anywhere 
         DB::table('request_stages')->insert([
             'id' => 7,
-            'stage_name' => "Memo Eksternal Selesai",
+            'stage_name' => "Memo Eksternal",
             'sequence' => 0,
             'conditions' => "Approval Manajer Eksternal",
             'letter_id' => 1,

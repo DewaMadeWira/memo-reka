@@ -18,17 +18,57 @@ class MemoService
     {
         $this->authService = $authService;
     }
-    public function index()
+    public function index($intent)
     {
         $division = $this->authService->userDivision();
         // $user = Auth::user();
         // $user = User::with('role')->with('division')->where("id", $user->id)->first();
         // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->where("from_division", $user[0]->division->id)->first();
         // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->first();
-        $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo')->whereHas('memo', function ($q) use ($division) {
-            $q->where('from_division', $division);
-        })->get();
-        return $memo;
+        // All
+
+        switch ($intent) {
+            case '':
+                // $memo = $this->memoService->approve($id);
+                // return to_route('memo.index');
+                $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('memo', function ($q) use ($division) {
+                    $q->where('from_division', $division);
+                })->get();
+                return $memo;
+            case 'memo.internal':
+                $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('stages', function ($q) {
+                    $q->where('stage_name', "Memo Internal");
+                })->whereHas('memo', function ($q) use ($division) {
+                    $q->where('from_division', $division);
+                })->get();
+
+                return $memo;
+            case 'memo.eksternal':
+                $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('stages', function ($q) {
+                    $q->where('stage_name', "Memo Eksternal");
+                })->whereHas('memo', function ($q) use ($division) {
+                    $q->where('from_division', $division);
+                })->get();
+
+                return $memo;
+            default:
+                return response()->json(['error' => 'Invalid letter type'], 400);
+        }
+
+        // Memo Internal
+        // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('memo', function ($q) use ($division) {
+        //     $q->where('from_division', $division);
+        // })->get();
+        // return $memo;
+
+        // Memo External
+        // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('stages', function ($q) {
+        //     $q->where('stage_name', "Memo Eksternal");
+        // })->whereHas('memo', function ($q) use ($division) {
+        //     $q->where('from_division', $division);
+        // })->get();
+
+        // return $memo;
     }
     public function create($request)
     {

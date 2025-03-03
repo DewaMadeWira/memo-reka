@@ -16,17 +16,20 @@ import {
 export default function Index({
     request,
     division,
+    userData,
 }: {
     request: any;
     division: any;
+    userData: any;
 }) {
+    console.log(userData);
     console.log(request);
     console.log(division);
     const [formData, setFormData] = useState({
         request_name: "",
         perihal: "",
         content: "",
-        to_division: 0,
+        to_division: null,
     });
     const { user } = usePage().props.auth;
     console.log(user);
@@ -56,10 +59,40 @@ export default function Index({
     return (
         <div className="w-full ">
             <h1 className="text-2xl font-bold">Memo</h1>
+            <h1 className="text-xl font-bold">
+                Divisi : {userData.division.division_name}
+            </h1>
+            <div className="flex gap-3">
+                <a
+                    href={`/memo`}
+                    // onClick={() => router.re}
+                    className={`bg-blue-500 p-2 mt-2 text-white rounded-lg 
+                                    `}
+                >
+                    All Memo
+                </a>
+                <a
+                    href={`/memo?intent=memo.internal`}
+                    // onClick={() => router.re}
+                    className={`bg-blue-500 p-2 mt-2 text-white rounded-lg 
+                                    `}
+                >
+                    Memo Internal
+                </a>
+                <a
+                    href={`/memo?intent=memo.eksternal`}
+                    // onClick={() => router.re}
+                    className={`bg-blue-500 p-2 mt-2 text-white rounded-lg 
+                                    `}
+                >
+                    Memo Eksternal
+                </a>
+            </div>
             <table className="w-[80%]">
                 <tr>
                     <th>Id</th>
                     <th>Request Name</th>
+                    <th>Divisi Tujuan</th>
                     <th>Stages</th>
                     <th>Status</th>
                     <th>PDF</th>
@@ -67,11 +100,14 @@ export default function Index({
                         Approval
                     </th>
                 </tr>
-                {request.map((request: any) => (
+                {request.map((request: any, index: number) => (
                     //{" "}
                     <tr key={request.id} className="">
-                        <td className="">{request.id}</td>
+                        <td className="">{index + 1}</td>
                         <td className="">{request.request_name}</td>
+                        <td className="">
+                            {request.memo.to_division.division_name}
+                        </td>
                         <td className="text-center">
                             {request.stages.stage_name}
                         </td>
@@ -165,6 +201,7 @@ export default function Index({
                                 onChange={handleChange}
                                 className="w-full p-2 border rounded-lg"
                             >
+                                <option value="">Pilih Divisi</option>
                                 {division.map((divi: any) => (
                                     <option value={divi.id}>
                                         {divi.division_name}

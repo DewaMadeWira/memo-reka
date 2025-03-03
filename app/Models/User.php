@@ -33,7 +33,7 @@ class User extends Authenticatable
     }
     public function division(): BelongsTo
     {
-        return $this->belongsTo(role::class, 'division_id', 'id');
+        return $this->belongsTo(Division::class, 'division_id', 'id');
     }
     public function request_stages(): HasMany
     {

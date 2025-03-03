@@ -23,7 +23,7 @@ class MemoController extends Controller
     {
         $this->memoService = $memoService;
     }
-    public function index()
+    public function index(Request $request)
     {
         // Testing -- IGNORE --
         // $user = Auth::user();
@@ -39,10 +39,27 @@ class MemoController extends Controller
 
 
         //Working -- RESTORE THIS AFTER TEST ---
-        $data = $this->memoService->index();
+        $intent = $request->get("intent");
+        // return $intent;
+
+        // switch ($intent) {
+        //     case '':
+        //         // $memo = $this->memoService->approve($id);
+        //         // return to_route('memo.index');
+        //         return "empty intent";
+        //     case 'memo.internal':
+        //         return "memo internal";
+        //     default:
+        //         return response()->json(['error' => 'Invalid letter type'], 400);
+        // }
+        $data = $this->memoService->index($intent);
         $division = Division::get();
+        $user = Auth::user();
+        $user = User::with('role')->with('division')->where("id", $user->id)->first();
+        // return $user;
 
         return Inertia::render('Memo/Index', [
+            'userData' => $user,
             'request' => $data,
             'division' => $division
         ]);
