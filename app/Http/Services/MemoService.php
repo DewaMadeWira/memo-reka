@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Models\MemoLetter;
 use App\Models\RequestLetter;
+use App\Models\RequestStages;
 use App\Models\User;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
@@ -93,14 +94,16 @@ class MemoService
             'from_division' => $user->division->id,
             'to_division' => $request->to_division,
         ]);
-        $stages = MemoLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
-        // return $memo;
-        // return $stages;
+        // $stages = MemoLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
+        $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
+        // $stages = RequestStages::where('letter_id', 2)->get();
+        // dd($stages);
+        // return $stages->request_stages;
         $request = RequestLetter::create([
             "request_name" => $request->request_name,
             "user_id" => $user->id,
             // "status_id" => $stages->letter->request_stages[0]->status_id,
-            "stages_id" => $stages->letter->request_stages->where('sequence', 1)->first()->id,
+            "stages_id" => $stages->where('sequence', 1)->first()->id,
             "letter_type_id" => $memo->letter_id,
             "memo_id" => $memo->id,
         ]);

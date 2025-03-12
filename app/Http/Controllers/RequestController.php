@@ -100,7 +100,8 @@ class RequestController extends Controller
         switch ($intent) {
             case 'memo.create':
                 $memo = $this->memoService->create($request);
-                return to_route('memo.index');
+                return $memo;
+                // return to_route('memo.index');
             case 'invitation.create':
                 $invitation = $this->invitationService->create();
                 return to_route('undangan-rapat.index');

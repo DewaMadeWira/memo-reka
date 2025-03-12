@@ -17,6 +17,7 @@ class RequestLetter extends Model
         'memo_id',
         'invitation_id',
         'letter_type_id',
+        'stages_table',
     ];
     public function user(): BelongsTo
     {
