@@ -26,7 +26,8 @@ return new class extends Migration
             $table->foreign('stages_id')->references('id')->on('request_stages');
             $table->foreign('memo_id')->references('id')->on('memo_letters');
             $table->foreign('letter_type_id')->references('id')->on('letter_types');
-            $table->json('stages_table');
+            $table->json('to_stages');
+            $table->json('rejected_stages');
         });
     }
 

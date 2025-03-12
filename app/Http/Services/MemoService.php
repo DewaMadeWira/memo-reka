@@ -98,7 +98,8 @@ class MemoService
         $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
         // $stages = RequestStages::where('letter_id', 2)->get();
         // dd($stages);
-        // return $stages->request_stages;
+        $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter()->toJson();
+        $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter()->toJson();
         $request = RequestLetter::create([
             "request_name" => $request->request_name,
             "user_id" => $user->id,
@@ -106,20 +107,28 @@ class MemoService
             "stages_id" => $stages->where('sequence', 1)->first()->id,
             "letter_type_id" => $memo->letter_id,
             "memo_id" => $memo->id,
+            "to_stages" => $nextStageMap,
+            "rejected_stages" => $rejectedStageMap,
         ]);
+        // return response()->json($request);
+        // return $stages->request_stages;
         // $requestCreated = RequestLetter::with('user')->with("memo")->with("status")->with("stages")->get();
         // return to_route('memo.index');
     }
     public function approve($id)
     {
-        $request = RequestLetter::with('memo', 'memo.letter.request_stages')->where('memo_id', $id)->first();
-        $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
-        if ($nextStage->to_stage_id == null) {
-            return null;
-        }
+        $request = RequestLetter::with('memo')->where('memo_id', $id)->first();
+        // $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
+        // if ($nextStage->to_stage_id == null) {
+        //     return null;
+        // }
+        $nextStageId = json_decode($request->to_stages, true);
+
+        $nextStageId = $nextStageId[$request->stages_id];
+        // return response()->json($nextStageId);
         $request->update([
             // "stages_id" => $request->stages->to_stage_id,
-            "stages_id" => $nextStage->to_stage_id,
+            "stages_id" => $nextStageId,
         ]);
         $request->save();
     }

@@ -157,7 +157,8 @@ class RequestController extends Controller
         switch ($intent) {
             case 'memo.approve':
                 $memo = $this->memoService->approve($id);
-                return to_route('memo.index');
+                return $memo;
+                // return to_route('memo.index');
             case 'memo.reject':
                 $memo = $this->memoService->reject($id);
                 return to_route('memo.index');
