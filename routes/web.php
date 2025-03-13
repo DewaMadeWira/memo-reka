@@ -4,6 +4,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\StagesController;
 use App\Models\MemoLetter;
 use Faker\Core\File;
 use Illuminate\Foundation\Application;
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
 Route::resource('memo', MemoController::class);
 Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
+Route::resource('stages', StagesController::class);
 
 Route::get('pdf', function () {
 

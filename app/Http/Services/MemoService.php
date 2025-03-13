@@ -32,7 +32,9 @@ class MemoService
             case '':
                 // $memo = $this->memoService->approve($id);
                 // return to_route('memo.index');
-                $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('memo', function ($q) use ($division) {
+                $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+                    $query->withTrashed();
+                }, 'stages.status', 'memo', 'memo.to_division'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
                 return $memo;
@@ -94,10 +96,7 @@ class MemoService
             'from_division' => $user->division->id,
             'to_division' => $request->to_division,
         ]);
-        // $stages = MemoLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
         $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
-        // $stages = RequestStages::where('letter_id', 2)->get();
-        // dd($stages);
         $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter()->toJson();
         $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter()->toJson();
         $request = RequestLetter::create([
@@ -110,21 +109,17 @@ class MemoService
             "to_stages" => $nextStageMap,
             "rejected_stages" => $rejectedStageMap,
         ]);
-        // return response()->json($request);
-        // return $stages->request_stages;
-        // $requestCreated = RequestLetter::with('user')->with("memo")->with("status")->with("stages")->get();
-        // return to_route('memo.index');
     }
     public function approve($id)
     {
         $request = RequestLetter::with('memo')->where('memo_id', $id)->first();
-        // $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
-        // if ($nextStage->to_stage_id == null) {
-        //     return null;
-        // }
         $nextStageId = json_decode($request->to_stages, true);
+        // return response()->json($nextStageId);
 
-        $nextStageId = $nextStageId[$request->stages_id];
+        $nextStageId = $nextStageId[$request->stages_id] ?? null;
+        if ($nextStageId == null) {
+            return to_route('memo.index');
+        }
         // return response()->json($nextStageId);
         $request->update([
             // "stages_id" => $request->stages->to_stage_id,

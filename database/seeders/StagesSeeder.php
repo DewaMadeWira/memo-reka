@@ -142,6 +142,39 @@ class StagesSeeder extends Seeder
             'status_id' => 5,
             'rejected_id' => NULL,
         ]);
+        DB::table('request_stages')->insert([
+            'id' => 12,
+            'stage_name' => "Delete Me",
+            'sequence' => 0,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 2,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 13,
+            'stage_name' => "Delete Me",
+            'sequence' => 0,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 2,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 14,
+            'stage_name' => "Delete Me",
+            'sequence' => 0,
+            'conditions' => "Approval Manajer Internal",
+            'letter_id' => 2,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+        ]);
         Schema::enableForeignKeyConstraints();
     }
 }

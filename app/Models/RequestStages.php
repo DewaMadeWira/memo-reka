@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RequestStages extends Model
 {
     //
+    use SoftDeletes;
     protected $primaryKey = 'id';
     protected $fillable = [
         'stage_name',
@@ -21,6 +23,7 @@ class RequestStages extends Model
         'approver_id',
         'status_id',
     ];
+    protected $dates = ['deleted_at'];
     public function letter_type(): BelongsTo
     {
         return $this->belongsTo(LetterType::class, 'letter_id', 'id');

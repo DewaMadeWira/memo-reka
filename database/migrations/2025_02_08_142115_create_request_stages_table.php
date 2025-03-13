@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreign('to_stage_id')->references('id')->on('request_stages');
             $table->foreign('rejected_id')->references('id')->on('request_stages');
             $table->foreign('status_id')->references('id')->on('request_statuses');
+            $table->softDeletes();
         });
     }
 
