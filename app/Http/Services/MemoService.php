@@ -129,14 +129,15 @@ class MemoService
     }
     public function reject($id)
     {
-        $request = RequestLetter::with('memo', 'memo.letter.request_stages')->where('memo_id', $id)->first();
-        $nextStage = $request->memo->letter->request_stages->where('id', $request->stages_id)->first();
-        if ($nextStage->rejected_id == null) {
+        $request = RequestLetter::with('memo')->where('memo_id', $id)->first();
+        $nextStageId = json_decode($request->rejected_stages, true);
+        $nextStageId = $nextStageId[$request->stages_id] ?? null;
+        if ($nextStageId == null) {
             return to_route('memo.index');
         }
 
         $request->update([
-            "stages_id" => $nextStage->rejected_id,
+            "stages_id" => $nextStageId
         ]);
         $request->save();
     }
