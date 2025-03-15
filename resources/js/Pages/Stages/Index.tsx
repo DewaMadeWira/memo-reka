@@ -50,13 +50,14 @@ export default function Index({ data }: { data: any }) {
             <h1 className="text-xl font-bold">
                 {/* Divisi : {userData.division.division_name} */}
             </h1>
-            <div className="flex gap-3">d</div>
+            <div className="flex gap-3"></div>
             <table className="w-[80%]">
                 <tr>
                     <th>Id</th>
                     <th>Stage Name</th>
+                    <th>Stage Status</th>
                     <th>Stage Conditions</th>
-                    <th>Stage Sequence</th>
+                    {/* <th>Stage Sequence</th> */}
                     <th>To Stage ID</th>
                     <th>Rejected ID</th>
                 </tr>
@@ -65,10 +66,15 @@ export default function Index({ data }: { data: any }) {
                     <tr key={request.id} className="text-center">
                         <td className="">{index + 1}</td>
                         <td className="">{request.stage_name}</td>
+                        <td className="">{request.status.status_name}</td>
                         <td className="">{request.conditions}</td>
-                        <td className="">{request.sequence}</td>
-                        <td className="text-center">{request.to_stage_id}</td>
-                        <td className="text-center">{request.rejected_id}</td>
+                        {/* <td className="">{request.sequence}</td> */}
+                        <td className="text-center">
+                            {request.request_approved?.stage_name}
+                        </td>
+                        <td className="text-center">
+                            {request.request_rejected?.stage_name}
+                        </td>
                         <td className={`${user.role_id == 1 ? "" : "hidden"}`}>
                             <div className="flex gap-2">
                                 <button
@@ -103,7 +109,7 @@ export default function Index({ data }: { data: any }) {
                 </AlertDialogTrigger>
                 <AlertDialogContent className="w-[300rem]">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Buat Memo Baru</AlertDialogTitle>
+                        <AlertDialogTitle>Buat Stages Baru</AlertDialogTitle>
                         <div className="">
                             <label htmlFor="perihal" className="block mb-2">
                                 Nama Permintaan Persetujuan

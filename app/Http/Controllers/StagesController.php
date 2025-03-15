@@ -16,7 +16,7 @@ class StagesController extends Controller
     {
         //
 
-        $stages = RequestStages::get();
+        $stages = RequestStages::with("status", "request_approved", "request_rejected")->get();
         return Inertia::render('Stages/Index', [
             'data' => $stages,
         ]);
