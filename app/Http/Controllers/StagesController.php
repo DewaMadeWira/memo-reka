@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LetterType;
 use App\Models\RequestStages;
+use App\Models\RequestStatus;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -17,8 +21,14 @@ class StagesController extends Controller
         //
 
         $stages = RequestStages::with("status", "request_approved", "request_rejected")->get();
+        $statuses = RequestStatus::get();
+        $letter = LetterType::get();
+        $role = Role::get();
         return Inertia::render('Stages/Index', [
             'data' => $stages,
+            'statuses' => $statuses,
+            'letter' => $letter,
+            'role' => $role,
         ]);
     }
 
