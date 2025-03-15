@@ -20,7 +20,7 @@ class StagesController extends Controller
     {
         //
 
-        $stages = RequestStages::with("status", "request_approved", "request_rejected")->get();
+        $stages = RequestStages::with("status", "request_approved", "request_rejected", "letter_type")->get();
         $statuses = RequestStatus::get();
         $letter = LetterType::get();
         $role = Role::get();
@@ -46,6 +46,16 @@ class StagesController extends Controller
     public function store(Request $request)
     {
         //
+        $stages = RequestStages::create([
+            'stage_name' => $request->stage_name,
+            'sequence' => $request->sequence,
+            'to_stage_id' => $request->to_stage_id,
+            'rejected_id' => $request->rejected_id,
+            'letter_id' => $request->letter_id,
+            'approver_id' => $request->approver_id,
+            'status_id' => $request->status_id,
+        ]);
+        return to_route('stages.index');
     }
 
     /**

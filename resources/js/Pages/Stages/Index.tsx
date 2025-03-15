@@ -38,7 +38,7 @@ export default function Index({
     const { user } = usePage().props.auth;
     const handleSubmit = () => {
         console.log(formData);
-        // router.post("/request?intent=memo.create", formData);
+        router.post("/stages", formData);
     };
     // const handleApprove = ({ id }: { id: number }) => {
     //     router.post("/memo-approve/" + id);
@@ -68,6 +68,7 @@ export default function Index({
             <table className="w-[80%]">
                 <tr>
                     <th>Id</th>
+                    <th>Letter Type</th>
                     <th>Stage Name</th>
                     <th>Stage Status</th>
                     {/* <th>Stage Conditions</th> */}
@@ -79,6 +80,7 @@ export default function Index({
                     //{" "}
                     <tr key={request.id} className="text-center">
                         <td className="">{index + 1}</td>
+                        <td className="">{request.letter_type.letter_name}</td>
                         <td className="">{request.stage_name}</td>
                         <td className="">{request.status.status_name}</td>
                         {/* <td className="">{request.conditions}</td> */}
@@ -212,11 +214,11 @@ export default function Index({
                                     </option>
                                 ))}
                             </select>
-                            <label htmlFor="status" className="block mb-2">
+                            <label htmlFor="status_id" className="block mb-2">
                                 Status
                             </label>
                             <select
-                                name="status"
+                                name="status_id"
                                 id=""
                                 className="w-full p-2 border rounded-lg"
                                 onChange={handleChange}
