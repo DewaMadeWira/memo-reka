@@ -2,9 +2,9 @@ import { SVGAttributes } from "react";
 
 import logo from "/public/assets/images/logo_reka.png";
 
-export default function ApplicationLogo(props: SVGAttributes<SVGElement>) {
+export default function ApplicationLogo({width, height}:{width:number, height:number}) {
     return (
-        <img src={logo} alt="" width={200} height={200} />
+        <img src={logo} alt="" width={width} height={height} />
         // <svg
         //     {...props}
         //     viewBox="0 0 316 316"

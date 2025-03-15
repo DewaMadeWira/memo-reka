@@ -8,7 +8,7 @@ export default function Guest({ children }: PropsWithChildren) {
             <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4  sm:max-w-md sm:rounded-lg mx-10 font-cabin">
                 <div className="flex justify-center">
                     <Link href="/">
-                        <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
+                        <ApplicationLogo width={200} height={200} />
                     </Link>
                 </div>
                 <h3 className="text-center font-bold text-2xl my-7">
