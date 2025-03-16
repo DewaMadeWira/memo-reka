@@ -30,7 +30,14 @@ import {
     NotebookText,
     Search,
     Settings,
+    Users,
 } from "lucide-react";
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/Components/ui/collapsible";
+
 import ApplicationLogo from "./ApplicationLogo";
 
 const items = [
@@ -55,7 +62,7 @@ const items = [
         icon: Search,
     },
     {
-        title: "Settings",
+        title: "Manajemen",
         url: "#",
         icon: Settings,
     },
@@ -88,88 +95,112 @@ export function AppSidebar() {
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem className="mt-1">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <SidebarMenuButton asChild>
-                                        <a href={items[1].url}>
-                                            <div className="w-10 flex justify-center items-center">
-                                                <NotebookText />
-                                            </div>
-                                            <span className="text-base">
-                                                {items[1].title}
-                                            </span>
-                                            <ChevronDown></ChevronDown>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                                    <DropdownMenuItem>
-                                        Semua {items[1].title}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        {items[1].title} Internal
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        {items[1].title} Eksternal
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Collapsible className="group/collapsible">
+                                <CollapsibleTrigger className="flex w-full hover:bg-gray-200 p-2 rounded-md ">
+                                    <div className="w-10 flex justify-center items-center">
+                                        <NotebookText />
+                                    </div>
+                                    <span className="text-base">
+                                        {items[1].title}
+                                    </span>
+                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
+                                </CollapsibleTrigger>
+                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
+                                    <a
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                        href=""
+                                    >
+                                        Makan
+                                    </a>
+                                    <a
+                                        href=""
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                    >
+                                        Siang
+                                    </a>
+                                </CollapsibleContent>
+                            </Collapsible>
                         </SidebarMenuItem>
                         <SidebarMenuItem className="mt-1">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <SidebarMenuButton asChild>
-                                        <a href={items[2].url}>
-                                            <div className="w-10 flex justify-center items-center">
-                                                <File />
-                                            </div>
-                                            <span className="text-base">
-                                                {items[2].title}
-                                            </span>
-                                            <ChevronDown></ChevronDown>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                                    <DropdownMenuItem>
-                                        Semua {items[2].title}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        {items[2].title} Internal
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        {items[2].title} Eksternal
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Collapsible className="group/collapsible">
+                                <CollapsibleTrigger className="flex w-full hover:bg-gray-200 p-2 rounded-md ">
+                                    <div className="w-10 flex justify-center items-center">
+                                        <File />
+                                    </div>
+                                    <span className="text-base">
+                                        {items[2].title}
+                                    </span>
+                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
+                                </CollapsibleTrigger>
+                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
+                                    <a
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                        href=""
+                                    >
+                                        Makan
+                                    </a>
+                                    <a
+                                        href=""
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                    >
+                                        Siang
+                                    </a>
+                                </CollapsibleContent>
+                            </Collapsible>
                         </SidebarMenuItem>
                         <SidebarMenuItem className="mt-1">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <SidebarMenuButton asChild>
-                                        <a href={items[3].url}>
-                                            <div className="w-10 flex justify-center items-center">
-                                                <FilePlus2 />
-                                            </div>
-                                            <span className="text-base">
-                                                {items[3].title}
-                                            </span>
-                                            <ChevronDown></ChevronDown>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                                    <DropdownMenuItem>
-                                        Semua {items[3].title}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        {items[3].title} Internal
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        {items[3].title} Eksternal
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Collapsible className="group/collapsible">
+                                <CollapsibleTrigger className="flex w-full hover:bg-gray-200 p-2 rounded-md ">
+                                    <div className="w-10 flex justify-center items-center">
+                                        <FilePlus2 />
+                                    </div>
+                                    <span className="text-base">
+                                        {items[3].title}
+                                    </span>
+                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
+                                </CollapsibleTrigger>
+                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
+                                    <a
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                        href=""
+                                    >
+                                        Makan
+                                    </a>
+                                    <a
+                                        href=""
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                    >
+                                        Siang
+                                    </a>
+                                </CollapsibleContent>
+                            </Collapsible>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem className="mt-1">
+                            <Collapsible className="group/collapsible">
+                                <CollapsibleTrigger className="flex w-full hover:bg-gray-200 p-2 rounded-md ">
+                                    <div className="w-10 flex justify-center items-center">
+                                        <Users></Users>
+                                    </div>
+                                    <span className="text-base">
+                                        {items[4].title}
+                                    </span>
+                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
+                                </CollapsibleTrigger>
+                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
+                                    <a
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                        href=""
+                                    >
+                                        Makan
+                                    </a>
+                                    <a
+                                        href=""
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                    >
+                                        Siang
+                                    </a>
+                                </CollapsibleContent>
+                            </Collapsible>
                         </SidebarMenuItem>
                         {/* {items.map((item) => (
                             <SidebarMenuItem key={item.title} className="mt-1">
