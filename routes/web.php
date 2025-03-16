@@ -5,6 +5,7 @@ use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\StagesController;
+use App\Http\Controllers\UserManagementController;
 use App\Models\MemoLetter;
 use Faker\Core\File;
 use Illuminate\Foundation\Application;
@@ -34,6 +35,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
+Route::resource('admin/manajemen-user', UserManagementController::class);
 Route::resource('memo', MemoController::class);
 Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
