@@ -46,16 +46,32 @@ class StagesController extends Controller
     public function store(Request $request)
     {
         //
-        $stages = RequestStages::create([
-            'stage_name' => $request->stage_name,
-            'sequence' => $request->sequence,
-            'to_stage_id' => $request->to_stage_id,
-            'rejected_id' => $request->rejected_id,
-            'letter_id' => $request->letter_id,
-            'approver_id' => $request->approver_id,
-            'status_id' => $request->status_id,
-        ]);
-        return to_route('stages.index');
+        $intent = $request->get("intent");
+        switch ($intent) {
+            case 'stages.create':
+                // return to_route('memo.index');
+                $stages = RequestStages::create([
+                    'stage_name' => $request->stage_name,
+                    'sequence' => $request->sequence,
+                    'to_stage_id' => $request->to_stage_id,
+                    'rejected_id' => $request->rejected_id,
+                    'letter_id' => $request->letter_id,
+                    'approver_id' => $request->approver_id,
+                    'status_id' => $request->status_id,
+                ]);
+                return to_route('stages.index');
+            case 'stages.update':
+                foreach ($request['data'] as $item) {
+                    RequestStages::where('id', $item["id"])->update([
+                        "to_stage_id" => $item["id_value"],
+                    ]);
+                }
+                return to_route('stages.index');
+                // dd($request->data);
+
+            default:
+                return response()->json(['error' => 'Invalid letter type'], 400);
+        }
     }
 
     /**

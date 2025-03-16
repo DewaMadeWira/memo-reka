@@ -1,5 +1,5 @@
 import { router } from "@inertiajs/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePage } from "@inertiajs/react";
 import {
     AlertDialog,
@@ -12,6 +12,11 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
+
+type updateDataType = {
+    id: number;
+    id_value: number;
+};
 
 export default function Index({
     data,
@@ -35,17 +40,12 @@ export default function Index({
         approver_id: "",
         status_id: "",
     });
+    const [updateData, setUpdateData] = useState<updateDataType[]>();
     const { user } = usePage().props.auth;
     const handleSubmit = () => {
         console.log(formData);
-        router.post("/stages", formData);
+        router.post("/stages?intent=stages.create", formData);
     };
-    // const handleApprove = ({ id }: { id: number }) => {
-    //     router.post("/memo-approve/" + id);
-    // };
-    function handleApprove(id: number) {
-        router.put("/request/" + id + "?intent=memo.approve");
-    }
     function deleteStages(id: number) {
         router.delete("/stages/" + id);
     }
@@ -57,13 +57,63 @@ export default function Index({
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+    const handleUpdate = ({
+        id,
+        id_value,
+    }: {
+        id: number;
+        id_value: number;
+    }) => {
+        setUpdateData((prevData) => {
+            // Check if the ID exists in the array
 
+            if (!prevData) {
+                return [{ id: id, id_value: id_value }];
+            }
+
+            const index = prevData.findIndex((item) => item.id === id);
+
+            if (index !== -1) {
+                // If ID exists, update the id_value
+                const updatedData = [...prevData];
+                updatedData[index] = {
+                    ...updatedData[index],
+                    id_value: id_value,
+                };
+                return updatedData;
+            } else {
+                // If ID does not exist, add new item
+                return [...prevData, { id: id, id_value: id_value }];
+            }
+        });
+        // setUpdateData([{ id: id, id_value: id_value }]);
+        // router.put("/stages/" + id,formData)
+    };
+
+    const sendUpdate = () => {
+        console.log(updateData);
+        router.post("/stages?intent=stages.update", {
+            data: updateData,
+        });
+    };
+
+    useEffect(() => {
+        console.log(updateData);
+    }, [updateData]);
     return (
-        <div className="w-full ">
+        <div className="w-full font-epilogue ">
             <h1 className="text-2xl font-bold">Stages</h1>
-            <h1 className="text-xl font-bold">
+            <div className=" font-bold flex w-[80%] justify-end">
+                <button
+                    onClick={sendUpdate}
+                    disabled={updateData ? false : true}
+                    className={`bg-green-500 p-2 mt-2 text-white rounded-lg disabled:cursor-not-allowed disabled:bg-gray-400
+                                    `}
+                >
+                    Simpan perubahan
+                </button>
                 {/* Divisi : {userData.division.division_name} */}
-            </h1>
+            </div>
             <div className="flex gap-3"></div>
             <table className="w-[80%]">
                 <tr>
@@ -78,16 +128,39 @@ export default function Index({
                 </tr>
                 {data.map((request: any, index: number) => (
                     //{" "}
-                    <tr key={request.id} className="text-center">
+
+                    <tr
+                        key={request.id}
+                        className={`text-center ${updateData}`}
+                    >
                         <td className="">{index + 1}</td>
                         <td className="">{request.letter_type.letter_name}</td>
                         <td className="">{request.stage_name}</td>
                         <td className="">{request.status.status_name}</td>
                         {/* <td className="">{request.conditions}</td> */}
                         {/* <td className="">{request.sequence}</td> */}
-                        <td className="text-center">
+                        <select
+                            name=""
+                            id=""
+                            className="w-full p-2 border rounded-lg"
+                            onChange={(e) =>
+                                handleUpdate({
+                                    id: request.id,
+                                    id_value: parseInt(e.target.value),
+                                })
+                            }
+                            defaultValue={request.request_approved?.id}
+                        >
+                            <option value={-1}>Null</option>
+                            {data.map((stage: any) => (
+                                <option value={stage.id}>
+                                    {stage.stage_name}
+                                </option>
+                            ))}
+                        </select>
+                        {/* <td className="text-center">
                             {request.request_approved?.stage_name}
-                        </td>
+                        </td> */}
                         <td className="text-center">
                             {request.request_rejected?.stage_name}
                         </td>
