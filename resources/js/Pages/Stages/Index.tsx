@@ -15,7 +15,8 @@ import {
 
 type updateDataType = {
     id: number;
-    id_value: number;
+    to_stage_id: number;
+    rejected_id: number;
 };
 
 export default function Index({
@@ -59,16 +60,24 @@ export default function Index({
     };
     const handleUpdate = ({
         id,
-        id_value,
+        field,
+        value,
     }: {
         id: number;
-        id_value: number;
+        field: "to_stage_id" | "rejected_id";
+        value: number;
     }) => {
         setUpdateData((prevData) => {
             // Check if the ID exists in the array
 
             if (!prevData) {
-                return [{ id: id, id_value: id_value }];
+                return [
+                    {
+                        id: id,
+                        to_stage_id: field === "to_stage_id" ? value : -2,
+                        rejected_id: field === "rejected_id" ? value : -2,
+                    },
+                ];
             }
 
             const index = prevData.findIndex((item) => item.id === id);
@@ -78,12 +87,19 @@ export default function Index({
                 const updatedData = [...prevData];
                 updatedData[index] = {
                     ...updatedData[index],
-                    id_value: id_value,
+                    [field]: value,
                 };
                 return updatedData;
             } else {
                 // If ID does not exist, add new item
-                return [...prevData, { id: id, id_value: id_value }];
+                return [
+                    ...prevData,
+                    {
+                        id: id,
+                        to_stage_id: field === "to_stage_id" ? value : -1,
+                        rejected_id: field === "rejected_id" ? value : -1,
+                    },
+                ];
             }
         });
         // setUpdateData([{ id: id, id_value: id_value }]);
@@ -100,6 +116,7 @@ export default function Index({
     useEffect(() => {
         console.log(updateData);
     }, [updateData]);
+
     return (
         <div className="w-full font-epilogue ">
             <h1 className="text-2xl font-bold">Stages</h1>
@@ -107,8 +124,7 @@ export default function Index({
                 <button
                     onClick={sendUpdate}
                     disabled={updateData ? false : true}
-                    className={`bg-green-500 p-2 mt-2 text-white rounded-lg disabled:cursor-not-allowed disabled:bg-gray-400
-                                    `}
+                    className={`bg-green-500 p-2 mt-2 text-white rounded-lg disabled:cursor-not-allowed disabled:bg-gray-400`}
                 >
                     Simpan perubahan
                 </button>
@@ -139,31 +155,54 @@ export default function Index({
                         <td className="">{request.status.status_name}</td>
                         {/* <td className="">{request.conditions}</td> */}
                         {/* <td className="">{request.sequence}</td> */}
-                        <select
-                            name=""
-                            id=""
-                            className="w-full p-2 border rounded-lg"
-                            onChange={(e) =>
-                                handleUpdate({
-                                    id: request.id,
-                                    id_value: parseInt(e.target.value),
-                                })
-                            }
-                            defaultValue={request.request_approved?.id}
-                        >
-                            <option value={-1}>Null</option>
-                            {data.map((stage: any) => (
-                                <option value={stage.id}>
-                                    {stage.stage_name}
-                                </option>
-                            ))}
-                        </select>
+                        <td>
+                            <select
+                                name=""
+                                id=""
+                                className="w-full p-2 border rounded-lg"
+                                onChange={(e) =>
+                                    handleUpdate({
+                                        id: request.id,
+                                        field: "to_stage_id",
+                                        value: parseInt(e.target.value),
+                                    })
+                                }
+                                defaultValue={request.request_approved?.id}
+                            >
+                                <option value={-1}>Null</option>
+                                {data.map((stage: any) => (
+                                    <option value={stage.id}>
+                                        {stage.stage_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </td>
+
+                        <td>
+                            <select
+                                name=""
+                                id=""
+                                className="w-full p-2 border rounded-lg"
+                                onChange={(e) =>
+                                    handleUpdate({
+                                        id: request.id,
+                                        field: "rejected_id",
+                                        value: parseInt(e.target.value),
+                                    })
+                                }
+                                defaultValue={request.request_rejected?.id}
+                            >
+                                <option value={-1}>Null</option>
+                                {data.map((stage: any) => (
+                                    <option value={stage.id}>
+                                        {stage.stage_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </td>
                         {/* <td className="text-center">
                             {request.request_approved?.stage_name}
                         </td> */}
-                        <td className="text-center">
-                            {request.request_rejected?.stage_name}
-                        </td>
                         <td className={`${user.role_id == 1 ? "" : "hidden"}`}>
                             <div className="flex gap-2">
                                 <button

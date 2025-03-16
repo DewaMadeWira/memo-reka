@@ -61,10 +61,22 @@ class StagesController extends Controller
                 ]);
                 return to_route('stages.index');
             case 'stages.update':
+
                 foreach ($request['data'] as $item) {
-                    RequestStages::where('id', $item["id"])->update([
-                        "to_stage_id" => $item["id_value"],
-                    ]);
+                    $updateData = [];
+                    if ($item["to_stage_id"] != -2) {
+                        $updateData["to_stage_id"] = ($item["to_stage_id"] == -1) ? NULL : $item["to_stage_id"];
+                    }
+
+                    // Handle rejected_id
+                    if ($item["rejected_id"] != -2) {
+                        $updateData["rejected_id"] = ($item["rejected_id"] == -1) ? NULL : $item["rejected_id"];
+                    }
+
+                    // Only update if there's data to update
+                    if (!empty($updateData)) {
+                        RequestStages::where('id', $item["id"])->update($updateData);
+                    }
                 }
                 return to_route('stages.index');
                 // dd($request->data);
