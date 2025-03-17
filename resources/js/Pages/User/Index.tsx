@@ -16,17 +16,53 @@ import {
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import { DataTable } from "./user/data-table";
-import { columns } from "./user/columns";
+import { columns, User } from "./user/columns";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog";
+import { Role } from "@/types/RoleType";
+import { Division } from "@/types/DivisionType";
+import { useState } from "react";
+import { router } from "@inertiajs/react";
 
-export default function Index() {
-    const dataDummy = [
-        {
-            id: "728ed52f",
-            amount: 100,
-            status: "pending",
-            email: "m@example.com",
-        },
-    ];
+export default function Index({
+    users,
+    role,
+    division,
+}: {
+    users: User[];
+    role: Role[];
+    division: Division[];
+}) {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        role: 0,
+        divisi: 0,
+    });
+    const handleChange = (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+    ) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+    const handleSubmit = () => {
+        console.log(formData);
+
+        router.post("/admin/manajemen-pengguna", formData);
+    };
+
     return (
         <SidebarAuthenticated>
             <div className="w-full p-10">
@@ -60,12 +96,102 @@ export default function Index() {
                             <DropdownMenuItem>Minuman</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <button className="p-2 bg-blue-500 text-white rounded-md">
-                        + Tambah Pengguna
-                    </button>
+                    <AlertDialog>
+                        <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
+                            + Tambah Pengguna
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="">
+                                    Buat Pengguna Baru
+                                </AlertDialogTitle>
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="name">Nama</label>
+                                        <input
+                                            onChange={handleChange}
+                                            className=" rounded-md"
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="email">Email</label>
+                                        <input
+                                            onChange={handleChange}
+                                            className=" rounded-md"
+                                            type="email"
+                                            name="email"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="password">
+                                            Password
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            className=" rounded-md"
+                                            type="password"
+                                            name="password"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="role">Role</label>
+                                        <select
+                                            onChange={handleChange}
+                                            name="role"
+                                            id=""
+                                            className=" rounded-md"
+                                        >
+                                            <option value="">Pilih Role</option>
+                                            {role.map((item) => (
+                                                <option
+                                                    value={item.id}
+                                                    key={item.id}
+                                                >
+                                                    {item.role_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="divisi">Divisi</label>
+                                        <select
+                                            onChange={handleChange}
+                                            name="divisi"
+                                            id=""
+                                            className=" rounded-md"
+                                        >
+                                            <option value="">
+                                                Pilih Divisi
+                                            </option>
+                                            {division.map((item) => (
+                                                <option
+                                                    value={item.id}
+                                                    key={item.id}
+                                                >
+                                                    {item.division_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Kembali</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={handleSubmit}
+                                    className="bg-blue-500"
+                                >
+                                    Simpan
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
                 <div className="mt-10">
-                    <DataTable data={dataDummy} columns={columns} />
+                    <DataTable data={users} columns={columns} />
                 </div>
             </div>
         </SidebarAuthenticated>

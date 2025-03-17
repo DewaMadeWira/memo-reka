@@ -37,9 +37,13 @@ export function DataTable<TData, TValue>({
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
+                            <TableHead className="text-center">Nomor</TableHead>
                             {headerGroup.headers.map((header) => {
                                 return (
-                                    <TableHead key={header.id}>
+                                    <TableHead
+                                        key={header.id}
+                                        className="text-center"
+                                    >
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
@@ -50,16 +54,19 @@ export function DataTable<TData, TValue>({
                                     </TableHead>
                                 );
                             })}
+                            <TableHead className="text-center">Aksi</TableHead>
                         </TableRow>
                     ))}
                 </TableHeader>
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
+                        table.getRowModel().rows.map((row, index) => (
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
+                                className="text-center"
                             >
+                                <TableCell>{index + 1}</TableCell>
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
                                         {flexRender(
@@ -68,6 +75,12 @@ export function DataTable<TData, TValue>({
                                         )}
                                     </TableCell>
                                 ))}
+                                <TableCell>
+                                    <div className="flex gap-2 justify-center">
+                                        <button>Edit</button>
+                                        <button>Delete</button>
+                                    </div>
+                                </TableCell>
                             </TableRow>
                         ))
                     ) : (

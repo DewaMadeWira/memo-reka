@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
-Route::resource('admin/manajemen-user', UserManagementController::class);
+Route::resource('admin/manajemen-pengguna', UserManagementController::class);
 Route::resource('memo', MemoController::class);
 Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);

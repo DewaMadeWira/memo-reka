@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Division;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +16,14 @@ class UserManagementController extends Controller
     public function index()
     {
         //
-        return Inertia::render('User/Index');
+        $user = User::with('role', 'division')->get();
+        $role = Role::get();
+        $division = Division::get();
+        return Inertia::render('User/Index', [
+            'users' => $user,
+            'role' => $role,
+            'division' => $division
+        ]);
     }
 
     /**
@@ -30,6 +40,13 @@ class UserManagementController extends Controller
     public function store(Request $request)
     {
         //
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role,
+            'division_id' => $request->divisi,
+            'password' => bcrypt($request->password),
+        ]);
     }
 
     /**
