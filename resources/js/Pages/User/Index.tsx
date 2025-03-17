@@ -59,8 +59,11 @@ export default function Index({
     };
     const handleSubmit = () => {
         console.log(formData);
-
         router.post("/admin/manajemen-pengguna", formData);
+    };
+    const handleDelete = (id: number) => {
+        console.log(formData);
+        router.delete(`/admin/manajemen-pengguna/${id}`);
     };
 
     return (
@@ -191,7 +194,11 @@ export default function Index({
                     </AlertDialog>
                 </div>
                 <div className="mt-10">
-                    <DataTable data={users} columns={columns} />
+                    <DataTable
+                        data={users}
+                        columns={columns}
+                        handleDelete={handleDelete}
+                    />
                 </div>
             </div>
         </SidebarAuthenticated>

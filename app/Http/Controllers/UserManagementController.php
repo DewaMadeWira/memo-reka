@@ -47,6 +47,7 @@ class UserManagementController extends Controller
             'division_id' => $request->divisi,
             'password' => bcrypt($request->password),
         ]);
+        // return to_route('admin/manajemen-pengguna.index');
     }
 
     /**
@@ -79,5 +80,7 @@ class UserManagementController extends Controller
     public function destroy(string $id)
     {
         //
+        $user = User::where('id', $id)->delete();
+        // return to_route('admin/manajemen-pengguna.index');
     }
 }

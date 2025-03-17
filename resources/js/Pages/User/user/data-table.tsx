@@ -16,14 +16,28 @@ import {
     TableRow,
 } from "@/Components/ui/table";
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog";
+
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    handleDelete: (id: number) => void;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    handleDelete,
 }: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         data,
@@ -78,7 +92,37 @@ export function DataTable<TData, TValue>({
                                 <TableCell>
                                     <div className="flex gap-2 justify-center">
                                         <button>Edit</button>
-                                        <button>Delete</button>
+
+                                        <AlertDialog>
+                                            <AlertDialogTrigger>
+                                                Hapus
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>
+                                                        Apakah anda yakin ?
+                                                    </AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Data yang dipilih akan
+                                                        dihapus
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>
+                                                        Kembali
+                                                    </AlertDialogCancel>
+                                                    <AlertDialogAction
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                Number(row.id)
+                                                            )
+                                                        }
+                                                    >
+                                                        Hapus
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </div>
                                 </TableCell>
                             </TableRow>
