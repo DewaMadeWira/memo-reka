@@ -72,6 +72,13 @@ class UserManagementController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $user = User::where('id', $id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role_id' => $request->role,
+            'division_id' => $request->divisi,
+            'password' => bcrypt($request->password),
+        ]);
     }
 
     /**

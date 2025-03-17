@@ -46,8 +46,8 @@ export default function Index({
         name: "",
         email: "",
         password: "",
-        role: 0,
-        divisi: 0,
+        role_id: 0,
+        division_id: 0,
     });
     const handleChange = (
         e: React.ChangeEvent<
@@ -64,6 +64,11 @@ export default function Index({
     const handleDelete = (id: number) => {
         console.log(formData);
         router.delete(`/admin/manajemen-pengguna/${id}`);
+    };
+    const handleUpdate = (id: number) => {
+        console.log(formData);
+        console.log(id);
+        router.put(`/admin/manajemen-pengguna/${id}`, formData);
     };
 
     return (
@@ -195,9 +200,15 @@ export default function Index({
                 </div>
                 <div className="mt-10">
                     <DataTable
+                        formData={formData}
+                        setFormData={setFormData}
                         data={users}
                         columns={columns}
                         handleDelete={handleDelete}
+                        handleChange={handleChange}
+                        role={role}
+                        division={division}
+                        handleUpdate={handleUpdate}
                     />
                 </div>
             </div>

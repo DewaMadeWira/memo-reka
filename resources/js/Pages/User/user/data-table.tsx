@@ -32,23 +32,61 @@ import {
 } from "@/Components/ui/alert-dialog";
 import { Button } from "@/Components/ui/button";
 import { useState } from "react";
+import { Role } from "@/types/RoleType";
+import { Division } from "@/types/DivisionType";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     handleDelete: (id: number) => void;
+    handleChange: (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+    ) => void;
+    handleUpdate: (id: number) => void;
+    role: Role[];
+    division: Division[];
+    formData: {
+        name: string;
+        email: string;
+        password: string;
+        role_id: number;
+        division_id: number;
+    };
+    setFormData: React.Dispatch<
+        React.SetStateAction<{
+            name: string;
+            email: string;
+            password: string;
+            role_id: number;
+            division_id: number;
+        }>
+    >;
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
     handleDelete,
+    handleChange,
+    handleUpdate,
+    role,
+    division,
+    formData,
+    setFormData,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
+
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 2, // or whatever default page size you want
     });
+
+    const setEdit = (data: any) => {
+        // console.log;
+        setFormData(data);
+    };
     const table = useReactTable({
         data,
         columns,
@@ -116,7 +154,168 @@ export function DataTable<TData, TValue>({
                                     ))}
                                     <TableCell>
                                         <div className="flex gap-2 justify-center">
-                                            <button>Edit</button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger
+                                                    onClick={() =>
+                                                        setEdit(row.original)
+                                                    }
+                                                    className="p-2 bg-blue-500 text-white rounded-md"
+                                                >
+                                                    Edit
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle className="">
+                                                            Buat Pengguna Baru
+                                                        </AlertDialogTitle>
+                                                        <div className="flex flex-col gap-3">
+                                                            <div className="flex flex-col gap-2">
+                                                                <label htmlFor="name">
+                                                                    Nama
+                                                                </label>
+                                                                <input
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    className=" rounded-md"
+                                                                    type="text"
+                                                                    id="name"
+                                                                    name="name"
+                                                                    value={
+                                                                        formData.name
+                                                                    }
+                                                                />
+                                                            </div>
+                                                            <div className="flex flex-col gap-2">
+                                                                <label htmlFor="email">
+                                                                    Email
+                                                                </label>
+                                                                <input
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    className=" rounded-md"
+                                                                    type="email"
+                                                                    name="email"
+                                                                    value={
+                                                                        formData.email
+                                                                    }
+                                                                />
+                                                            </div>
+                                                            <div className="flex flex-col gap-2">
+                                                                <label htmlFor="password">
+                                                                    Password
+                                                                </label>
+                                                                <input
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    className=" rounded-md"
+                                                                    type="password"
+                                                                    name="password"
+                                                                />
+                                                            </div>
+                                                            <div className="flex flex-col gap-2">
+                                                                <label htmlFor="role_id">
+                                                                    Role
+                                                                </label>
+                                                                <select
+                                                                    value={
+                                                                        formData.role_id
+                                                                    }
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    name="role_id"
+                                                                    id=""
+                                                                    className=" rounded-md"
+                                                                >
+                                                                    <option value="">
+                                                                        Pilih
+                                                                        Role
+                                                                    </option>
+                                                                    {role.map(
+                                                                        (
+                                                                            item
+                                                                        ) => (
+                                                                            <option
+                                                                                value={
+                                                                                    item.id
+                                                                                }
+                                                                                key={
+                                                                                    item.id
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    item.role_name
+                                                                                }
+                                                                            </option>
+                                                                        )
+                                                                    )}
+                                                                </select>
+                                                            </div>
+                                                            <div className="flex flex-col gap-2">
+                                                                <label htmlFor="division_id">
+                                                                    Divisi
+                                                                </label>
+                                                                <select
+                                                                    defaultValue={
+                                                                        formData.division_id
+                                                                    }
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    name="division_id"
+                                                                    id=""
+                                                                    className=" rounded-md"
+                                                                >
+                                                                    <option value="">
+                                                                        Pilih
+                                                                        Divisi
+                                                                    </option>
+                                                                    {division.map(
+                                                                        (
+                                                                            item
+                                                                        ) => (
+                                                                            <option
+                                                                                value={
+                                                                                    item.id
+                                                                                }
+                                                                                key={
+                                                                                    item.id
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    item.division_name
+                                                                                }
+                                                                            </option>
+                                                                        )
+                                                                    )}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>
+                                                            Kembali
+                                                        </AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            onClick={() =>
+                                                                handleUpdate(
+                                                                    Number(
+                                                                        row
+                                                                            .original
+                                                                            .id
+                                                                    )
+                                                                )
+                                                            }
+                                                            className="bg-blue-500"
+                                                        >
+                                                            Simpan
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
 
                                             <AlertDialog>
                                                 <AlertDialogTrigger>
@@ -140,7 +339,9 @@ export function DataTable<TData, TValue>({
                                                             onClick={() =>
                                                                 handleDelete(
                                                                     Number(
-                                                                        row.id
+                                                                        row
+                                                                            .original
+                                                                            .id
                                                                     )
                                                                 )
                                                             }
