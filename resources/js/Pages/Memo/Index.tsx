@@ -12,19 +12,26 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/Components/ui/popover";
 
 export default function Index({
     request,
     division,
     userData,
+    stages,
 }: {
     request: any;
     division: any;
     userData: any;
+    stages: any;
 }) {
     console.log(userData);
     console.log(request);
-    console.log(division);
+    console.log(stages);
     const [formData, setFormData] = useState({
         request_name: "",
         perihal: "",
@@ -109,7 +116,14 @@ export default function Index({
                             {request.memo.to_division.division_name}
                         </td>
                         <td className="text-center">
-                            {request.stages.stage_name}
+                            <Popover>
+                                <PopoverTrigger>
+                                    {request.stages.stage_name}
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                    <div className="">Stages Detail</div>
+                                </PopoverContent>
+                            </Popover>
                         </td>
                         <td className="text-center">
                             {request.stages.status.status_name}

@@ -53,6 +53,36 @@ class MemoController extends Controller
         //         return response()->json(['error' => 'Invalid letter type'], 400);
         // }
         $data = $this->memoService->index($intent);
+        $modifiedData = $data->map(function ($item) {
+            $stages = json_decode($item->to_stages, true);
+
+            if (!$stages || !is_array($stages)) {
+                $item->progress_stages = [];
+                return $item;
+            }
+
+            // Extract referenced stages
+            $referenced = [];
+            $visited = [];
+            $key = array_key_first($stages);
+
+            while ($key !== null && !in_array($key, $visited)) {
+                $visited[] = $key; // Mark as visited
+                if (isset($stages[$key])) {
+                    $referenced[$key] = $stages[$key]; // Store reference
+                    $key = (string) $stages[$key]; // Move to next reference
+                } else {
+                    break;
+                }
+            }
+
+            // Append referenced stages to the item
+            $item->referenced_stages = $referenced;
+            return $item;
+        });
+
+        // $stages = json_encode($referenced);
+
         $division = Division::get();
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
@@ -60,8 +90,9 @@ class MemoController extends Controller
 
         return Inertia::render('Memo/Index', [
             'userData' => $user,
-            'request' => $data,
-            'division' => $division
+            'request' => $modifiedData,
+            'division' => $division,
+            // 'stages' => $stages,
         ]);
     }
 
