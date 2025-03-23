@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreign('letter_type_id')->references('id')->on('letter_types');
             $table->json('to_stages');
             $table->json('rejected_stages');
+            $table->json('progress_stages');
         });
     }
 
