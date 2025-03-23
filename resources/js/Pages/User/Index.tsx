@@ -66,9 +66,14 @@ export default function Index({
         router.delete(`/admin/manajemen-pengguna/${id}`);
     };
     const handleUpdate = (id: number) => {
-        console.log(formData);
+        const filteredData = Object.fromEntries(
+            Object.entries(formData).filter(([_, value]) => value !== "")
+        );
+
+        console.log(filteredData);
+        // console.log(formData);
         console.log(id);
-        router.put(`/admin/manajemen-pengguna/${id}`, formData);
+        router.put(`/admin/manajemen-pengguna/${id}`, filteredData);
     };
     console.log(users);
 
