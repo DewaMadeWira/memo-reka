@@ -84,8 +84,23 @@ export function DataTable<TData, TValue>({
     });
 
     const setEdit = (data: any) => {
-        // console.log;
-        setFormData(data);
+        console.log(data);
+        // setFormData(data);
+        setFormData({
+            name: data.name,
+            email: data.email,
+            password: "",
+            role_id: Number(data.role_id),
+            division_id: Number(data.division_id),
+            // role_id:
+            //     typeof data.role_id === "object"
+            //         ? data.role_id.id
+            //         : data.role_id,
+            // division_id:
+            //     typeof data.division_id === "object"
+            //         ? data.division_id.id
+            //         : data.division_id,
+        });
     };
     const table = useReactTable({
         data,
@@ -259,7 +274,7 @@ export function DataTable<TData, TValue>({
                                                                     Divisi
                                                                 </label>
                                                                 <select
-                                                                    defaultValue={
+                                                                    value={
                                                                         formData.division_id
                                                                     }
                                                                     onChange={

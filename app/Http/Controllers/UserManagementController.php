@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class UserManagementController extends Controller
 {
@@ -43,8 +44,8 @@ class UserManagementController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role_id' => $request->role,
-            'division_id' => $request->divisi,
+            'role_id' => $request->role_id,
+            'division_id' => $request->division_id,
             'password' => bcrypt($request->password),
         ]);
         // return to_route('admin/manajemen-pengguna.index');
@@ -72,13 +73,29 @@ class UserManagementController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        $user = User::where('id', $id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role_id' => $request->role,
-            'division_id' => $request->divisi,
-            'password' => bcrypt($request->password),
+        // $user = User::where('id', $id)->update([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'role_id' => $request->role_id,
+        //     'division_id' => $request->division_id,
+        //     'password' => bcrypt($request->password),
+        // ]);
+        $validatedData = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|max:255|unique:users,email,' . $id,
+            'role_id' => 'sometimes|integer|exists:roles,id',
+            'division_id' => 'sometimes|integer|exists:divisions,id',
+            'password' => 'sometimes|nullable|string|min:6|confirmed',
         ]);
+        // return response()->json($request);
+        // return response()->json($validatedData);
+        if ($request->has('password') && $request->password !== null) {
+            $validatedData['password'] = bcrypt($request->password);
+        } else {
+            unset($validatedData['password']);
+        }
+        // Log::info('Validated Data:', $validatedData);
+        User::where('id', $id)->update($validatedData);
     }
 
     /**

@@ -70,6 +70,7 @@ export default function Index({
         console.log(id);
         router.put(`/admin/manajemen-pengguna/${id}`, formData);
     };
+    console.log(users);
 
     return (
         <SidebarAuthenticated>
@@ -148,7 +149,7 @@ export default function Index({
                                         <label htmlFor="role">Role</label>
                                         <select
                                             onChange={handleChange}
-                                            name="role"
+                                            name="role_id"
                                             id=""
                                             className=" rounded-md"
                                         >
@@ -167,7 +168,7 @@ export default function Index({
                                         <label htmlFor="divisi">Divisi</label>
                                         <select
                                             onChange={handleChange}
-                                            name="divisi"
+                                            name="division_id"
                                             id=""
                                             className=" rounded-md"
                                         >
