@@ -15,8 +15,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
-import { DataTable } from "./user/data-table";
-import { columns, User } from "./user/columns";
+import { DataTable } from "./role/data-table";
+import { columns } from "./role/columns";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -33,15 +33,7 @@ import { Division } from "@/types/DivisionType";
 import { useState } from "react";
 import { router } from "@inertiajs/react";
 
-export default function Index({
-    users,
-    role,
-    division,
-}: {
-    users: User[];
-    role: Role[];
-    division: Division[];
-}) {
+export default function Index({ roles }: { roles: Role[] }) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -75,7 +67,7 @@ export default function Index({
         console.log(id);
         router.put(`/admin/manajemen-pengguna/${id}`, filteredData);
     };
-    console.log(users);
+    console.log(roles);
 
     return (
         <SidebarAuthenticated>
@@ -83,25 +75,19 @@ export default function Index({
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                            <BreadcrumbLink href="">Manajemen</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/components">
-                                Components
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                            <BreadcrumbPage>Manajemen Role</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
 
-                <h1 className="font-bold text-2xl">Manajemen Pengguna</h1>
+                <h1 className="font-bold text-2xl">Manajemen Role</h1>
 
                 <div className="w-full flex justify-end items-center mt-2 gap-5">
-                    <DropdownMenu>
+                    {/* <DropdownMenu>
                         <DropdownMenuTrigger className="text-black p-2 border border-gray-300 rounded-md w-1/12 text-base">
                             Filter
                         </DropdownMenuTrigger>
@@ -109,10 +95,10 @@ export default function Index({
                             <DropdownMenuItem>Makan</DropdownMenuItem>
                             <DropdownMenuItem>Minuman</DropdownMenuItem>
                         </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                     <AlertDialog>
                         <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
-                            + Tambah Pengguna
+                            + Tambah Role
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader>
@@ -158,7 +144,7 @@ export default function Index({
                                             id=""
                                             className=" rounded-md"
                                         >
-                                            <option value="">Pilih Role</option>
+                                            {/* <option value="">Pilih Role</option>
                                             {role.map((item) => (
                                                 <option
                                                     value={item.id}
@@ -166,7 +152,7 @@ export default function Index({
                                                 >
                                                     {item.role_name}
                                                 </option>
-                                            ))}
+                                            ))} */}
                                         </select>
                                     </div>
                                     <div className="flex flex-col gap-2">
@@ -180,14 +166,14 @@ export default function Index({
                                             <option value="">
                                                 Pilih Divisi
                                             </option>
-                                            {division.map((item) => (
+                                            {/* {division.map((item) => (
                                                 <option
                                                     value={item.id}
                                                     key={item.id}
                                                 >
                                                     {item.division_name}
                                                 </option>
-                                            ))}
+                                            ))} */}
                                         </select>
                                     </div>
                                 </div>
@@ -208,12 +194,12 @@ export default function Index({
                     <DataTable
                         formData={formData}
                         setFormData={setFormData}
-                        data={users}
+                        data={roles}
                         columns={columns}
                         handleDelete={handleDelete}
                         handleChange={handleChange}
-                        role={role}
-                        division={division}
+                        // role={role}
+                        // division={division}
                         handleUpdate={handleUpdate}
                     />
                 </div>

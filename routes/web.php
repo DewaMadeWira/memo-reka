@@ -4,6 +4,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\StagesController;
 use App\Http\Controllers\UserManagementController;
 use App\Models\MemoLetter;
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
 Route::resource('admin/manajemen-pengguna', UserManagementController::class);
+Route::resource('admin/manajemen-role', RoleManagementController::class);
 Route::resource('memo', MemoController::class);
 Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);

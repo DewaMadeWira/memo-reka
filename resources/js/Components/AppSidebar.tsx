@@ -39,6 +39,7 @@ import {
 } from "@/Components/ui/collapsible";
 
 import ApplicationLogo from "./ApplicationLogo";
+import { Link } from "@inertiajs/react";
 
 const items = [
     {
@@ -187,18 +188,18 @@ export function AppSidebar() {
                                     <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
                                 </CollapsibleTrigger>
                                 <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
-                                    <a
+                                    <Link
                                         className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                        href=""
+                                        href="/admin/manajemen-pengguna"
                                     >
-                                        Makan
-                                    </a>
-                                    <a
-                                        href=""
+                                        Manajemen Pengguna
+                                    </Link>
+                                    <Link
                                         className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                        href="/admin/manajemen-role"
                                     >
-                                        Siang
-                                    </a>
+                                        Manajemen Role
+                                    </Link>
                                 </CollapsibleContent>
                             </Collapsible>
                         </SidebarMenuItem>

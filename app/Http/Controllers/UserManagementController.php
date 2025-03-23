@@ -20,7 +20,7 @@ class UserManagementController extends Controller
         $user = User::with('role', 'division')->get();
         $role = Role::get();
         $division = Division::get();
-        return Inertia::render('User/Index', [
+        return Inertia::render('Management/User/Index', [
             'users' => $user,
             'role' => $role,
             'division' => $division
