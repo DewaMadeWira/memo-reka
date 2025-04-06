@@ -92,5 +92,21 @@ class DivisionManagementController extends Controller
     public function destroy(string $id)
     {
         //
+        try {
+            $role = Division::findOrFail($id);
+
+
+            // Delete the role
+            $role->delete();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // return redirect()->back()->with('error', 'Role not found');
+            return redirect()->back()
+                ->withErrors(['message' => 'Divisi tidak ditemukan.'])
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['message' => 'Terjadi kesalahan saat menghapus divisi.'])
+                ->withInput();
+        }
     }
 }
