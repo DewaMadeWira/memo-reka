@@ -45,7 +45,6 @@ class RoleManagementController extends Controller
             $role = Role::create([
                 'role_name' => $validated['role_name'],
             ]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors, specifically for duplicates
             if (isset($e->validator->failed()['role_name']['Unique'])) {
@@ -89,6 +88,21 @@ class RoleManagementController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $role = Role::findOrFail($id);
+
+
+            // Delete the role
+            $role->delete();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // return redirect()->back()->with('error', 'Role not found');
+            return redirect()->back()
+                ->withErrors(['message' => 'Role tidak ditemukan.'])
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['message' => 'Terjadi kesalahan saat menghapus role.'])
+                ->withInput();
+        }
     }
 }

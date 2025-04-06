@@ -60,8 +60,22 @@ export default function Index({ roles }: { roles: Role[] }) {
         });
     };
     const handleDelete = (id: number) => {
-        console.log(formData);
-        router.delete(`/admin/manajemen-pengguna/${id}`);
+        // console.log(formData);
+        router.delete(`/admin/manajemen-role/${id}`, {
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Role berhasil dihapus",
+                });
+            },
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                });
+            },
+        });
     };
     const handleUpdate = (id: number) => {
         const filteredData = Object.fromEntries(
