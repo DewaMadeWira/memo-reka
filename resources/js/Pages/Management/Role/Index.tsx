@@ -78,14 +78,30 @@ export default function Index({ roles }: { roles: Role[] }) {
         });
     };
     const handleUpdate = (id: number) => {
-        const filteredData = Object.fromEntries(
-            Object.entries(formData).filter(([_, value]) => value !== "")
-        );
+        // const filteredData = Object.fromEntries(
+        //     Object.entries(formData).filter(([_, value]) => value !== "")
+        // );
 
-        console.log(filteredData);
-        // console.log(formData);
-        console.log(id);
-        router.put(`/admin/manajemen-pengguna/${id}`, filteredData);
+        // console.log(filteredData);
+        // // console.log(formData);
+        // console.log(id);
+        router.put(`/admin/manajemen-role/${id}`, formData,{
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Role berhasil diubah",
+                });
+            },
+        });
     };
     console.log(roles);
 

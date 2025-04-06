@@ -74,11 +74,13 @@ export function DataTable<TData, TValue>({
     });
 
     const setEdit = (data: any) => {
-        console.log(data);
+        // alert("Edit");
+        // console.log(data);
         // setFormData(data);
         setFormData({
-            role_name: data.name,
+            role_name: data.role_name,
         });
+        console.log(formData);
     };
     const table = useReactTable({
         data,
@@ -161,8 +163,11 @@ export function DataTable<TData, TValue>({
                                                         <AlertDialogTitle className="">
                                                             Edit Role "
                                                             {
-                                                                (row.original as { role_name: string })
-                                                                    .role_name
+                                                                (
+                                                                    row.original as {
+                                                                        role_name: string;
+                                                                    }
+                                                                ).role_name
                                                             }
                                                             "
                                                         </AlertDialogTitle>
