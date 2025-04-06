@@ -52,6 +52,11 @@ class RoleManagementController extends Controller
                     ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])
                     ->withInput();
             }
+            if (isset($e->validator->failed()['role_name']['Required'])) {
+                return redirect()->back()
+                    ->withErrors(['message' => 'Nama role tidak boleh kosong'])
+                    ->withInput();
+            }
 
             // Re-throw other validation errors to be handled by the framework
             throw $e;

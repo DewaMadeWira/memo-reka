@@ -200,6 +200,12 @@ export function AppSidebar() {
                                     >
                                         Manajemen Role
                                     </Link>
+                                    <Link
+                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                        href="/admin/manajemen-divisi"
+                                    >
+                                        Manajemen Divisi
+                                    </Link>
                                 </CollapsibleContent>
                             </Collapsible>
                         </SidebarMenuItem>
