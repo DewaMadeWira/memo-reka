@@ -105,7 +105,7 @@ class RoleManagementController extends Controller
                     ->withInput();
             }
             return redirect()->back()
-                ->withErrors(['message' => 'Terjadi kesalahan saat menghapus role.'])
+                ->withErrors(['message' => 'Terjadi kesalahan saat mengubah role.'])
                 ->withInput();
 
             // Re-throw other validation errors to be handled by the framework

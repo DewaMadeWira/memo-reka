@@ -78,13 +78,6 @@ export default function Index({ divisions }: { divisions: Division[] }) {
         });
     };
     const handleUpdate = (id: number) => {
-        // const filteredData = Object.fromEntries(
-        //     Object.entries(formData).filter(([_, value]) => value !== "")
-        // );
-
-        // console.log(filteredData);
-        // // console.log(formData);
-        // console.log(id);
         router.put(`/admin/manajemen-divisi/${id}`, formData, {
             onError: (errors) => {
                 toast({
@@ -143,7 +136,9 @@ export default function Index({ divisions }: { divisions: Division[] }) {
                                 </AlertDialogTitle>
                                 <div className="flex flex-col gap-3">
                                     <div className="flex flex-col gap-2">
-                                        <label htmlFor="name">Nama Divisi</label>
+                                        <label htmlFor="name">
+                                            Nama Divisi
+                                        </label>
                                         <input
                                             onChange={handleChange}
                                             className=" rounded-md"
