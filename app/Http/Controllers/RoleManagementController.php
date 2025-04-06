@@ -15,7 +15,8 @@ class RoleManagementController extends Controller
     {
         //
         $role = Role::get();
-        return Inertia::render('Management/Role/Index',
+        return Inertia::render(
+            'Management/Role/Index',
             ['roles' => $role]
         );
     }
@@ -34,6 +35,28 @@ class RoleManagementController extends Controller
     public function store(Request $request)
     {
         //
+        try {
+            // Validate the request
+            $validated = $request->validate([
+                'role_name' => 'required|string|max:255|unique:roles,role_name',
+            ]);
+
+            // Create the role
+            $role = Role::create([
+                'role_name' => $validated['role_name'],
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors, specifically for duplicates
+            if (isset($e->validator->failed()['role_name']['Unique'])) {
+                return redirect()->back()
+                    ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])
+                    ->withInput();
+            }
+
+            // Re-throw other validation errors to be handled by the framework
+            throw $e;
+        }
     }
 
     /**
@@ -42,6 +65,7 @@ class RoleManagementController extends Controller
     public function show(string $id)
     {
         //
+
     }
 
     /**

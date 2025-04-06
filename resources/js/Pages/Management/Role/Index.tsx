@@ -7,14 +7,6 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
 import { DataTable } from "./role/data-table";
 import { columns } from "./role/columns";
 import {
@@ -29,17 +21,15 @@ import {
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
 import { Role } from "@/types/RoleType";
-import { Division } from "@/types/DivisionType";
 import { useState } from "react";
 import { router } from "@inertiajs/react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Index({ roles }: { roles: Role[] }) {
+    const { toast } = useToast();
+
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        role_id: 0,
-        division_id: 0,
+        role_name: "",
     });
     const handleChange = (
         e: React.ChangeEvent<
@@ -50,8 +40,24 @@ export default function Index({ roles }: { roles: Role[] }) {
         setFormData({ ...formData, [name]: value });
     };
     const handleSubmit = () => {
-        console.log(formData);
-        router.post("/admin/manajemen-pengguna", formData);
+        // console.log(formData);
+        router.post("/admin/manajemen-role", formData, {
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Role berhasil ditambahkan",
+                });
+            },
+        });
     };
     const handleDelete = (id: number) => {
         console.log(formData);
@@ -103,78 +109,18 @@ export default function Index({ roles }: { roles: Role[] }) {
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="">
-                                    Buat Pengguna Baru
+                                    Buat Role Baru
                                 </AlertDialogTitle>
                                 <div className="flex flex-col gap-3">
                                     <div className="flex flex-col gap-2">
-                                        <label htmlFor="name">Nama</label>
+                                        <label htmlFor="name">Nama Role</label>
                                         <input
                                             onChange={handleChange}
                                             className=" rounded-md"
                                             type="text"
                                             id="name"
-                                            name="name"
+                                            name="role_name"
                                         />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="email">Email</label>
-                                        <input
-                                            onChange={handleChange}
-                                            className=" rounded-md"
-                                            type="email"
-                                            name="email"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="password">
-                                            Password
-                                        </label>
-                                        <input
-                                            onChange={handleChange}
-                                            className=" rounded-md"
-                                            type="password"
-                                            name="password"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="role">Role</label>
-                                        <select
-                                            onChange={handleChange}
-                                            name="role_id"
-                                            id=""
-                                            className=" rounded-md"
-                                        >
-                                            {/* <option value="">Pilih Role</option>
-                                            {role.map((item) => (
-                                                <option
-                                                    value={item.id}
-                                                    key={item.id}
-                                                >
-                                                    {item.role_name}
-                                                </option>
-                                            ))} */}
-                                        </select>
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="divisi">Divisi</label>
-                                        <select
-                                            onChange={handleChange}
-                                            name="division_id"
-                                            id=""
-                                            className=" rounded-md"
-                                        >
-                                            <option value="">
-                                                Pilih Divisi
-                                            </option>
-                                            {/* {division.map((item) => (
-                                                <option
-                                                    value={item.id}
-                                                    key={item.id}
-                                                >
-                                                    {item.division_name}
-                                                </option>
-                                            ))} */}
-                                        </select>
                                     </div>
                                 </div>
                             </AlertDialogHeader>

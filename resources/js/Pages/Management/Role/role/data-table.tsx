@@ -46,19 +46,11 @@ interface DataTableProps<TData, TValue> {
     ) => void;
     handleUpdate: (id: number) => void;
     formData: {
-        name: string;
-        email: string;
-        password: string;
-        role_id: number;
-        division_id: number;
+        role_name: string;
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
-            name: string;
-            email: string;
-            password: string;
-            role_id: number;
-            division_id: number;
+            role_name: string;
         }>
     >;
 }
@@ -85,11 +77,7 @@ export function DataTable<TData, TValue>({
         console.log(data);
         // setFormData(data);
         setFormData({
-            name: data.name,
-            email: data.email,
-            password: "",
-            role_id: Number(data.role_id),
-            division_id: Number(data.division_id),
+            role_name: data.name,
         });
     };
     const table = useReactTable({
@@ -171,12 +159,17 @@ export function DataTable<TData, TValue>({
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
                                                         <AlertDialogTitle className="">
-                                                            Buat Pengguna Baru
+                                                            Edit Role "
+                                                            {
+                                                                (row.original as { role_name: string })
+                                                                    .role_name
+                                                            }
+                                                            "
                                                         </AlertDialogTitle>
                                                         <div className="flex flex-col gap-3">
                                                             <div className="flex flex-col gap-2">
                                                                 <label htmlFor="name">
-                                                                    Nama
+                                                                    Nama Role
                                                                 </label>
                                                                 <input
                                                                     onChange={
@@ -184,119 +177,12 @@ export function DataTable<TData, TValue>({
                                                                     }
                                                                     className=" rounded-md"
                                                                     type="text"
-                                                                    id="name"
-                                                                    name="name"
+                                                                    id="role_name"
+                                                                    name="role_name"
                                                                     value={
-                                                                        formData.name
+                                                                        formData.role_name
                                                                     }
                                                                 />
-                                                            </div>
-                                                            <div className="flex flex-col gap-2">
-                                                                <label htmlFor="email">
-                                                                    Email
-                                                                </label>
-                                                                <input
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    className=" rounded-md"
-                                                                    type="email"
-                                                                    name="email"
-                                                                    value={
-                                                                        formData.email
-                                                                    }
-                                                                />
-                                                            </div>
-                                                            <div className="flex flex-col gap-2">
-                                                                <label htmlFor="password">
-                                                                    Password
-                                                                </label>
-                                                                <input
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    className=" rounded-md"
-                                                                    type="password"
-                                                                    name="password"
-                                                                />
-                                                            </div>
-                                                            <div className="flex flex-col gap-2">
-                                                                <label htmlFor="role_id">
-                                                                    Role
-                                                                </label>
-                                                                <select
-                                                                    value={
-                                                                        formData.role_id
-                                                                    }
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    name="role_id"
-                                                                    id=""
-                                                                    className=" rounded-md"
-                                                                >
-                                                                    <option value="">
-                                                                        Pilih
-                                                                        Role
-                                                                    </option>
-                                                                    {/* {role.map(
-                                                                        (
-                                                                            item
-                                                                        ) => (
-                                                                            <option
-                                                                                value={
-                                                                                    item.id
-                                                                                }
-                                                                                key={
-                                                                                    item.id
-                                                                                }
-                                                                            >
-                                                                                {
-                                                                                    item.role_name
-                                                                                }
-                                                                            </option>
-                                                                        )
-                                                                    )} */}
-                                                                </select>
-                                                            </div>
-                                                            <div className="flex flex-col gap-2">
-                                                                <label htmlFor="division_id">
-                                                                    Divisi
-                                                                </label>
-                                                                <select
-                                                                    value={
-                                                                        formData.division_id
-                                                                    }
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    name="division_id"
-                                                                    id=""
-                                                                    className=" rounded-md"
-                                                                >
-                                                                    <option value="">
-                                                                        Pilih
-                                                                        Divisi
-                                                                    </option>
-                                                                    {/* {division.map(
-                                                                        (
-                                                                            item
-                                                                        ) => (
-                                                                            <option
-                                                                                value={
-                                                                                    item.id
-                                                                                }
-                                                                                key={
-                                                                                    item.id
-                                                                                }
-                                                                            >
-                                                                                {
-                                                                                    item.division_name
-                                                                                }
-                                                                            </option>
-                                                                        )
-                                                                    )} */}
-                                                                </select>
                                                             </div>
                                                         </div>
                                                     </AlertDialogHeader>
@@ -308,9 +194,11 @@ export function DataTable<TData, TValue>({
                                                             onClick={() =>
                                                                 handleUpdate(
                                                                     Number(
-                                                                        row
-                                                                            .original
-                                                                            .id
+                                                                        (
+                                                                            row.original as {
+                                                                                id: number;
+                                                                            }
+                                                                        ).id
                                                                     )
                                                                 )
                                                             }
@@ -344,9 +232,11 @@ export function DataTable<TData, TValue>({
                                                             onClick={() =>
                                                                 handleDelete(
                                                                     Number(
-                                                                        row
-                                                                            .original
-                                                                            .id
+                                                                        (
+                                                                            row.original as {
+                                                                                id: number;
+                                                                            }
+                                                                        ).id
                                                                     )
                                                                 )
                                                             }
