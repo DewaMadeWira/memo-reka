@@ -120,8 +120,15 @@ export default function Index({
                                 <PopoverTrigger>
                                     {request.stages.stage_name}
                                 </PopoverTrigger>
-                                <PopoverContent>
-                                    <div className="">Stages Detail</div>
+                                <PopoverContent className="w-fit">
+                                    <div className="flex gap-2 w">
+                                        {request.progress.map((prog: any) => (
+                                            <div className="flex">
+                                                <p>{prog.stage_name}</p>
+                                                <p>{"=>"}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </PopoverContent>
                             </Popover>
                         </td>

@@ -40,8 +40,31 @@ class MemoService
                 })->get();
 
                 $memo->each(function ($requestLetter) {
-                    $requestLetter->progress = RequestStages::withTrashed()->whereIn('id', $requestLetter->progress_stages ?? [])->get();
+                    // Handle different possible types of progress_stages
+                    $progressStages = [];
+
+                    if (isset($requestLetter->progress_stages)) {
+                        if (is_string($requestLetter->progress_stages)) {
+                            // Try to decode JSON string
+                            $decoded = json_decode($requestLetter->progress_stages, true);
+                            if (is_array($decoded)) {
+                                $progressStages = $decoded;
+                            }
+                        } elseif (is_array($requestLetter->progress_stages)) {
+                            $progressStages = $requestLetter->progress_stages;
+                        }
+                    }
+
+                    // Now use the properly formatted array
+                    $requestLetter->progress = RequestStages::withTrashed()->whereIn('id', $progressStages)->get();
                 });
+
+                // $memo->each(function ($requestLetter) {
+                //     $progressStages = is_string($requestLetter->progress_stages)
+                //         ? json_decode($requestLetter->progress_stages, true)
+                //         : ($requestLetter->progress_stages ?? []);
+                //     $requestLetter->progress = RequestStages::withTrashed()->whereIn('id', $requestLetter->progress_stages ?? [])->get();
+                // });
 
                 // Request With Progress Stages
                 // dd($memo);

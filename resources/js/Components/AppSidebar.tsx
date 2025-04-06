@@ -78,7 +78,7 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent className="bg-white">
                 <SidebarGroup />
-                <SidebarGroupLabel className="text-base">
+                <SidebarGroupLabel className="text-base  text-black">
                     Menu
                 </SidebarGroupLabel>
                 <SidebarGroupContent className="ml-1 w-[90%]">

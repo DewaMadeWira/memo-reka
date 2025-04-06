@@ -83,9 +83,7 @@ export default function Index({
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="">
-                                Manajemen
-                            </BreadcrumbLink>
+                            <BreadcrumbLink href="">Manajemen</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
@@ -97,7 +95,7 @@ export default function Index({
                 <h1 className="font-bold text-2xl">Manajemen Pengguna</h1>
 
                 <div className="w-full flex justify-end items-center mt-2 gap-5">
-                    <DropdownMenu>
+                    {/* <DropdownMenu>
                         <DropdownMenuTrigger className="text-black p-2 border border-gray-300 rounded-md w-1/12 text-base">
                             Filter
                         </DropdownMenuTrigger>
@@ -105,7 +103,7 @@ export default function Index({
                             <DropdownMenuItem>Makan</DropdownMenuItem>
                             <DropdownMenuItem>Minuman</DropdownMenuItem>
                         </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                     <AlertDialog>
                         <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
                             + Tambah Pengguna
