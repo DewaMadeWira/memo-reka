@@ -56,7 +56,7 @@ class MemoService
                     }
 
                     // Now use the properly formatted array
-                    $requestLetter->progress = RequestStages::withTrashed()->whereIn('id', $progressStages)->get();
+                    $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
                 });
 
                 // $memo->each(function ($requestLetter) {

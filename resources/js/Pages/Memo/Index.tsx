@@ -13,6 +13,21 @@ import {
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
 import {
+    Menubar,
+    MenubarCheckboxItem,
+    MenubarContent,
+    MenubarItem,
+    MenubarMenu,
+    MenubarRadioGroup,
+    MenubarRadioItem,
+    MenubarSeparator,
+    MenubarShortcut,
+    MenubarSub,
+    MenubarSubContent,
+    MenubarSubTrigger,
+    MenubarTrigger,
+} from "@/Components/ui/menubar";
+import {
     Popover,
     PopoverContent,
     PopoverTrigger,
@@ -121,14 +136,164 @@ export default function Index({
                                     {request.stages.stage_name}
                                 </PopoverTrigger>
                                 <PopoverContent className="w-fit">
-                                    <div className="flex gap-2 w">
+                                    <div className="">
+                                        {request.progress.map((step, index) => {
+                                            let bgColor =
+                                                "bg-gray-100 text-gray-800"; // default color
+
+                                            if (step.id === request.stages_id) {
+                                                bgColor =
+                                                    "bg-blue-500 text-white";
+                                            } else if (
+                                                step.request_rejected &&
+                                                step.request_rejected.id ===
+                                                    request.stages_id
+                                            ) {
+                                                bgColor =
+                                                    "bg-red-500 text-white";
+                                            }
+
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className={`rounded-xl p-4 shadow transition-all ${bgColor}`}
+                                                >
+                                                    <div className="text-lg font-semibold">
+                                                        {step.stage_name}
+                                                    </div>
+                                                    {step.request_rejected && (
+                                                        <div className="text-sm opacity-80">
+                                                            Rejected Stage:{" "}
+                                                            {
+                                                                step
+                                                                    .request_rejected
+                                                                    .stage_name
+                                                            }
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                        <Menubar>
+                                            {request.progress.map(
+                                                (prog: any) => (
+                                                    <MenubarMenu>
+                                                        <MenubarTrigger
+                                                            // className={
+                                                            //     prog.id ==
+                                                            //     request.stages_id
+                                                            //         ? "bg-blue-500 text-white"
+                                                            //         : ""
+                                                            // }
+                                                            className={
+                                                                request.stages_id ===
+                                                                prog
+                                                                    .request_rejected
+                                                                    ?.id
+                                                                    ? "bg-red-500 text-white"
+                                                                    : prog.id ===
+                                                                      request.stages_id
+                                                                    ? "bg-blue-500 text-white"
+                                                                    : ""
+                                                            }
+                                                            // className={
+                                                            //     prog?.request_rejected !=
+                                                            //         null &&
+                                                            //     request.stages_id ===
+                                                            //         prog
+                                                            //             .request_rejected
+                                                            //             .id
+                                                            //         ? "bg-red-500 text-white"
+                                                            //         : prog.id ===
+                                                            //           request.stages_id
+                                                            //         ? "bg-blue-500 text-white"
+                                                            //         : ""
+                                                            // }
+                                                            // className={
+                                                            //     prog.request_rejected ==
+                                                            //     null
+                                                            //         ? "bg-blue-500 text-white"
+                                                            //         : ""
+                                                            // }
+                                                            // className={
+                                                            //     request.stages_id ==
+                                                            //     prog.request_rejected.id
+                                                            //         ? "bg-red-500"
+                                                            //         : request.stages_id ==
+                                                            //           prog.id
+                                                            //         ? "bg-blue-500"
+                                                            //         : ""
+                                                            // }
+                                                        >
+                                                            rejected id :
+                                                            {
+                                                                prog
+                                                                    .request_rejected
+                                                                    ?.id
+                                                            }
+                                                            stage id :
+                                                            {request.stages_id}
+                                                            {prog.stage_name}
+                                                            prog id :{prog.id}
+                                                        </MenubarTrigger>
+                                                        <MenubarContent>
+                                                            <MenubarItem>
+                                                                New Tab{" "}
+                                                                <MenubarShortcut>
+                                                                    ⌘T
+                                                                </MenubarShortcut>
+                                                            </MenubarItem>
+                                                            <MenubarItem>
+                                                                New Window{" "}
+                                                                <MenubarShortcut>
+                                                                    ⌘N
+                                                                </MenubarShortcut>
+                                                            </MenubarItem>
+                                                            <MenubarItem
+                                                                disabled
+                                                            >
+                                                                New Incognito
+                                                                Window
+                                                            </MenubarItem>
+                                                            <MenubarSeparator />
+                                                            <MenubarSub>
+                                                                <MenubarSubTrigger>
+                                                                    Share
+                                                                </MenubarSubTrigger>
+                                                                <MenubarSubContent>
+                                                                    <MenubarItem>
+                                                                        Email
+                                                                        link
+                                                                    </MenubarItem>
+                                                                    <MenubarItem>
+                                                                        Messages
+                                                                    </MenubarItem>
+                                                                    <MenubarItem>
+                                                                        Notes
+                                                                    </MenubarItem>
+                                                                </MenubarSubContent>
+                                                            </MenubarSub>
+                                                            <MenubarSeparator />
+                                                            <MenubarItem>
+                                                                Print...{" "}
+                                                                <MenubarShortcut>
+                                                                    ⌘P
+                                                                </MenubarShortcut>
+                                                            </MenubarItem>
+                                                        </MenubarContent>
+                                                    </MenubarMenu>
+                                                )
+                                            )}
+                                        </Menubar>
+                                    </div>
+                                    {/* <div className="flex gap-2 w">
                                         {request.progress.map((prog: any) => (
                                             <div className="flex">
                                                 <p>{prog.stage_name}</p>
                                                 <p>{"=>"}</p>
                                             </div>
                                         ))}
-                                    </div>
+                                    </div> */}
                                 </PopoverContent>
                             </Popover>
                         </td>
