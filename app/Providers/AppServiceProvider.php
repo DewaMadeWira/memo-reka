@@ -28,5 +28,18 @@ class AppServiceProvider extends ServiceProvider
             $user = User::with('role')->with('division')->where("id", $user->id)->get();
             return $user[0]->role->role_name === 'admin';
         });
+
+        Gate::define('manage-profile', function (User $user) {
+            return true;
+        });
+
+        Gate::define('manage-users', function (User $user) {
+            return $user->hasRole(1);
+        });
+        // Gate::after(function ($result, $user, $ability) {
+        //     if (!$result) {
+        //         return redirect()->route('dashboard')->with('error', 'You do not have permission to access this resource.');
+        //     }
+        // });
     }
 }

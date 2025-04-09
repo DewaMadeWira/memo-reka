@@ -43,6 +43,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(RequestStages::class, 'approver_id', 'id');
     }
+    public function hasRole($role)
+    {
+        return $this->role_id === $role;
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -31,13 +31,19 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::middleware('can:manage-profile')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+
+    Route::middleware('can:manage-users')->group(function () {
+        Route::resource('admin/manajemen-pengguna', UserManagementController::class);
+    });
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
-Route::resource('admin/manajemen-pengguna', UserManagementController::class);
 Route::resource('admin/manajemen-role', RoleManagementController::class);
 Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
 Route::resource('memo', MemoController::class);
