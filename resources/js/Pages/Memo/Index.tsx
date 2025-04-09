@@ -2,6 +2,14 @@ import { router } from "@inertiajs/react";
 import React, { useState } from "react";
 import { usePage } from "@inertiajs/react";
 import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/Components/ui/breadcrumb";
+import {
     AlertDialog,
     AlertDialogAction,
     AlertDialogCancel,
@@ -34,6 +42,8 @@ import {
 } from "@/Components/ui/popover";
 import { ArrowRight } from "lucide-react";
 import SidebarAuthenticated from "@/Layouts/SidebarAuthenticated";
+import { DataTable } from "./memo/data-table";
+import { columns } from "./memo/columns";
 
 export default function Index({
     request,
@@ -82,9 +92,20 @@ export default function Index({
 
     return (
         <SidebarAuthenticated>
-            <div className="w-full ">
-                <h1 className="text-2xl font-bold">Memo</h1>
-                <h1 className="text-xl font-bold">
+            <div className="w-full p-10">
+                <Breadcrumb className="mb-6">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="">Manajemen</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>Manajemen Divisi</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+                <h1 className="text-2xl font-semibold">Memo</h1>
+                <h1 className="text-xl font-medium mt-2">
                     Divisi : {userData.division.division_name}
                 </h1>
                 {/* <div className="flex gap-3">
@@ -113,7 +134,21 @@ export default function Index({
                         Memo Eksternal
                     </a>
                 </div> */}
-                <table className="w-[80%]">
+
+                <div className="mt-8">
+                    <DataTable
+                        // formData={formData}
+                        // setFormData={setFormData}
+                        data={request}
+                        columns={columns}
+                        // handleDelete={handleDelete}
+                        // handleChange={handleChange}
+                        // role={role}
+                        // division={division}
+                        // handleUpdate={handleUpdate}
+                    />
+                </div>
+                {/* <table className="w-[80%]">
                     <tr>
                         <th>Id</th>
                         <th>Request Name</th>
@@ -126,7 +161,6 @@ export default function Index({
                         </th>
                     </tr>
                     {request.map((request: any, index: number) => (
-                        //{" "}
                         <tr key={request.id} className="">
                             <td className="">{index + 1}</td>
                             <td className="">{request.request_name}</td>
@@ -140,41 +174,6 @@ export default function Index({
                                     </PopoverTrigger>
                                     <PopoverContent className="w-fit">
                                         <div className="">
-                                            {/* {request.progress.map((step, index) => {
-                                                let bgColor =
-                                                    "bg-gray-100 text-gray-800"; // default color
-                                                if (step.id === request.stages_id) {
-                                                    bgColor =
-                                                        "bg-blue-500 text-white";
-                                                } else if (
-                                                    step.request_rejected &&
-                                                    step.request_rejected.id ===
-                                                        request.stages_id
-                                                ) {
-                                                    bgColor =
-                                                        "bg-red-500 text-white";
-                                                }
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        className={`rounded-xl p-4 shadow transition-all ${bgColor}`}
-                                                    >
-                                                        <div className="text-lg font-semibold">
-                                                            {step.stage_name}
-                                                        </div>
-                                                        {step.request_rejected && (
-                                                            <div className="text-sm opacity-80">
-                                                                Rejected Stage:{" "}
-                                                                {
-                                                                    step
-                                                                        .request_rejected
-                                                                        .stage_name
-                                                                }
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })} */}
                                             <h4 className="text-sm">
                                                 {request.stages.stage_name}
                                             </h4>
@@ -244,18 +243,6 @@ export default function Index({
                                                                 <MenubarMenu>
                                                                     <div className="text-sm">
                                                                         <MenubarTrigger
-                                                                            // className={`w-44 p-1${
-                                                                            //     request.stages_id ===
-                                                                            //     prog
-                                                                            //         .request_rejected
-                                                                            //         ?.id
-                                                                            //         ? "bg-red-500 text-white"
-                                                                            //         : prog.id ===
-                                                                            //           request.stages_id
-                                                                            //         ? "bg-blue-500 text-white"
-                                                                            //         : ""
-                                                                            // }
-                                                                            //         `}
                                                                             className={
                                                                                 request.stages_id ===
                                                                                 prog
@@ -329,25 +316,14 @@ export default function Index({
                                                                                 </p>
                                                                             </div>
                                                                         </div>
-                                                                        {/* <MenubarItem>
-                                                                </MenubarItem> */}
                                                                     </MenubarContent>
                                                                 </MenubarMenu>
-                                                                {/* <ArrowRight /> */}
                                                             </div>
                                                         );
                                                     }
                                                 )}
                                             </Menubar>
                                         </div>
-                                        {/* <div className="flex gap-2 w">
-                                            {request.progress.map((prog: any) => (
-                                                <div className="flex">
-                                                    <p>{prog.stage_name}</p>
-                                                    <p>{"=>"}</p>
-                                                </div>
-                                            ))}
-                                        </div> */}
                                     </PopoverContent>
                                 </Popover>
                             </td>
@@ -390,10 +366,9 @@ export default function Index({
                                     </button>
                                 </div>
                             </td>
-                            {/* //{" "} */}
                         </tr>
                     ))}
-                </table>
+                </table> */}
                 <AlertDialog>
                     <AlertDialogTrigger
                         className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
