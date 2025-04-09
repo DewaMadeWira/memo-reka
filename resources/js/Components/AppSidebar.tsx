@@ -47,34 +47,47 @@ const items = [
         title: "Dashboard",
         url: "#",
         icon: ChartBarBig,
+        subItems: [], // No subitems for dashboard
     },
     {
         title: "Memo",
         url: "/admin/memo",
         icon: NotebookText,
+        subItems: [{ title: "Semua Memo", url: "/admin/memo" }],
     },
     {
         title: "Undangan Rapat",
-        url: "admin/undangan-rapat",
+        url: "/admin/undangan-rapat",
         icon: Calendar,
+        subItems: [
+            { title: "Makan", url: "/admin/undangan-rapat/makan" },
+            { title: "Siang", url: "/admin/undangan-rapat/siang" },
+        ],
     },
     {
         title: "Risalah Rapat",
         url: "#",
         icon: Search,
+        subItems: [
+            { title: "Makan", url: "/risalah-rapat/makan" },
+            { title: "Siang", url: "/risalah-rapat/siang" },
+        ],
     },
     {
         title: "Manajemen",
         url: "/admin/manajemen",
         icon: Settings,
+        subItems: [
+            { title: "Manajemen Pengguna", url: "/admin/manajemen-pengguna" },
+            { title: "Manajemen Role", url: "/admin/manajemen-role" },
+            { title: "Manajemen Divisi", url: "/admin/manajemen-divisi" },
+        ],
     },
 ];
-
 export function AppSidebar() {
     const { url } = usePage();
     return (
         <Sidebar collapsible="icon" className="w-1/6 ">
-            {/* <SidebarHeader /> */}
             <SidebarHeader className="bg-slate-50 flex justify-center w-full items-center ">
                 <ApplicationLogo width={150} height={150}></ApplicationLogo>
             </SidebarHeader>
@@ -85,170 +98,62 @@ export function AppSidebar() {
                 </SidebarGroupLabel>
                 <SidebarGroupContent className="ml-1 w-[90%]">
                     <SidebarMenu>
-                        <SidebarMenuItem className="mt-1">
-                            <SidebarMenuButton asChild>
-                                <a href={items[0].url}>
-                                    <div className="w-7 ml-1 flex justify-center items-center">
-                                        <ChartBarBig />
-                                    </div>
-                                    <span className="text-sm">
-                                        {items[0].title}
-                                    </span>
-                                </a>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem className="mt-1">
-                            <Collapsible className="group/collapsible">
-                                <CollapsibleTrigger
-                                    className={`flex w-full items-center font-medium p-2 rounded-md
-                                            hover:bg-violet-300 hover:text-violet-800
-                                        ${
-                                            url.startsWith(items[1].url)
-                                                ? "bg-violet-300 text-violet-800"
-                                                : ""
-                                        }`}
-                                >
-                                    <div className="w-10 flex justify-center items-center">
-                                        <NotebookText />
-                                    </div>
-                                    <span className="text-sm ">
-                                        {items[1].title}
-                                    </span>
-                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
-                                </CollapsibleTrigger>
-                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
-                                    <a
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                        href=""
-                                    >
-                                        Makan
-                                    </a>
-                                    <a
-                                        href=""
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                    >
-                                        Siang
-                                    </a>
-                                </CollapsibleContent>
-                            </Collapsible>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem className="mt-1">
-                            <Collapsible className="group/collapsible">
-                                <CollapsibleTrigger
-                                    className={`flex w-full items-center font-medium p-2 rounded-md
-                                            hover:bg-violet-300 hover:text-violet-800
-                                        ${
-                                            url.startsWith(items[2].url)
-                                                ? "bg-violet-300 text-violet-800"
-                                                : ""
-                                        }`}
-                                >
-                                    <div className="w-10 flex justify-center items-center">
-                                        <File />
-                                    </div>
-                                    <span className="text-sm">
-                                        {items[2].title}
-                                    </span>
-                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
-                                </CollapsibleTrigger>
-                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
-                                    <a
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                        href=""
-                                    >
-                                        Makan
-                                    </a>
-                                    <a
-                                        href=""
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                    >
-                                        Siang
-                                    </a>
-                                </CollapsibleContent>
-                            </Collapsible>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem className="mt-1">
-                            <Collapsible className="group/collapsible">
-                                <CollapsibleTrigger className="flex w-full hover:bg-gray-200 p-2 rounded-md ">
-                                    <div className="w-10 flex justify-center items-center">
-                                        <FilePlus2 />
-                                    </div>
-                                    <span className="text-sm">
-                                        {items[3].title}
-                                    </span>
-                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
-                                </CollapsibleTrigger>
-                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
-                                    <a
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                        href=""
-                                    >
-                                        Makan
-                                    </a>
-                                    <a
-                                        href=""
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                    >
-                                        Siang
-                                    </a>
-                                </CollapsibleContent>
-                            </Collapsible>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem className="mt-1">
-                            <Collapsible className="group/collapsible">
-                                <CollapsibleTrigger
-                                    className={`flex w-full items-center font-medium p-2 rounded-md
-                                            hover:bg-violet-300 hover:text-violet-800
-                                        ${
-                                            url.startsWith(items[4].url)
-                                                ? "bg-violet-300 text-violet-800"
-                                                : ""
-                                        }`}
-                                >
-                                    <div className="w-10 flex justify-center items-center">
-                                        <Users></Users>
-                                    </div>
-                                    <span className="text-sm">
-                                        {items[4].title}
-                                    </span>
-                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
-                                </CollapsibleTrigger>
-                                <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
-                                    <Link
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                        href="/admin/manajemen-pengguna"
-                                    >
-                                        Manajemen Pengguna
-                                    </Link>
-                                    <Link
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                        href="/admin/manajemen-role"
-                                    >
-                                        Manajemen Role
-                                    </Link>
-                                    <Link
-                                        className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                        href="/admin/manajemen-divisi"
-                                    >
-                                        Manajemen Divisi
-                                    </Link>
-                                </CollapsibleContent>
-                            </Collapsible>
-                        </SidebarMenuItem>
-                        {/* {items.map((item) => (
+                        {items.map((item, index) => (
                             <SidebarMenuItem key={item.title} className="mt-1">
-                                <SidebarMenuButton asChild>
-                                    <a href={item.url}>
-                                        <div className="w-10 flex justify-center items-center">
-                                            <item.icon />
-                                        </div>
-                                        <span className="text-sm">
-                                            {item.title}
-                                        </span>
-                                    </a>
-                                </SidebarMenuButton>
+                                {item.subItems.length > 0 ? (
+                                    <Collapsible className="group/collapsible">
+                                        <CollapsibleTrigger
+                                            className={`flex w-full items-center font-medium p-2 rounded-md
+                                                hover:bg-violet-300 hover:text-violet-800
+                                                ${
+                                                    url.startsWith(item.url)
+                                                        ? "bg-violet-300 text-violet-800"
+                                                        : ""
+                                                }`}
+                                        >
+                                            <div className="w-10 flex justify-center items-center">
+                                                <item.icon />
+                                            </div>
+                                            <span className="text-sm">
+                                                {item.title}
+                                            </span>
+                                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
+                                            {item.subItems.map((subItem) => (
+                                                <Link
+                                                    key={subItem.title}
+                                                    className="mt-1 p-2 hover:bg-gray-200 rounded-md"
+                                                    href={subItem.url}
+                                                >
+                                                    {subItem.title}
+                                                </Link>
+                                            ))}
+                                        </CollapsibleContent>
+                                    </Collapsible>
+                                ) : (
+                                    <SidebarMenuButton asChild>
+                                        <a
+                                            href={item.url}
+                                            className={`flex w-full items-center font-medium px-2 py-5 rounded-md
+                                                hover:bg-violet-300 hover:text-violet-800
+                                                ${
+                                                    url.startsWith(item.url)
+                                                        ? "bg-violet-300 text-violet-800"
+                                                        : ""
+                                                }`}
+                                        >
+                                            <div className="w-7 ml-1 flex justify-center items-center">
+                                                <item.icon />
+                                            </div>
+                                            <span className="text-sm">
+                                                {item.title}
+                                            </span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                )}
                             </SidebarMenuItem>
-                        ))} */}
+                        ))}
                     </SidebarMenu>
                 </SidebarGroupContent>
                 <SidebarGroup />
