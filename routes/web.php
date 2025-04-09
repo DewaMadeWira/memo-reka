@@ -72,6 +72,10 @@ Route::post('upload', function (Request $request) {
     return $file;
 });
 
+Route::get('/test-unauthorized', function () {
+    throw new \Illuminate\Auth\Access\AuthorizationException('This is a test unauthorized exception');
+})->middleware('auth');
+
 // Route::get('/memo', [MemoController::class, 'index'])->name('memo.index');
 // Route::post('/memo', [MemoController::class, 'create'])->name('memo.create');
 // Route::post('/memo-approve/{id}', [MemoController::class, 'approve'])->name('memo.approve');
