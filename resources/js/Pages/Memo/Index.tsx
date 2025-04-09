@@ -32,6 +32,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/Components/ui/popover";
+import { ArrowRight } from "lucide-react";
 
 export default function Index({
     request,
@@ -137,7 +138,7 @@ export default function Index({
                                 </PopoverTrigger>
                                 <PopoverContent className="w-fit">
                                     <div className="">
-                                        {request.progress.map((step, index) => {
+                                        {/* {request.progress.map((step, index) => {
                                             let bgColor =
                                                 "bg-gray-100 text-gray-800"; // default color
 
@@ -173,116 +174,168 @@ export default function Index({
                                                     )}
                                                 </div>
                                             );
-                                        })}
-                                        <Menubar>
+                                        })} */}
+                                        <h4 className="text-sm">
+                                            {request.stages.stage_name}
+                                        </h4>
+                                        <Menubar className="h-fit border-none shadow-none">
                                             {request.progress.map(
-                                                (prog: any) => (
-                                                    <MenubarMenu>
-                                                        <MenubarTrigger
-                                                            // className={
-                                                            //     prog.id ==
-                                                            //     request.stages_id
-                                                            //         ? "bg-blue-500 text-white"
-                                                            //         : ""
-                                                            // }
-                                                            className={
-                                                                request.stages_id ===
-                                                                prog
-                                                                    .request_rejected
-                                                                    ?.id
-                                                                    ? "bg-red-500 text-white"
-                                                                    : prog.id ===
-                                                                      request.stages_id
-                                                                    ? "bg-blue-500 text-white"
-                                                                    : ""
-                                                            }
-                                                            // className={
-                                                            //     prog?.request_rejected !=
-                                                            //         null &&
-                                                            //     request.stages_id ===
-                                                            //         prog
-                                                            //             .request_rejected
-                                                            //             .id
-                                                            //         ? "bg-red-500 text-white"
-                                                            //         : prog.id ===
-                                                            //           request.stages_id
-                                                            //         ? "bg-blue-500 text-white"
-                                                            //         : ""
-                                                            // }
-                                                            // className={
-                                                            //     prog.request_rejected ==
-                                                            //     null
-                                                            //         ? "bg-blue-500 text-white"
-                                                            //         : ""
-                                                            // }
-                                                            // className={
-                                                            //     request.stages_id ==
-                                                            //     prog.request_rejected.id
-                                                            //         ? "bg-red-500"
-                                                            //         : request.stages_id ==
-                                                            //           prog.id
-                                                            //         ? "bg-blue-500"
-                                                            //         : ""
-                                                            // }
-                                                        >
-                                                            rejected id :
-                                                            {
-                                                                prog
-                                                                    .request_rejected
-                                                                    ?.id
-                                                            }
-                                                            stage id :
-                                                            {request.stages_id}
-                                                            {prog.stage_name}
-                                                            prog id :{prog.id}
-                                                        </MenubarTrigger>
-                                                        <MenubarContent>
-                                                            <MenubarItem>
-                                                                New Tab{" "}
-                                                                <MenubarShortcut>
-                                                                    ⌘T
-                                                                </MenubarShortcut>
-                                                            </MenubarItem>
-                                                            <MenubarItem>
-                                                                New Window{" "}
-                                                                <MenubarShortcut>
-                                                                    ⌘N
-                                                                </MenubarShortcut>
-                                                            </MenubarItem>
-                                                            <MenubarItem
-                                                                disabled
-                                                            >
-                                                                New Incognito
-                                                                Window
-                                                            </MenubarItem>
-                                                            <MenubarSeparator />
-                                                            <MenubarSub>
-                                                                <MenubarSubTrigger>
-                                                                    Share
-                                                                </MenubarSubTrigger>
-                                                                <MenubarSubContent>
-                                                                    <MenubarItem>
-                                                                        Email
-                                                                        link
-                                                                    </MenubarItem>
-                                                                    <MenubarItem>
-                                                                        Messages
-                                                                    </MenubarItem>
-                                                                    <MenubarItem>
-                                                                        Notes
-                                                                    </MenubarItem>
-                                                                </MenubarSubContent>
-                                                            </MenubarSub>
-                                                            <MenubarSeparator />
-                                                            <MenubarItem>
-                                                                Print...{" "}
-                                                                <MenubarShortcut>
-                                                                    ⌘P
-                                                                </MenubarShortcut>
-                                                            </MenubarItem>
-                                                        </MenubarContent>
-                                                    </MenubarMenu>
-                                                )
+                                                (prog: any, index: number) => {
+                                                    const currentStageIndex =
+                                                        request.progress.findIndex(
+                                                            (p: any) =>
+                                                                p.id ===
+                                                                request.stages_id
+                                                        );
+
+                                                    const rejectedStageIndex =
+                                                        request.request_rejected
+                                                            ? request.progress.findIndex(
+                                                                  (p: any) =>
+                                                                      p.id ===
+                                                                      request
+                                                                          .request_rejected
+                                                                          .id
+                                                              )
+                                                            : -1;
+
+                                                    // Pick the *lowest* index between red and blue stages
+                                                    const targetStageIndex =
+                                                        currentStageIndex === -1
+                                                            ? rejectedStageIndex
+                                                            : rejectedStageIndex ===
+                                                              -1
+                                                            ? currentStageIndex
+                                                            : Math.min(
+                                                                  currentStageIndex,
+                                                                  rejectedStageIndex
+                                                              );
+
+                                                    const isBeforeTargetStage =
+                                                        index <
+                                                        targetStageIndex;
+
+                                                    let triggerClass =
+                                                        "w-44 h-7 border-[1px] border-gray-200"; // default
+
+                                                    if (
+                                                        prog.id ===
+                                                        request.request_rejected
+                                                            ?.id
+                                                    ) {
+                                                        triggerClass =
+                                                            "bg-red-500 text-white w-44 h-7";
+                                                    } else if (
+                                                        prog.id ===
+                                                        request.stages_id
+                                                    ) {
+                                                        triggerClass =
+                                                            "bg-blue-500 text-white w-44 h-7";
+                                                    } else if (
+                                                        isBeforeTargetStage
+                                                    ) {
+                                                        triggerClass =
+                                                            "bg-blue-200 text-black w-44 h-7"; // for stages before red or blue
+                                                    }
+
+                                                    return (
+                                                        <div className="flex flex-col gap-2">
+                                                            <MenubarMenu>
+                                                                <div className="text-sm">
+                                                                    <MenubarTrigger
+                                                                        // className={`w-44 p-1${
+                                                                        //     request.stages_id ===
+                                                                        //     prog
+                                                                        //         .request_rejected
+                                                                        //         ?.id
+                                                                        //         ? "bg-red-500 text-white"
+                                                                        //         : prog.id ===
+                                                                        //           request.stages_id
+                                                                        //         ? "bg-blue-500 text-white"
+                                                                        //         : ""
+                                                                        // }
+                                                                        //         `}
+                                                                        className={
+                                                                            request.stages_id ===
+                                                                            prog
+                                                                                .request_rejected
+                                                                                ?.id
+                                                                                ? "bg-red-500 text-white w-44 h-7 focus:bg-red-500 hover:bg-red-500 focus:hover:bg-red-500"
+                                                                                : prog.id ===
+                                                                                  request.stages_id
+                                                                                ? "bg-blue-500 text-white w-44 h-7 focus:bg-blue-500 hover:bg-blue-500 focus:hover:bg-blue-500"
+                                                                                : "w-44 h-7 border-[1px] border-gray-200"
+                                                                        }
+                                                                    ></MenubarTrigger>
+                                                                </div>
+                                                                <MenubarContent className="border-b border-gray-200 w-1/3">
+                                                                    <div className="p-3 flex flex-col gap-1">
+                                                                        <h4 className="text-base">
+                                                                            <span className="font-bold">
+                                                                                Tahapan
+                                                                                :{" "}
+                                                                            </span>
+                                                                        </h4>
+                                                                        <h4 className="text-sm">
+                                                                            {
+                                                                                prog.stage_name
+                                                                            }
+                                                                        </h4>
+                                                                        <p className="text-xs">
+                                                                            Lorem
+                                                                            ipsum
+                                                                            dolor
+                                                                            sit,
+                                                                            amet
+                                                                            consectetur
+                                                                            adipisicing
+                                                                            elit.
+                                                                            Pariatur,
+                                                                            in.
+                                                                            Laudantium
+                                                                            ex
+                                                                            molestias
+                                                                            optio
+                                                                            accusamus
+                                                                            velit,
+                                                                            nisi
+                                                                            ducimus
+                                                                            iusto
+                                                                            vitae?
+                                                                        </p>
+                                                                        <div
+                                                                            className={
+                                                                                request.stages_id ===
+                                                                                prog
+                                                                                    .request_rejected
+                                                                                    ?.id
+                                                                                    ? ""
+                                                                                    : "hidden"
+                                                                            }
+                                                                        >
+                                                                            <h4 className="text-sm font-bold">
+                                                                                Tahapan
+                                                                                Ditolak
+                                                                                Pada
+                                                                                :{" "}
+                                                                            </h4>
+                                                                            <p className="text-xs">
+                                                                                {
+                                                                                    prog
+                                                                                        .request_rejected
+                                                                                        ?.stage_name
+                                                                                }
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    {/* <MenubarItem>
+                                                            </MenubarItem> */}
+                                                                </MenubarContent>
+                                                            </MenubarMenu>
+                                                            {/* <ArrowRight /> */}
+                                                        </div>
+                                                    );
+                                                }
                                             )}
                                         </Menubar>
                                     </div>
