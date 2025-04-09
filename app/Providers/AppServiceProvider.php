@@ -36,6 +36,12 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-users', function (User $user) {
             return $user->hasRole(1);
         });
+
+
+        Gate::define('admin-privilege', function (User $user) {
+            return $user->hasRole(1);
+        });
+
         // Gate::after(function ($result, $user, $ability) {
         //     if (!$result) {
         //         return redirect()->route('dashboard')->with('error', 'You do not have permission to access this resource.');
