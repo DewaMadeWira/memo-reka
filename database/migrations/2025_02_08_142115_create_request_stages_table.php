@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('stage_name');
             $table->integer('sequence');
-            // $table->string('conditions');
+            $table->string('description')->nullable();
             $table->foreignId('letter_id');
             $table->foreignId('approver_id');
             $table->foreignId('to_stage_id')->nullable();

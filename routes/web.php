@@ -40,8 +40,9 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('can:admin-privilege')->group(function () {
         Route::resource('admin/manajemen-pengguna', UserManagementController::class);
-        Route::resource('admin/memo', MemoController::class);
     });
+
+    Route::resource('memo', MemoController::class);
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');

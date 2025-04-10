@@ -62,7 +62,8 @@ interface DataTableProps<TData, TValue> {
     //         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     //     >
     // ) => void;
-    // handleUpdate: (id: number) => void;
+    handleApprove: (id: number) => void;
+    handleReject: (id: number) => void;
     // formData: {
     //     role_name: string;
     // };
@@ -76,10 +77,11 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
     columns,
     data,
+    handleApprove,
+    handleReject,
 }: // handleDelete,
-// handleChange,
-// handleUpdate,
 // role,
+
 // division,
 // formData,
 // setFormData,
@@ -140,6 +142,9 @@ DataTableProps<TData, TValue>) {
                                         </TableHead>
                                     );
                                 })}
+                                <TableHead className="text-center">
+                                    Tahapan
+                                </TableHead>
                                 <TableHead className="text-center">
                                     Aksi
                                 </TableHead>
@@ -271,7 +276,7 @@ DataTableProps<TData, TValue>) {
                                                                             <MenubarContent className="border-b border-gray-200 w-1/3">
                                                                                 <div className="p-3 flex flex-col gap-1">
                                                                                     <h4 className="text-base">
-                                                                                        <span className="font-bold">
+                                                                                        <span className="font-semibold">
                                                                                             Tahapan
                                                                                             :{" "}
                                                                                         </span>
@@ -282,26 +287,9 @@ DataTableProps<TData, TValue>) {
                                                                                         }
                                                                                     </h4>
                                                                                     <p className="text-xs">
-                                                                                        Lorem
-                                                                                        ipsum
-                                                                                        dolor
-                                                                                        sit,
-                                                                                        amet
-                                                                                        consectetur
-                                                                                        adipisicing
-                                                                                        elit.
-                                                                                        Pariatur,
-                                                                                        in.
-                                                                                        Laudantium
-                                                                                        ex
-                                                                                        molestias
-                                                                                        optio
-                                                                                        accusamus
-                                                                                        velit,
-                                                                                        nisi
-                                                                                        ducimus
-                                                                                        iusto
-                                                                                        vitae?
+                                                                                        {
+                                                                                            prog.description
+                                                                                        }
                                                                                     </p>
                                                                                     <div
                                                                                         className={
@@ -315,17 +303,25 @@ DataTableProps<TData, TValue>) {
                                                                                                 : "hidden"
                                                                                         }
                                                                                     >
-                                                                                        <h4 className="text-sm font-bold">
+                                                                                        <MenubarSeparator className="bg-slate-300"></MenubarSeparator>
+                                                                                        <h4 className="text-sm font-semibold mt-2">
                                                                                             Tahapan
                                                                                             Ditolak
                                                                                             Pada
                                                                                             :{" "}
                                                                                         </h4>
-                                                                                        <p className="text-xs">
+                                                                                        <p className="text-sm mt-1">
                                                                                             {
                                                                                                 prog
                                                                                                     .request_rejected
                                                                                                     ?.stage_name
+                                                                                            }
+                                                                                        </p>
+                                                                                        <p className="text-xs mt-1">
+                                                                                            {
+                                                                                                prog
+                                                                                                    .request_rejected
+                                                                                                    ?.description
                                                                                             }
                                                                                         </p>
                                                                                     </div>
@@ -343,7 +339,31 @@ DataTableProps<TData, TValue>) {
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2 justify-center">
-                                            <AlertDialog>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() =>
+                                                        handleApprove(
+                                                            row.original.memo.id
+                                                        )
+                                                    }
+                                                    className={`bg-green-500 p-2 mt-2 text-white rounded-lg
+                                        `}
+                                                >
+                                                    Approve
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleReject(
+                                                            row.original.memo.id
+                                                        )
+                                                    }
+                                                    className={`bg-red-500 p-2 mt-2 text-white rounded-lg
+                                        `}
+                                                >
+                                                    Reject
+                                                </button>
+                                            </div>
+                                            {/* <AlertDialog>
                                                 <AlertDialogTrigger
                                                     onClick={() =>
                                                         setEdit(row.original)
@@ -407,9 +427,9 @@ DataTableProps<TData, TValue>) {
                                                         </AlertDialogAction>
                                                     </AlertDialogFooter>
                                                 </AlertDialogContent>
-                                            </AlertDialog>
+                                            </AlertDialog> */}
 
-                                            <AlertDialog>
+                                            {/* <AlertDialog>
                                                 <AlertDialogTrigger>
                                                     Hapus
                                                 </AlertDialogTrigger>
@@ -444,7 +464,7 @@ DataTableProps<TData, TValue>) {
                                                         </AlertDialogAction>
                                                     </AlertDialogFooter>
                                                 </AlertDialogContent>
-                                            </AlertDialog>
+                                            </AlertDialog> */}
                                         </div>
                                     </TableCell>
                                 </TableRow>

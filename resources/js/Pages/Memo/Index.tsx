@@ -104,10 +104,99 @@ export default function Index({
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
-                <h1 className="text-2xl font-semibold">Memo</h1>
-                <h1 className="text-xl font-medium mt-2">
-                    Divisi : {userData.division.division_name}
-                </h1>
+                <div className="flex justify-between items-center">
+                    <div className="">
+                        <h1 className="text-2xl font-semibold">Memo</h1>
+                        <h1 className="text-xl font-medium mt-2">
+                            Divisi : {userData.division.division_name}
+                        </h1>
+                    </div>
+                    <AlertDialog>
+                        <AlertDialogTrigger
+                            className={`bg-blue-500 p-2 mt-2 text-white text-sm font-medium rounded-lg ${
+                                user.role_id == 1 ? "hidden" : ""
+                            }`}
+                        >
+                            Buat Memo
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="w-[300rem]">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="font-medium">
+                                    Buat Memo Baru
+                                </AlertDialogTitle>
+                                <div className="">
+                                    <label
+                                        htmlFor="perihal"
+                                        className="block mb-2"
+                                    >
+                                        Nama Permintaan Persetujuan
+                                    </label>
+                                    <input
+                                        onChange={handleChange}
+                                        type="text"
+                                        name="request_name"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                    />
+                                    <label
+                                        htmlFor="perihal"
+                                        className="block mb-2"
+                                    >
+                                        Perihal
+                                    </label>
+                                    <input
+                                        onChange={handleChange}
+                                        type="text"
+                                        name="perihal"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                    />
+                                    <label
+                                        htmlFor="content"
+                                        className="block mb-2"
+                                    >
+                                        Isi
+                                    </label>
+                                    <textarea
+                                        onChange={handleChange}
+                                        rows={10}
+                                        name="content"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                    />
+                                    <label
+                                        htmlFor="to_division"
+                                        className="block mb-2"
+                                    >
+                                        Divisi Tujuan
+                                    </label>
+                                    <select
+                                        name="to_division"
+                                        id=""
+                                        onChange={handleChange}
+                                        className="w-full p-2 border rounded-lg"
+                                    >
+                                        <option value="">Pilih Divisi</option>
+                                        {division.map((divi: any) => (
+                                            <option value={divi.id}>
+                                                {divi.division_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Kembali</AlertDialogCancel>
+                                <AlertDialogAction
+                                    className="bg-blue-500 font-normal hover:bg-blue-600"
+                                    onClick={handleSubmit}
+                                >
+                                    Buat Memo
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
                 {/* <div className="flex gap-3">
                     <a
                         href={`/memo`}
@@ -137,6 +226,8 @@ export default function Index({
 
                 <div className="mt-8">
                     <DataTable
+                        handleApprove={handleApprove}
+                        handleReject={handleReject}
                         // formData={formData}
                         // setFormData={setFormData}
                         data={request}
@@ -369,77 +460,7 @@ export default function Index({
                         </tr>
                     ))}
                 </table> */}
-                <AlertDialog>
-                    <AlertDialogTrigger
-                        className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
-                            user.role_id == 1 ? "hidden" : ""
-                        }`}
-                    >
-                        Buat Memo
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="w-[300rem]">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Buat Memo Baru</AlertDialogTitle>
-                            <div className="">
-                                <label htmlFor="perihal" className="block mb-2">
-                                    Nama Permintaan Persetujuan
-                                </label>
-                                <input
-                                    onChange={handleChange}
-                                    type="text"
-                                    name="request_name"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                />
-                                <label htmlFor="perihal" className="block mb-2">
-                                    Perihal
-                                </label>
-                                <input
-                                    onChange={handleChange}
-                                    type="text"
-                                    name="perihal"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                />
-                                <label htmlFor="content" className="block mb-2">
-                                    Isi
-                                </label>
-                                <textarea
-                                    onChange={handleChange}
-                                    rows={10}
-                                    name="content"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                />
-                                <label
-                                    htmlFor="to_division"
-                                    className="block mb-2"
-                                >
-                                    Divisi Tujuan
-                                </label>
-                                <select
-                                    name="to_division"
-                                    id=""
-                                    onChange={handleChange}
-                                    className="w-full p-2 border rounded-lg"
-                                >
-                                    <option value="">Pilih Divisi</option>
-                                    {division.map((divi: any) => (
-                                        <option value={divi.id}>
-                                            {divi.division_name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleSubmit}>
-                                Buat Memo
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+
                 {/* <button
                     onClick={handleSubmit}
                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
