@@ -25,6 +25,9 @@ import { DataTable } from "./stage/data-table";
 import { User } from "@/types/UserType";
 import { Stages } from "@/types/StagesType";
 import { columns } from "./stage/columns";
+import { Status } from "@/types/StatusType";
+import { Letter } from "@/types/LetterType";
+import { Role } from "@/types/RoleType";
 
 type updateDataType = {
     id: number;
@@ -39,9 +42,9 @@ export default function Index({
     role,
 }: {
     data: Stages[];
-    statuses: any;
-    letter: any;
-    role: any;
+    statuses: Status[];
+    letter: Letter[];
+    role: Role[];
 }) {
     console.log(data);
     const [formData, setFormData] = useState({
@@ -49,7 +52,6 @@ export default function Index({
         sequence: "",
         to_stage_id: "",
         rejected_id: "",
-        // 'conditions',
         letter_id: "",
         approver_id: "",
         status_id: "",
@@ -58,10 +60,10 @@ export default function Index({
     const { user } = usePage().props.auth as { user: User };
     const handleSubmit = () => {
         console.log(formData);
-        router.post("/stages?intent=stages.create", formData);
+        router.post("/admin/tahapan-surat?intent=stages.create", formData);
     };
     function deleteStages(id: number) {
-        router.delete("/stages/" + id);
+        router.delete("/admin/tahapan-surat/" + id);
     }
     const handleChange = (
         e: React.ChangeEvent<
@@ -121,7 +123,7 @@ export default function Index({
 
     const sendUpdate = () => {
         console.log(updateData);
-        router.post("/stages?intent=stages.update", {
+        router.post("/admin/tahapan-surat?intent=stages.update", {
             data: updateData,
         });
     };
@@ -140,21 +142,175 @@ export default function Index({
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>Manajemen Tahapan Surat</BreadcrumbPage>
+                            <BreadcrumbPage>
+                                Manajemen Tahapan Surat
+                            </BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
-                <h1 className="text-2xl font-bold">Stages</h1>
-                <div className=" font-bold flex w-[80%] justify-end">
+                <h1 className="text-2xl font-bold">Tahapan</h1>
+                <div className=" font-medium text-sm flex w-full justify-end gap-3">
+                    <AlertDialog>
+                        <AlertDialogTrigger
+                            className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
+                                user.role_id == 2 ? "hidden" : ""
+                            }`}
+                        >
+                            Buat Tahapan Baru
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="w-[300rem]">
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Buat Stages Baru
+                                </AlertDialogTitle>
+                                <div className="">
+                                    <label
+                                        htmlFor="stage_name"
+                                        className="block mb-2"
+                                    >
+                                        Stage Name
+                                    </label>
+                                    <input
+                                        onChange={handleChange}
+                                        type="text"
+                                        name="stage_name"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                    />
+                                    <label
+                                        htmlFor="sequence"
+                                        className="block mb-2"
+                                    >
+                                        Sequence
+                                    </label>
+                                    <select
+                                        name="sequence"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={handleChange}
+                                    >
+                                        <option>Pilih Opsi</option>
+                                        <option value={1}>First</option>
+                                        <option value={0}>Not First</option>
+                                    </select>
+                                    <label
+                                        htmlFor="letter_id"
+                                        className="block mb-2"
+                                    >
+                                        Letter Type
+                                    </label>
+                                    <select
+                                        name="letter_id"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={handleChange}
+                                    >
+                                        <option>Pilih Opsi</option>
+                                        {letter.map((stage: any) => (
+                                            <option value={stage.id}>
+                                                {stage.letter_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label
+                                        htmlFor="approver_id"
+                                        className="block mb-2"
+                                    >
+                                        Approver
+                                    </label>
+                                    <select
+                                        name="approver_id"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={handleChange}
+                                    >
+                                        <option>Pilih Opsi</option>
+                                        {role.map((stage: any) => (
+                                            <option value={stage.id}>
+                                                {stage.role_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label
+                                        htmlFor="to_stage_id"
+                                        className="block mb-2"
+                                    >
+                                        To Stage ID
+                                    </label>
+                                    <select
+                                        name="to_stage_id"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={handleChange}
+                                    >
+                                        <option>Pilih Opsi</option>
+                                        {data.map((stage: any) => (
+                                            <option value={stage.id}>
+                                                {stage.stage_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label
+                                        htmlFor="rejected_id"
+                                        className="block mb-2"
+                                    >
+                                        Rejected ID
+                                    </label>
+                                    <select
+                                        name="rejected_id"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={handleChange}
+                                    >
+                                        <option>Pilih Opsi</option>
+                                        {data.map((stage: any) => (
+                                            <option value={stage.id}>
+                                                {stage.stage_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label
+                                        htmlFor="status_id"
+                                        className="block mb-2"
+                                    >
+                                        Status
+                                    </label>
+                                    <select
+                                        name="status_id"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={handleChange}
+                                    >
+                                        <option>Pilih Opsi</option>
+                                        {statuses.map((status: any) => (
+                                            <option value={status.id}>
+                                                {status.status_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Kembali</AlertDialogCancel>
+                                <AlertDialogAction
+                                    className="bg-green-500"
+                                    onClick={handleSubmit}
+                                >
+                                    Buat Tahapan
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                     <button
                         onClick={sendUpdate}
                         disabled={updateData ? false : true}
                         className={`bg-green-500 p-2 mt-2 text-white rounded-lg disabled:cursor-not-allowed disabled:bg-gray-400`}
                     >
-                        Simpan perubahan
+                        {updateData
+                            ? "Simpan Perubahan"
+                            : "Belum ada perubahan"}
                     </button>
                 </div>
-                <div className="flex gap-3"></div>
                 {/* <table className="w-[80%]">
                     <tr>
                         <th>Id</th>
@@ -250,167 +406,15 @@ export default function Index({
                 <div className="mt-8">
                     <DataTable
                         user={user}
-                        // handleApprove={handleApprove}
-                        // handleReject={handleReject}
-                        // formData={formData}
-                        // setFormData={setFormData}
                         data={data}
                         columns={columns}
-                        // handleDelete={handleDelete}
-                        // handleChange={handleChange}
-                        // role={role}
-                        // division={division}
-                        // handleUpdate={handleUpdate}
+                        letter={letter}
+                        role={role}
+                        handleChange={handleChange}
+                        handleUpdate={handleUpdate}
                     />
                 </div>
-                <AlertDialog>
-                    <AlertDialogTrigger
-                        className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
-                            user.role_id == 2 ? "hidden" : ""
-                        }`}
-                    >
-                        Buat Stages Baru
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="w-[300rem]">
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>
-                                Buat Stages Baru
-                            </AlertDialogTitle>
-                            <div className="">
-                                <label
-                                    htmlFor="stage_name"
-                                    className="block mb-2"
-                                >
-                                    Stage Name
-                                </label>
-                                <input
-                                    onChange={handleChange}
-                                    type="text"
-                                    name="stage_name"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                />
-                                <label
-                                    htmlFor="sequence"
-                                    className="block mb-2"
-                                >
-                                    Sequence
-                                </label>
-                                <select
-                                    name="sequence"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                    onChange={handleChange}
-                                >
-                                    <option>Pilih Opsi</option>
-                                    <option value={1}>First</option>
-                                    <option value={0}>Not First</option>
-                                </select>
-                                <label
-                                    htmlFor="letter_id"
-                                    className="block mb-2"
-                                >
-                                    Letter Type
-                                </label>
-                                <select
-                                    name="letter_id"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                    onChange={handleChange}
-                                >
-                                    <option>Pilih Opsi</option>
-                                    {letter.map((stage: any) => (
-                                        <option value={stage.id}>
-                                            {stage.letter_name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <label
-                                    htmlFor="approver_id"
-                                    className="block mb-2"
-                                >
-                                    Approver
-                                </label>
-                                <select
-                                    name="approver_id"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                    onChange={handleChange}
-                                >
-                                    <option>Pilih Opsi</option>
-                                    {role.map((stage: any) => (
-                                        <option value={stage.id}>
-                                            {stage.role_name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <label
-                                    htmlFor="to_stage_id"
-                                    className="block mb-2"
-                                >
-                                    To Stage ID
-                                </label>
-                                <select
-                                    name="to_stage_id"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                    onChange={handleChange}
-                                >
-                                    <option>Pilih Opsi</option>
-                                    {data.map((stage: any) => (
-                                        <option value={stage.id}>
-                                            {stage.stage_name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <label
-                                    htmlFor="rejected_id"
-                                    className="block mb-2"
-                                >
-                                    Rejected ID
-                                </label>
-                                <select
-                                    name="rejected_id"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                    onChange={handleChange}
-                                >
-                                    <option>Pilih Opsi</option>
-                                    {data.map((stage: any) => (
-                                        <option value={stage.id}>
-                                            {stage.stage_name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <label
-                                    htmlFor="status_id"
-                                    className="block mb-2"
-                                >
-                                    Status
-                                </label>
-                                <select
-                                    name="status_id"
-                                    id=""
-                                    className="w-full p-2 border rounded-lg"
-                                    onChange={handleChange}
-                                >
-                                    <option>Pilih Opsi</option>
-                                    {statuses.map((status: any) => (
-                                        <option value={status.id}>
-                                            {status.status_name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleSubmit}>
-                                Buat Memo
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+
                 {/* <button
                     onClick={handleSubmit}
                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${

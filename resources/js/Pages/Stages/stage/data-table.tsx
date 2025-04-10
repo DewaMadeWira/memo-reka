@@ -54,18 +54,32 @@ import { Button } from "@/Components/ui/button";
 import { useState } from "react";
 import { User } from "@/types/UserType";
 import { Stages } from "@/types/StagesType";
+import { Status } from "@/types/StatusType";
+import { Letter } from "@/types/LetterType";
+import { Role } from "@/types/RoleType";
 
 interface DataTableProps<TData extends Stages, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     user: User;
+    // statuses: Status[];
+    letter: Letter[];
+    role: Role[];
     // handleDelete: (id: number) => void;
-    // handleChange: (
-    //     e: React.ChangeEvent<
-    //         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    //     >
-    // ) => void;
-    // handleApprove: (id: number) => void;
+    handleChange: (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+    ) => void;
+    handleUpdate: ({
+        id,
+        field,
+        value,
+    }: {
+        id: number;
+        field: "to_stage_id" | "rejected_id";
+        value: number;
+    }) => void;
     // handleReject: (id: number) => void;
     // formData: {
     //     role_name: string;
@@ -80,8 +94,11 @@ interface DataTableProps<TData extends Stages, TValue> {
 export function DataTable<TData extends Stages, TValue>({
     columns,
     data,
-    // handleApprove,
-    // handleReject,
+    // status,
+    role,
+    letter,
+    handleUpdate,
+    handleChange,
     user,
 }: // handleDelete,
 // role,
@@ -146,6 +163,12 @@ DataTableProps<TData, TValue>) {
                                         </TableHead>
                                     );
                                 })}
+                                <TableHead className="text-center">
+                                    Tahapan disetujui
+                                </TableHead>
+                                <TableHead className="text-center">
+                                    Tahapan ditolak
+                                </TableHead>
                             </TableRow>
                         ))}
                     </TableHeader>
@@ -168,6 +191,63 @@ DataTableProps<TData, TValue>) {
                                             )}
                                         </TableCell>
                                     ))}
+                                    <TableCell className="max-w-[500px] truncate">
+                                        <select
+                                            name=""
+                                            id=""
+                                            className="w-full text-sm p-2 border border-slate-200 rounded-lg truncate pr-5"
+                                            onChange={(e) =>
+                                                handleUpdate({
+                                                    id: row.original.id,
+                                                    field: "to_stage_id",
+                                                    value: parseInt(
+                                                        e.target.value
+                                                    ),
+                                                })
+                                            }
+                                            defaultValue={
+                                                row.original.request_approved
+                                                    ?.id
+                                            }
+                                        >
+                                            <option value={-1}>Null</option>
+                                            {data.map((stage: any) => (
+                                                <option value={stage.id}>
+                                                    {stage.stage_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </TableCell>
+                                    <TableCell className="max-w-[500px] truncate">
+                                        <select
+                                            name=""
+                                            id=""
+                                            className="w-full p-2 border border-slate-200 text-sm rounded-lg truncate pr-5"
+                                            onChange={(e) =>
+                                                handleUpdate({
+                                                    id: row.original.id,
+                                                    field: "rejected_id",
+                                                    value: parseInt(
+                                                        e.target.value
+                                                    ),
+                                                })
+                                            }
+                                            defaultValue={
+                                                row.original.request_rejected
+                                                    ?.id
+                                            }
+                                        >
+                                            <option value={-1}>Null</option>
+                                            {data.map((stage: any) => (
+                                                <option
+                                                    className=""
+                                                    value={stage.id}
+                                                >
+                                                    {stage.stage_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </TableCell>
                                 </TableRow>
                             ))
                         ) : (

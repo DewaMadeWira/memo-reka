@@ -14,6 +14,7 @@ export type Stages = {
     approver_id: number;
     status_id: number;
     deleted_at?: string | null;
-    status:Status
-
+    status: Status;
+    request_approved: Stages | null;
+    request_rejected: Stages | null;
 };

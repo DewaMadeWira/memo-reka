@@ -59,7 +59,7 @@ class StagesController extends Controller
                     'approver_id' => $request->approver_id,
                     'status_id' => $request->status_id,
                 ]);
-                return to_route('stages.index');
+                return to_route('tahapan-surat.index');
             case 'stages.update':
 
                 foreach ($request['data'] as $item) {
@@ -78,7 +78,7 @@ class StagesController extends Controller
                         RequestStages::where('id', $item["id"])->update($updateData);
                     }
                 }
-                return to_route('stages.index');
+                return to_route('tahapan-surat.index');
                 // dd($request->data);
 
             default:

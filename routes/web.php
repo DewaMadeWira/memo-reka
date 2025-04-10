@@ -51,7 +51,7 @@ Route::resource('admin/manajemen-role', RoleManagementController::class);
 Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
 Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
-Route::resource('stages', StagesController::class);
+// Route::resource('stages', StagesController::class);
 
 Route::get('pdf', function () {
 
