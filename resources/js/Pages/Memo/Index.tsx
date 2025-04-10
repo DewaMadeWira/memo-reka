@@ -92,7 +92,7 @@ export default function Index({
 
     return (
         <SidebarAuthenticated>
-            <div className="w-full p-10">
+            <div className="w-full p-10 bg-white">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>
                         <BreadcrumbItem>

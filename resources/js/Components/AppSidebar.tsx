@@ -88,10 +88,10 @@ export function AppSidebar() {
     const { url } = usePage();
     return (
         <Sidebar collapsible="icon" className="w-1/6 ">
-            <SidebarHeader className="bg-slate-50 flex justify-center w-full items-center ">
+            <SidebarHeader className="bg-white flex justify-center w-full items-center ">
                 <ApplicationLogo width={150} height={150}></ApplicationLogo>
             </SidebarHeader>
-            <SidebarContent className="bg-slate-50">
+            <SidebarContent className="bg-white">
                 <SidebarGroup />
                 <SidebarGroupLabel className="text-xs ml-1 text-black">
                     MENU

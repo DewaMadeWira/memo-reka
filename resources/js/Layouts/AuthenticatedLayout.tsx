@@ -2,6 +2,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
+import { SidebarTrigger } from "@/Components/ui/sidebar";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
 
@@ -15,17 +16,17 @@ export default function Authenticated({
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-white">
             <nav className="border-b border-gray-100 bg-white">
                 <div className="mx-auto max-full px-4 sm:px-6 lg:px-8 ">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
+                    <div className="flex h-16 justify-between items-center">
+                        <SidebarTrigger></SidebarTrigger>
+                        {/* <div className="flex">
                             <div className="flex shrink-0 items-center ">
                                 <Link href="/">
                                     <ApplicationLogo
                                         width={100}
                                         height={100}
-                                        // className="block h-9 w-auto fill-current text-gray-800"
                                     />
                                 </Link>
                             </div>
@@ -38,7 +39,7 @@ export default function Authenticated({
                                     Dashboard
                                 </NavLink>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
                             <div className="relative ms-3">
