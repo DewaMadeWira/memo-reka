@@ -53,7 +53,7 @@ const items = [
         title: "Memo",
         url: "/admin/memo",
         icon: NotebookText,
-        subItems: [{ title: "Semua Memo", url: "/admin/memo" }],
+        subItems: [{ title: "Semua Memo", url: "/memo" }],
     },
     {
         title: "Undangan Rapat",
@@ -78,9 +78,15 @@ const items = [
         url: "/admin/manajemen",
         icon: Settings,
         subItems: [
-            { title: "Manajemen Pengguna", url: "/admin/manajemen-pengguna" },
-            { title: "Manajemen Role", url: "/admin/manajemen-role" },
-            { title: "Manajemen Divisi", url: "/admin/manajemen-divisi" },
+            { title: "Akun dan Pengguna", type: "separator" },
+            { title: "Pengguna", url: "/admin/manajemen-pengguna" },
+            { title: "Role", url: "/admin/manajemen-role" },
+            { title: "Divisi", url: "/admin/manajemen-divisi" },
+            { title: "Surat", type: "separator" },
+            {
+                title: "Tahapan Surat",
+                url: "/admin/tahapan-surat",
+            },
         ],
     },
 ];
@@ -112,7 +118,7 @@ export function AppSidebar() {
                                                 }`}
                                         >
                                             <div className="w-10 flex justify-center items-center">
-                                                <item.icon />
+                                                <item.icon size={20} />
                                             </div>
                                             <span className="text-sm">
                                                 {item.title}
@@ -120,15 +126,24 @@ export function AppSidebar() {
                                             <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
                                         </CollapsibleTrigger>
                                         <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
-                                            {item.subItems.map((subItem) => (
-                                                <Link
-                                                    key={subItem.title}
-                                                    className="mt-1 p-2 hover:bg-gray-200 rounded-md"
-                                                    href={subItem.url}
-                                                >
-                                                    {subItem.title}
-                                                </Link>
-                                            ))}
+                                            {item.subItems.map((subItem) =>
+                                                subItem.type === "separator" ? (
+                                                    <div
+                                                        key={subItem.title}
+                                                        className="text-sm font-medium text-gray-500 mt-3 mb-1 px-2"
+                                                    >
+                                                        {subItem.title}
+                                                    </div>
+                                                ) : (
+                                                    <Link
+                                                        key={subItem.title}
+                                                        className="mt-1 pl-5 p-2 hover:bg-gray-200 rounded-md text-xs"
+                                                        href={subItem.url!}
+                                                    >
+                                                        {subItem.title}
+                                                    </Link>
+                                                )
+                                            )}
                                         </CollapsibleContent>
                                     </Collapsible>
                                 ) : (
@@ -144,7 +159,7 @@ export function AppSidebar() {
                                                 }`}
                                         >
                                             <div className="w-7 ml-1 flex justify-center items-center">
-                                                <item.icon />
+                                                <item.icon size={20} />
                                             </div>
                                             <span className="text-sm">
                                                 {item.title}

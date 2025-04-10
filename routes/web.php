@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('can:admin-privilege')->group(function () {
         Route::resource('admin/manajemen-pengguna', UserManagementController::class);
+        Route::resource('admin/tahapan-surat', StagesController::class);
     });
 
     Route::resource('memo', MemoController::class);

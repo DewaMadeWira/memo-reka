@@ -52,10 +52,14 @@ import {
 } from "@/Components/ui/popover";
 import { Button } from "@/Components/ui/button";
 import { useState } from "react";
+import { Memo } from "@/types/MemoType";
+import { RequestLetter } from "@/types/RequestType";
+import { User } from "@/types/UserType";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    user: User;
     // handleDelete: (id: number) => void;
     // handleChange: (
     //     e: React.ChangeEvent<
@@ -74,11 +78,12 @@ interface DataTableProps<TData, TValue> {
     // >;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RequestLetter, TValue>({
     columns,
     data,
     handleApprove,
     handleReject,
+    user,
 }: // handleDelete,
 // role,
 
@@ -145,7 +150,13 @@ DataTableProps<TData, TValue>) {
                                 <TableHead className="text-center">
                                     Tahapan
                                 </TableHead>
-                                <TableHead className="text-center">
+                                <TableHead
+                                    className={
+                                        user.role_id != 1
+                                            ? "hidden"
+                                            : "text-center"
+                                    }
+                                >
                                     Aksi
                                 </TableHead>
                             </TableRow>
@@ -337,7 +348,11 @@ DataTableProps<TData, TValue>) {
                                             </PopoverContent>
                                         </Popover>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell
+                                        className={
+                                            user.role_id != 1 ? "hidden" : ""
+                                        }
+                                    >
                                         <div className="flex gap-2 justify-center">
                                             <div className="flex gap-2">
                                                 <button

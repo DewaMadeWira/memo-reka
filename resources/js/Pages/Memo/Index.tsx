@@ -44,6 +44,7 @@ import { ArrowRight } from "lucide-react";
 import SidebarAuthenticated from "@/Layouts/SidebarAuthenticated";
 import { DataTable } from "./memo/data-table";
 import { columns } from "./memo/columns";
+import { User } from "@/types/UserType";
 
 export default function Index({
     request,
@@ -65,7 +66,7 @@ export default function Index({
         content: "",
         to_division: null,
     });
-    const { user } = usePage().props.auth;
+    const { user } = usePage().props.auth as { user: User };
     console.log(user);
     console.log(request);
     const handleSubmit = () => {
@@ -226,6 +227,7 @@ export default function Index({
 
                 <div className="mt-8">
                     <DataTable
+                        user={user}
                         handleApprove={handleApprove}
                         handleReject={handleReject}
                         // formData={formData}
