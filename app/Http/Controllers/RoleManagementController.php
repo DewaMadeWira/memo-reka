@@ -87,7 +87,6 @@ class RoleManagementController extends Controller
     {
         //
         try {
-
             $validated = $request->validate([
                 'role_name' => 'required|string|max:255|unique:roles,role_name',
             ]);

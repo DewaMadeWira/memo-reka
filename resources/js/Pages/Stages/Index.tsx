@@ -28,6 +28,8 @@ import { columns } from "./stage/columns";
 import { Status } from "@/types/StatusType";
 import { Letter } from "@/types/LetterType";
 import { Role } from "@/types/RoleType";
+import { useToast } from "@/hooks/use-toast";
+// import { toast } from "@/hooks/use-toast";
 
 type updateDataType = {
     id: number;
@@ -47,6 +49,7 @@ export default function Index({
     role: Role[];
 }) {
     console.log(data);
+    const { toast } = useToast();
     const [formData, setFormData] = useState({
         stage_name: "",
         sequence: "",
@@ -60,10 +63,56 @@ export default function Index({
     const { user } = usePage().props.auth as { user: User };
     const handleSubmit = () => {
         console.log(formData);
-        router.post("/admin/tahapan-surat?intent=stages.create", formData);
+        router.post("/admin/tahapan-surat?intent=stages.create", formData, {
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Tahapan berhasil dibuat",
+                });
+            },
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                });
+            },
+        });
+    };
+    const handleEdit = (id: number) => {
+        console.log(formData);
+        router.put("/admin/tahapan-surat/" + id, formData, {
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Tahapan berhasil diedit",
+                });
+            },
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                });
+            },
+        });
     };
     function deleteStages(id: number) {
-        router.delete("/admin/tahapan-surat/" + id);
+        router.delete("/admin/tahapan-surat/" + id, {
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Tahapan berhasil dihapus",
+                });
+            },
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                });
+            },
+        });
     }
     const handleChange = (
         e: React.ChangeEvent<
@@ -123,9 +172,27 @@ export default function Index({
 
     const sendUpdate = () => {
         console.log(updateData);
-        router.post("/admin/tahapan-surat?intent=stages.update", {
-            data: updateData,
-        });
+        router.post(
+            "/admin/tahapan-surat?intent=stages.update",
+            {
+                data: updateData,
+            },
+            {
+                onSuccess: () => {
+                    toast({
+                        className: "bg-green-500 text-white",
+                        title: "Berhasil !",
+                        description: "Tahapan berhasil diubah",
+                    });
+                },
+                onError: (errors) => {
+                    toast({
+                        title: "Terjadi Kesalahan !",
+                        description: errors.message,
+                    });
+                },
+            }
+        );
     };
 
     useEffect(() => {
@@ -405,6 +472,8 @@ export default function Index({
                 </table> */}
                 <div className="mt-8">
                     <DataTable
+                        statuses={statuses}
+                        deleteStages={deleteStages}
                         user={user}
                         data={data}
                         columns={columns}
@@ -412,6 +481,7 @@ export default function Index({
                         role={role}
                         handleChange={handleChange}
                         handleUpdate={handleUpdate}
+                        handleEdit={handleEdit}
                     />
                 </div>
 

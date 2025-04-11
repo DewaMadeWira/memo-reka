@@ -62,7 +62,7 @@ interface DataTableProps<TData extends Stages, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     user: User;
-    // statuses: Status[];
+    statuses: Status[];
     letter: Letter[];
     role: Role[];
     // handleDelete: (id: number) => void;
@@ -80,6 +80,8 @@ interface DataTableProps<TData extends Stages, TValue> {
         field: "to_stage_id" | "rejected_id";
         value: number;
     }) => void;
+    deleteStages: (id: number) => void;
+    handleEdit: (id: number) => void;
     // handleReject: (id: number) => void;
     // formData: {
     //     role_name: string;
@@ -94,12 +96,14 @@ interface DataTableProps<TData extends Stages, TValue> {
 export function DataTable<TData extends Stages, TValue>({
     columns,
     data,
-    // status,
+    deleteStages,
     role,
     letter,
     handleUpdate,
     handleChange,
+    handleEdit,
     user,
+    statuses,
 }: // handleDelete,
 // role,
 
@@ -168,6 +172,9 @@ DataTableProps<TData, TValue>) {
                                 </TableHead>
                                 <TableHead className="text-center">
                                     Tahapan ditolak
+                                </TableHead>
+                                <TableHead className="text-center">
+                                    Aksi
                                 </TableHead>
                             </TableRow>
                         ))}
@@ -247,6 +254,265 @@ DataTableProps<TData, TValue>) {
                                                 </option>
                                             ))}
                                         </select>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex gap-2">
+                                            <AlertDialog>
+                                                <AlertDialogTrigger
+                                                    className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
+                                                        user.role_id == 2
+                                                            ? "hidden"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    Edit
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent className="w-[300rem]">
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            Edit Tahapan Baru
+                                                        </AlertDialogTitle>
+                                                        <div className="">
+                                                            <label
+                                                                htmlFor="stage_name"
+                                                                className="block mb-2"
+                                                            >
+                                                                Stage Name
+                                                            </label>
+                                                            <input
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                                type="text"
+                                                                name="stage_name"
+                                                                id=""
+                                                                className="w-full p-2 border rounded-lg"
+                                                            />
+                                                            <label
+                                                                htmlFor="sequence"
+                                                                className="block mb-2"
+                                                            >
+                                                                Sequence
+                                                            </label>
+                                                            <select
+                                                                name="sequence"
+                                                                id=""
+                                                                className="w-full p-2 border rounded-lg"
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                            >
+                                                                <option>
+                                                                    Pilih Opsi
+                                                                </option>
+                                                                <option
+                                                                    value={1}
+                                                                >
+                                                                    First
+                                                                </option>
+                                                                <option
+                                                                    value={0}
+                                                                >
+                                                                    Not First
+                                                                </option>
+                                                            </select>
+                                                            <label
+                                                                htmlFor="letter_id"
+                                                                className="block mb-2"
+                                                            >
+                                                                Letter Type
+                                                            </label>
+                                                            <select
+                                                                name="letter_id"
+                                                                id=""
+                                                                className="w-full p-2 border rounded-lg"
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                            >
+                                                                <option>
+                                                                    Pilih Opsi
+                                                                </option>
+                                                                {letter.map(
+                                                                    (
+                                                                        stage: any
+                                                                    ) => (
+                                                                        <option
+                                                                            value={
+                                                                                stage.id
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                stage.letter_name
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                )}
+                                                            </select>
+                                                            <label
+                                                                htmlFor="approver_id"
+                                                                className="block mb-2"
+                                                            >
+                                                                Approver
+                                                            </label>
+                                                            <select
+                                                                name="approver_id"
+                                                                id=""
+                                                                className="w-full p-2 border rounded-lg"
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                            >
+                                                                <option>
+                                                                    Pilih Opsi
+                                                                </option>
+                                                                {role.map(
+                                                                    (
+                                                                        stage: any
+                                                                    ) => (
+                                                                        <option
+                                                                            value={
+                                                                                stage.id
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                stage.role_name
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                )}
+                                                            </select>
+                                                            <label
+                                                                htmlFor="to_stage_id"
+                                                                className="block mb-2"
+                                                            >
+                                                                To Stage ID
+                                                            </label>
+                                                            <select
+                                                                name="to_stage_id"
+                                                                id=""
+                                                                className="w-full p-2 border rounded-lg"
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                            >
+                                                                <option>
+                                                                    Pilih Opsi
+                                                                </option>
+                                                                {data.map(
+                                                                    (
+                                                                        stage: any
+                                                                    ) => (
+                                                                        <option
+                                                                            value={
+                                                                                stage.id
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                stage.stage_name
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                )}
+                                                            </select>
+                                                            <label
+                                                                htmlFor="rejected_id"
+                                                                className="block mb-2"
+                                                            >
+                                                                Rejected ID
+                                                            </label>
+                                                            <select
+                                                                name="rejected_id"
+                                                                id=""
+                                                                className="w-full p-2 border rounded-lg"
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                            >
+                                                                <option>
+                                                                    Pilih Opsi
+                                                                </option>
+                                                                {data.map(
+                                                                    (
+                                                                        stage: any
+                                                                    ) => (
+                                                                        <option
+                                                                            value={
+                                                                                stage.id
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                stage.stage_name
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                )}
+                                                            </select>
+                                                            <label
+                                                                htmlFor="status_id"
+                                                                className="block mb-2"
+                                                            >
+                                                                Status
+                                                            </label>
+                                                            <select
+                                                                name="status_id"
+                                                                id=""
+                                                                className="w-full p-2 border rounded-lg"
+                                                                onChange={
+                                                                    handleChange
+                                                                }
+                                                            >
+                                                                <option>
+                                                                    Pilih Opsi
+                                                                </option>
+                                                                {statuses.map(
+                                                                    (
+                                                                        status: any
+                                                                    ) => (
+                                                                        <option
+                                                                            value={
+                                                                                status.id
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                status.status_name
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                )}
+                                                            </select>
+                                                        </div>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>
+                                                            Kembali
+                                                        </AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            className="bg-green-500"
+                                                            onClick={() =>
+                                                                handleEdit(
+                                                                    row.original
+                                                                        .id
+                                                                )
+                                                            }
+                                                        >
+                                                            Buat Tahapan
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                            <button
+                                                onClick={() =>
+                                                    deleteStages(
+                                                        row.original.id
+                                                    )
+                                                }
+                                                className={`bg-red-500 p-2 mt-2 text-white rounded-lg
+                                        `}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))

@@ -108,6 +108,15 @@ class StagesController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $stages = RequestStages::where('id', $id)->update([
+            'stage_name' => $request->stage_name,
+            'sequence' => $request->sequence,
+            'to_stage_id' => $request->to_stage_id,
+            'rejected_id' => $request->rejected_id,
+            'letter_id' => $request->letter_id,
+            'approver_id' => $request->approver_id,
+            'status_id' => $request->status_id,
+        ]);
     }
 
     /**
@@ -124,6 +133,6 @@ class StagesController extends Controller
                 'to_stage_id' => NULL,
                 'rejected_id' => NULL
             ]);
-        return to_route('stages.index');
+        return to_route('tahapan-surat.index');
     }
 }
