@@ -28,6 +28,8 @@ class MemoService
         // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->where("from_division", $user[0]->division->id)->first();
         // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->first();
         // All
+        // dd($intent);
+        // dd($division);
 
         switch ($intent) {
             case '':
@@ -36,7 +38,8 @@ class MemoService
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
                 }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($division) {
-                    $q->where('from_division', $division);
+                    $q->where('from_division', $division)
+                        ->orWhere('to_division', $division);;
                 })->get();
 
                 $memo->each(function ($requestLetter) {
@@ -59,59 +62,70 @@ class MemoService
                     $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
                 });
 
-                // $memo->each(function ($requestLetter) {
-                //     $progressStages = is_string($requestLetter->progress_stages)
-                //         ? json_decode($requestLetter->progress_stages, true)
-                //         : ($requestLetter->progress_stages ?? []);
-                //     $requestLetter->progress = RequestStages::withTrashed()->whereIn('id', $requestLetter->progress_stages ?? [])->get();
-                // });
-
-                // Request With Progress Stages
-                // dd($memo);
-                // $requests = RequestLetter::all(); // Fetch all requests
-                // $allStageIds = collect($memo->pluck('progress_stages'))
-                //     ->filter()
-                //     ->flatMap(fn($map) => array_merge(array_keys(json_decode($map, true) ?? []), array_values(json_decode($map, true) ?? [])))
-                //     ->unique()
-                //     ->toArray(); // Collect all unique stage IDs
-
-                // $stages = RequestStages::whereIn('id', $allStageIds)->get()->keyBy('id'); // Fetch all stages at once
-
-
-                // $memo->transform(function ($item) use ($stages) {
-                //     $stagesMap = json_decode($item->progress_stages, true) ?? []; // Ensure it's an array
-
-                //     $item->progress_stages = collect($stagesMap)->mapWithKeys(function ($to, $from) use ($stages) {
-                //         return [
-                //             $from => [
-                //                 'from' => $stages[$from] ?? null,
-                //                 'to' => $stages[$to] ?? null,
-                //             ]
-                //         ];
-                //     });
-
-                //     return $item;
-                // });
-
-                // dd($requests);
 
                 return $memo;
             case 'memo.internal':
-                $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('stages', function ($q) {
-                    $q->where('stage_name', "Memo Internal");
-                })->whereHas('memo', function ($q) use ($division) {
+                // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division', 'memo.to_division', 'memo.signatory')->whereHas('stages', function ($q) {
+                //     $q->where('stage_name', "Memo Internal");
+                // })->whereHas('memo', function ($q) use ($division) {
+                //     $q->where('from_division', $division);
+                // })->get();
+                $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+                    $query->withTrashed();
+                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
+
+                // dd($memo);
+
+
+                $memo->each(function ($requestLetter) {
+                    $progressStages = [];
+
+                    if (isset($requestLetter->progress_stages)) {
+                        if (is_string($requestLetter->progress_stages)) {
+                            $decoded = json_decode($requestLetter->progress_stages, true);
+                            if (is_array($decoded)) {
+                                $progressStages = $decoded;
+                            }
+                        } elseif (is_array($requestLetter->progress_stages)) {
+                            $progressStages = $requestLetter->progress_stages;
+                        }
+                    }
+
+                    $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
+                });
 
                 return $memo;
             case 'memo.eksternal':
-                $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('stages', function ($q) {
-                    $q->where('stage_name', "Memo Eksternal");
-                })->whereHas('memo', function ($q) use ($division) {
-                    $q->where('from_division', $division);
+                $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+                    $query->withTrashed();
+                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($division) {
+                    $q->where('to_division', $division);
                 })->get();
 
+                // dd($memo);
+
+
+                $memo->each(function ($requestLetter) {
+                    $progressStages = [];
+
+                    if (isset($requestLetter->progress_stages)) {
+                        if (is_string($requestLetter->progress_stages)) {
+                            $decoded = json_decode($requestLetter->progress_stages, true);
+                            if (is_array($decoded)) {
+                                $progressStages = $decoded;
+                            }
+                        } elseif (is_array($requestLetter->progress_stages)) {
+                            $progressStages = $requestLetter->progress_stages;
+                        }
+                    }
+
+                    $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
+                });
+
                 return $memo;
+
             default:
                 return response()->json(['error' => 'Invalid letter type'], 400);
         }

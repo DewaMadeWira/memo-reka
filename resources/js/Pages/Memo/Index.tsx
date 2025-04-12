@@ -50,16 +50,16 @@ export default function Index({
     request,
     division,
     userData,
-    stages,
-}: {
+}: // stages,
+{
     request: any;
     division: any;
     userData: any;
-    stages: any;
+    // stages: any;
 }) {
     console.log(userData);
     console.log(request);
-    console.log(stages);
+    // console.log(stages);
     const [formData, setFormData] = useState({
         request_name: "",
         perihal: "",

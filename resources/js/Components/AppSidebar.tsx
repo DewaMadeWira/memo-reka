@@ -41,6 +41,7 @@ import {
 import ApplicationLogo from "./ApplicationLogo";
 import { Link, usePage } from "@inertiajs/react";
 import { url } from "inspector";
+import { title } from "process";
 
 const items = [
     {
@@ -53,7 +54,11 @@ const items = [
         title: "Memo",
         url: "/admin/memo",
         icon: NotebookText,
-        subItems: [{ title: "Semua Memo", url: "/memo" }],
+        subItems: [
+            { title: "Semua Memo", url: "/memo" },
+            { title: "Memo Dikirim", url: "/memo?intent=memo.internal" },
+            { title: "Memo Diterima", url: "/memo?intent=memo.eksternal" },
+        ],
     },
     {
         title: "Undangan Rapat",
