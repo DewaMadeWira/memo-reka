@@ -55,6 +55,8 @@ import { useState } from "react";
 import { Memo } from "@/types/MemoType";
 import { RequestLetter } from "@/types/RequestType";
 import { User } from "@/types/UserType";
+import { PDFViewer } from "@react-pdf/renderer";
+import Template from "@/Pages/Pdf/Template";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -377,6 +379,47 @@ DataTableProps<TData, TValue>) {
                                                 >
                                                     Reject
                                                 </button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger>
+                                                        <button
+                                                            // onClick={() =>
+                                                            //     handleApprove(
+                                                            //         row.original.memo.id
+                                                            //     )
+                                                            // }
+                                                            className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
+                                        `}
+                                                        >
+                                                            Lihat PDF
+                                                        </button>{" "}
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent className="w-full max-w-7xl">
+                                                        <AlertDialogHeader className="">
+                                                            <AlertDialogTitle>
+                                                                Preview PDF
+                                                            </AlertDialogTitle>
+                                                            <div className="">
+                                                                <PDFViewer className="w-full h-[80vh]">
+                                                                    <Template
+                                                                        data={
+                                                                            row
+                                                                                .original
+                                                                                .memo
+                                                                        }
+                                                                    />
+                                                                </PDFViewer>
+                                                            </div>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel className="bg-blue-500 text-white">
+                                                                Kembali
+                                                            </AlertDialogCancel>
+                                                            {/* <AlertDialogAction>
+                                                                Continue
+                                                            </AlertDialogAction> */}
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </div>
                                             {/* <AlertDialog>
                                                 <AlertDialogTrigger

@@ -35,7 +35,7 @@ class MemoService
                 // return to_route('memo.index');
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'memo', 'memo.to_division'])->whereHas('memo', function ($q) use ($division) {
+                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
 
