@@ -15,6 +15,7 @@ class Division extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'division_name',
+        'division_code',
     ];
     protected $dates = ['deleted_at'];
     public function users()

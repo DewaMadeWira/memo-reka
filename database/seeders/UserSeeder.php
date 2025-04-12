@@ -18,9 +18,9 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             [
 
-                'name' => "Adi",
-                'email' => "adi@gmail.com",
-                "password" => Hash::make("12345678"),
+                'name' => "Manager QMSHETI",
+                'email' => "mqmsheti@gmail.com",
+                "password" => Hash::make("password123"),
                 'role_id' => 1,
                 'division_id' => 1,
             ],
@@ -29,33 +29,50 @@ class UserSeeder extends Seeder
 
                 'name' => "Hisyam Syafiq A.",
                 'email' => "hisyam@gmail.com",
-                "password" => Hash::make("12345678"),
+                "password" => Hash::make("password123"),
                 'role_id' => 1,
                 'division_id' => 1,
             ],
             [
 
-                'name' => "Budi",
-                'email' => "budi@gmail.com",
-                "password" => Hash::make("12345678"),
+                'name' => "Pegawai QMSHETI",
+                'email' => "pqmsheti@gmail.com",
+                "password" => Hash::make("password123"),
                 'role_id' => 2,
                 'division_id' => 1,
             ],
             [
 
-                'name' => "Dika",
-                'email' => "dika@gmail.com",
-                "password" => Hash::make("12345678"),
+                'name' => "Manager HR",
+                'email' => "mhr@gmail.com",
+                "password" => Hash::make("password123"),
                 'role_id' => 1,
                 'division_id' => 2,
             ],
             [
 
-                'name' => "Eko",
-                'email' => "eko@gmail.com",
-                "password" => Hash::make("12345678"),
+                'name' => "Pegawai HR",
+                'email' => "phr@gmail.com",
+                "password" => Hash::make("password123"),
                 'role_id' => 2,
                 'division_id' => 2,
+            ],
+
+            [
+
+                'name' => "Manager LOG",
+                'email' => "mlog@gmail.com",
+                "password" => Hash::make("password123"),
+                'role_id' => 1,
+                'division_id' => 3,
+            ],
+            [
+
+                'name' => "Pegawai LOG",
+                'email' => "plog@gmail.com",
+                "password" => Hash::make("password123"),
+                'role_id' => 2,
+                'division_id' => 3,
             ]
         ]);
     }

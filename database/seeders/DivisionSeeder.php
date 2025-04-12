@@ -14,10 +14,16 @@ class DivisionSeeder extends Seeder
     public function run(): void
     {
         DB::table('divisions')->insert([
-            'division_name' => "IT",
+            'division_name' => "Departemen Quality Management and Safety Health Environment & Teknologi Informasi",
+            'division_code' => "QMSHE-TI",
         ]);
         DB::table('divisions')->insert([
-            'division_name' => "HR",
+            'division_name' => "HR & GA",
+            'division_code' => "HR-GA",
+        ]);
+        DB::table('divisions')->insert([
+            'division_name' => "Logistik dan Gudang",
+            'division_code' => "LOG",
         ]);
         //
     }
