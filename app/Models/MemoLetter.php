@@ -12,6 +12,8 @@ class MemoLetter extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'memo_number',
+        'monthly_counter',
+        'yearly_counter',
         'perihal',
         'content',
         'signatory',

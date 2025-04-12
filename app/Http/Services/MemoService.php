@@ -126,6 +126,30 @@ class MemoService
 
                 return $memo;
 
+            case "number":
+                $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+                    $query->withTrashed();
+                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($division) {
+                    $q->where('from_division', $division);
+                })->latest()->first();
+
+                // $year = date("Y", strtotime($memo->created_at));
+
+                $year = $memo->created_at->format('Y');
+                $month = $memo->created_at->format('m');
+
+
+                // $lastYear = 2025;
+                $lastYearlyCounter = 198;
+
+                // $lastMonth = '04'; // format 2 digit
+                $lastMonthlyCounter = 27;
+
+                $result = $this->generateNomorSurat($year, $lastYearlyCounter, $month, $lastMonthlyCounter);
+
+                dd($result);
+                // return ("number");
+
             default:
                 return response()->json(['error' => 'Invalid letter type'], 400);
         }
@@ -145,6 +169,41 @@ class MemoService
 
         // return $memo;
     }
+
+    public function generateNomorSurat($lastYear, $lastYearlyCounter, $lastMonth, $lastMonthlyCounter)
+    {
+        $currentYear = date("Y");
+        $currentMonth = date("m");
+
+        if ($lastYear != $currentYear) {
+            $newYear = $currentYear;
+            $newYearlyCounter = 1;
+        } else {
+            $newYear = $lastYear;
+            $newYearlyCounter = $lastYearlyCounter + 1;
+        }
+
+        if ($lastMonth != $currentMonth || $lastYear != $currentYear) {
+            $newMonth = $currentMonth;
+            $newMonthlyCounter = 1;
+        } else {
+            $newMonth = $lastMonth;
+            $newMonthlyCounter = $lastMonthlyCounter + 1;
+        }
+
+        $nomorBulanan = sprintf("%03d/%s/%s", $newMonthlyCounter, $newMonth, $newYear);
+        $nomorTahunan = sprintf("%03d/%s", $newYearlyCounter, $newYear);
+
+        return [
+            'nomor_bulanan' => $nomorBulanan,
+            'nomor_tahunan' => $nomorTahunan,
+            'year' => $newYear,
+            'month' => $newMonth,
+            'counter_year' => $newYearlyCounter,
+            'counter_month' => $newMonthlyCounter
+        ];
+    }
+
     public function create($request)
     {
 
