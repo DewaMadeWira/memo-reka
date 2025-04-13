@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('memo_letters', function (Blueprint $table) {
             $table->id();
             $table->string("memo_number");
-            $table->integer("monthly_counter");
-            $table->integer("yearly_counter");
+            $table->integer("monthly_counter")->nullable();
+            $table->integer("yearly_counter")->nullable();
             $table->string("perihal");
             $table->text("content");
             $table->foreignId("letter_id");
