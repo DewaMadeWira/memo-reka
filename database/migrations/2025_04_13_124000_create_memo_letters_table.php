@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('memo_letters', function (Blueprint $table) {
             $table->id();
             $table->string("memo_number");
@@ -22,12 +23,23 @@ return new class extends Migration
             $table->foreignId("from_division");
             $table->foreignId("to_division");
             $table->foreignId("signatory");
+            $table->foreignId("official_id");
             $table->timestamps();
             $table->foreign('signatory')->references('id')->on('users');
+            $table->foreign('official_id')->references('id')->on('officials');
             $table->foreign('from_division')->references('id')->on('divisions');
             $table->foreign('to_division')->references('id')->on('divisions');
-            // $table->foreign('letter_id')->references('id')->on('letter_types');
         });
+        Schema::table('memo_letters', function (Blueprint $table) {
+            $table->foreign('letter_id')->references('id')->on('letter_types');
+        });
+        Schema::table('invitation_letters', function (Blueprint $table) {
+            $table->foreign('letter_id')->references('id')->on('letter_types');
+        });
+        Schema::table('request_letters', function (Blueprint $table) {
+            $table->foreign('invitation_id')->references('id')->on('invitation_letters');
+        });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

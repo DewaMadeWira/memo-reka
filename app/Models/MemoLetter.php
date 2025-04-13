@@ -17,6 +17,7 @@ class MemoLetter extends Model
         'perihal',
         'content',
         'signatory',
+        'official_id',
         'letter_id',
         'from_division',
         'to_division',
@@ -36,5 +37,9 @@ class MemoLetter extends Model
     public function signatory(): BelongsTo
     {
         return $this->belongsTo(User::class, 'signatory', 'id');
+    }
+    public function official_id(): BelongsTo
+    {
+        return $this->belongsTo(Official::class, 'official_id', 'id');
     }
 }

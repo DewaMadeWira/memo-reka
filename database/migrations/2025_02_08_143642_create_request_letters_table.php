@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('request_letters', function (Blueprint $table) {
             $table->id();
             $table->string("request_name");
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->json('rejected_stages');
             $table->json('progress_stages');
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

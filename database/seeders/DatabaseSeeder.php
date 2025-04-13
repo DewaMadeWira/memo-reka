@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call([
+            OfficialSeeder::class,
             RoleSeeder::class,
             DivisionSeeder::class,
             UserSeeder::class,
@@ -28,8 +29,7 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             StagesSeeder::class,
             LetterType::class,
-            MemoSeeder::class,
-            OfficialSeeder::class,
+            // MemoSeeder::class,
         ]);
     }
 }
