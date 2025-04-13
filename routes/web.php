@@ -3,6 +3,7 @@
 use App\Http\Controllers\DivisionManagementController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MemoController;
+use App\Http\Controllers\OfficialManagementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RoleManagementController;
@@ -40,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('can:admin-privilege')->group(function () {
         Route::resource('admin/manajemen-pengguna', UserManagementController::class);
+        Route::resource('admin/manajemen-pejabat', OfficialManagementController::class);
         Route::resource('admin/tahapan-surat', StagesController::class);
     });
 

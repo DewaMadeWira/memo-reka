@@ -85,6 +85,7 @@ const items = [
         subItems: [
             { title: "Akun dan Pengguna", type: "separator" },
             { title: "Pengguna", url: "/admin/manajemen-pengguna" },
+            { title: "Pejabat", url: "/admin/manajemen-pejabat" },
             { title: "Role", url: "/admin/manajemen-role" },
             { title: "Divisi", url: "/admin/manajemen-divisi" },
             { title: "Surat", type: "separator" },

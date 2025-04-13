@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             StagesSeeder::class,
             LetterType::class,
             MemoSeeder::class,
-
+            OfficialSeeder::class,
         ]);
     }
 }
