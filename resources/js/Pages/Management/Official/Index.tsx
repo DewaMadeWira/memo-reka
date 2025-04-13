@@ -29,7 +29,7 @@ import {
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
 import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { Official } from "@/types/OfficialType";
 import { useToast } from "@/hooks/use-toast";
 
@@ -117,6 +117,7 @@ export default function Index({ data }: { data: Official[] }) {
 
     return (
         <SidebarAuthenticated>
+            <Head title="Manajemen Pejabat" />
             <div className="w-full p-10">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>

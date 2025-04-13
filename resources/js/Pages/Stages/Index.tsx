@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import { usePage } from "@inertiajs/react";
 import {
@@ -201,6 +201,7 @@ export default function Index({
 
     return (
         <SidebarAuthenticated>
+            <Head title="Manajemen Tahapan Surat"  />
             <div className="w-full p-10 ">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>

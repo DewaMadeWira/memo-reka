@@ -5,6 +5,17 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { SidebarTrigger } from "@/Components/ui/sidebar";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog";
 
 export default function Authenticated({
     header,
@@ -74,13 +85,76 @@ export default function Authenticated({
                                         >
                                             Profile
                                         </Dropdown.Link>
+
+                                        {/* <Dropdown.Link
+                                            as="button"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                if (
+                                                    confirm(
+                                                        "Apakah anda yakin? Anda akan melakukan Logout dari website."
+                                                    )
+                                                ) {
+                                                    router.post(
+                                                        route("logout")
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            Logout
+                                        </Dropdown.Link> */}
+
                                         <Dropdown.Link
-                                            href={route("logout")}
                                             method="post"
                                             as="button"
+                                            href={route("logout")}
                                         >
-                                            Log Out
+                                            Logout
                                         </Dropdown.Link>
+
+                                        {/* <Dropdown.Link
+                                            href=""
+                                            // href={route("logout")}
+                                            // method="post"
+                                            // as="button"
+                                        > */}
+                                        {/* <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <button className="text-sm p-2 px-4 text-gray-900 hover:bg-gray-100 w-full text-start">
+                                                    Logout
+                                                </button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>
+                                                        Apakah anda yakin ?
+                                                    </AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Anda akan melakukan
+                                                        Logout dari website.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>
+                                                        Kembali
+                                                    </AlertDialogCancel>
+                                                    <AlertDialogAction asChild>
+                                                        <Link
+                                                            href={route(
+                                                                "logout"
+                                                            )}
+                                                            method="post"
+                                                            as="button"
+                                                            className="inline-flex h-10 items-center justify-center rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground ring-offset-background transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                                                        >
+                                                            Logout
+                                                        </Link>
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog> */}
+                                        {/* Log Out */}
+                                        {/* </Dropdown.Link> */}
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>

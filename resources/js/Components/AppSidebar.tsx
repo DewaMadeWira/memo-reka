@@ -42,6 +42,7 @@ import ApplicationLogo from "./ApplicationLogo";
 import { Link, usePage } from "@inertiajs/react";
 import { url } from "inspector";
 import { title } from "process";
+import { User } from "@/types";
 
 const items = [
     {
@@ -98,6 +99,7 @@ const items = [
 ];
 export function AppSidebar() {
     const { url } = usePage();
+    const { user } = usePage().props.auth as { user: User };
     return (
         <Sidebar collapsible="icon" className="w-1/6 ">
             <SidebarHeader className="bg-white flex justify-center w-full items-center ">
@@ -111,7 +113,15 @@ export function AppSidebar() {
                 <SidebarGroupContent className="ml-1 w-[90%]">
                     <SidebarMenu>
                         {items.map((item, index) => (
-                            <SidebarMenuItem key={item.title} className="mt-1">
+                            <SidebarMenuItem
+                                key={item.title}
+                                className={`mt-1 ${
+                                    item.title === "Manajemen" &&
+                                    user.role_id !== 1
+                                        ? "hidden"
+                                        : ""
+                                }`}
+                            >
                                 {item.subItems.length > 0 ? (
                                     <Collapsible className="group/collapsible">
                                         <CollapsibleTrigger

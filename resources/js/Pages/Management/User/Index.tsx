@@ -31,7 +31,7 @@ import {
 import { Role } from "@/types/RoleType";
 import { Division } from "@/types/DivisionType";
 import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 
 export default function Index({
     users,
@@ -79,6 +79,7 @@ export default function Index({
 
     return (
         <SidebarAuthenticated>
+            <Head title="Manajemen Pengguna"  />
             <div className="w-full p-10">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>

@@ -22,7 +22,7 @@ import {
 } from "@/Components/ui/alert-dialog";
 import { Role } from "@/types/RoleType";
 import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Index({ roles }: { roles: Role[] }) {
@@ -107,6 +107,7 @@ export default function Index({ roles }: { roles: Role[] }) {
 
     return (
         <SidebarAuthenticated>
+            <Head title="Manajemen Role" />
             <div className="w-full p-10">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>

@@ -43,14 +43,14 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin/manajemen-pengguna', UserManagementController::class);
         Route::resource('admin/manajemen-pejabat', OfficialManagementController::class);
         Route::resource('admin/tahapan-surat', StagesController::class);
+        Route::resource('admin/manajemen-role', RoleManagementController::class);
+        Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
     });
 
     Route::resource('memo', MemoController::class);
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
-Route::resource('admin/manajemen-role', RoleManagementController::class);
-Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
 Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
 // Route::resource('stages', StagesController::class);

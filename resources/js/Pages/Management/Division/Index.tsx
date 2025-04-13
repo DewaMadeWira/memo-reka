@@ -21,7 +21,7 @@ import {
     AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog";
 import { useState } from "react";
-import { router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { useToast } from "@/hooks/use-toast";
 import { Division } from "@/types/DivisionType";
 
@@ -100,6 +100,7 @@ export default function Index({ divisions }: { divisions: Division[] }) {
 
     return (
         <SidebarAuthenticated>
+            <Head title="Manajemen Divisi" />
             <div className="w-full p-10">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>
