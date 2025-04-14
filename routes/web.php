@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:admin-privilege')->group(function () {
         Route::resource('admin/manajemen-pengguna', UserManagementController::class);
         Route::resource('admin/manajemen-pejabat', OfficialManagementController::class);
-        Route::resource('admin/tahapan-surat', StagesController::class);
+        Route::resource('admin/manajemen-tahapan-surat', StagesController::class);
         Route::resource('admin/manajemen-role', RoleManagementController::class);
         Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
         Route::resource('admin/manajemen-tipe-surat', LetterTypeManagement::class);

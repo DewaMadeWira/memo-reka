@@ -92,7 +92,11 @@ const items = [
             { title: "Surat", type: "separator" },
             {
                 title: "Tahapan Surat",
-                url: "/admin/tahapan-surat",
+                url: "/admin/manajemen-tahapan-surat",
+            },
+            {
+                title: "Tipe Surat",
+                url: "/admin/manajemen-tipe-surat",
             },
         ],
     },
