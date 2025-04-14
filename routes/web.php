@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DivisionManagementController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\LetterTypeManagement;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\OfficialManagementController;
 use App\Http\Controllers\ProfileController;
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin/tahapan-surat', StagesController::class);
         Route::resource('admin/manajemen-role', RoleManagementController::class);
         Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
+        Route::resource('admin/manajemen-tipe-surat', LetterTypeManagement::class);
     });
 
     Route::resource('memo', MemoController::class);
