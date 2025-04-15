@@ -286,21 +286,36 @@ class MemoService
             $lastYearlyCounter = $memo->memo->yearly_counter;
             $lastMonth = $memo->created_at->format('m');
             $lastMonthlyCounter = $memo->memo->monthly_counter;
-            // dd($lastMonthlyCounter)
+
+            // dd($lastMonthlyCounter);
             if ($lastYear != $currentYear) {
                 // $newYear = $currentYear;
+
+                error_log($lastYear);
+                error_log("called not same year");
                 $newYearlyCounter = 1;
             } else {
                 // $newYear = $lastYear;
+
+                error_log($lastYear);
+                error_log("called same year");
                 $newYearlyCounter = $lastYearlyCounter + 1;
 
                 // dd($newYearlyCounter, $lastYearlyCounter);
             }
 
+
+            // if ($lastMonth != $currentMonth) {
             if ($lastMonth != $currentMonth || $lastYear != $currentYear) {
+                // dd("not empty", $currentMonth, $lastMonth, $currentYear, $lastYear);
+                error_log($lastMonth);
+
+                error_log("called not same month weird");
                 $newMonth = $currentMonth;
                 $newMonthlyCounter = 1;
             } else {
+                error_log($lastMonth);
+                error_log("called same month");
                 $newMonth = $lastMonth;
                 $newMonthlyCounter = $lastMonthlyCounter + 1;
             }
@@ -311,7 +326,7 @@ class MemoService
 
         $memoNumber = "$newYearlyCounter.$newMonthlyCounter/REKA/$official->official_code/GEN/{$user->division->division_code}/{$this->convertToRoman($currentMonth)}/$currentYear";
 
-        // dd($memoNumber);
+        // dd($newMonthlyCounter, $newYearlyCounter);
         return [
             // 'nomor_bulanan' => $nomorBulanan,
             // 'nomor_tahunan' => $nomorTahunan,
