@@ -174,7 +174,7 @@ export function DataTable<TData, TValue>({
                                                         <div className="flex flex-col gap-3">
                                                             <div className="flex flex-col gap-2">
                                                                 <label htmlFor="name">
-                                                                    Nama Role
+                                                                    Nama Tipe Surat
                                                                 </label>
                                                                 <input
                                                                     onChange={

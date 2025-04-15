@@ -50,16 +50,19 @@ class StagesController extends Controller
         switch ($intent) {
             case 'stages.create':
                 // return to_route('memo.index');
+                $toStageId = $request->to_stage_id == -1 ? null : $request->to_stage_id;
+                $rejectedId = $request->rejected_id == -1 ? null : $request->rejected_id;
                 $stages = RequestStages::create([
                     'stage_name' => $request->stage_name,
                     'sequence' => $request->sequence,
-                    'to_stage_id' => $request->to_stage_id,
-                    'rejected_id' => $request->rejected_id,
+                    'to_stage_id' => $toStageId,
+                    'rejected_id' => $rejectedId,
                     'letter_id' => $request->letter_id,
                     'approver_id' => $request->approver_id,
                     'status_id' => $request->status_id,
                 ]);
-                return to_route('tahapan-surat.index');
+                // return to_route('admin/manajemen-tahapan-surat.index');
+                return to_route('manajemen-tahapan-surat.index');
             case 'stages.update':
 
                 foreach ($request['data'] as $item) {
@@ -78,7 +81,7 @@ class StagesController extends Controller
                         RequestStages::where('id', $item["id"])->update($updateData);
                     }
                 }
-                return to_route('tahapan-surat.index');
+                return to_route('manajemen-tahapan-surat.index');
                 // dd($request->data);
 
             default:
@@ -133,6 +136,6 @@ class StagesController extends Controller
                 'to_stage_id' => NULL,
                 'rejected_id' => NULL
             ]);
-        return to_route('tahapan-surat.index');
+        // return to_route('tahapan-surat.index');
     }
 }

@@ -63,7 +63,7 @@ export default function Index({
     const { user } = usePage().props.auth as { user: User };
     const handleSubmit = () => {
         console.log(formData);
-        router.post("/admin/tahapan-surat?intent=stages.create", formData, {
+        router.post("/admin/manajemen-tahapan-surat?intent=stages.create", formData, {
             onSuccess: () => {
                 toast({
                     className: "bg-green-500 text-white",
@@ -81,7 +81,7 @@ export default function Index({
     };
     const handleEdit = (id: number) => {
         console.log(formData);
-        router.put("/admin/tahapan-surat/" + id, formData, {
+        router.put("/admin/manajemen-tahapan-surat/" + id, formData, {
             onSuccess: () => {
                 toast({
                     className: "bg-green-500 text-white",
@@ -98,7 +98,7 @@ export default function Index({
         });
     };
     function deleteStages(id: number) {
-        router.delete("/admin/tahapan-surat/" + id, {
+        router.delete("/admin/manajemen-tahapan-surat/" + id, {
             onSuccess: () => {
                 toast({
                     className: "bg-green-500 text-white",
@@ -173,7 +173,7 @@ export default function Index({
     const sendUpdate = () => {
         console.log(updateData);
         router.post(
-            "/admin/tahapan-surat?intent=stages.update",
+            "/admin/manajemen-tahapan-surat?intent=stages.update",
             {
                 data: updateData,
             },
@@ -311,7 +311,7 @@ export default function Index({
                                         className="w-full p-2 border rounded-lg"
                                         onChange={handleChange}
                                     >
-                                        <option>Pilih Opsi</option>
+                                        <option value={-1}>Pilih Opsi</option>
                                         {data.map((stage: any) => (
                                             <option value={stage.id}>
                                                 {stage.stage_name}
@@ -330,7 +330,7 @@ export default function Index({
                                         className="w-full p-2 border rounded-lg"
                                         onChange={handleChange}
                                     >
-                                        <option>Pilih Opsi</option>
+                                        <option value={-1}>Pilih Opsi</option>
                                         {data.map((stage: any) => (
                                             <option value={stage.id}>
                                                 {stage.stage_name}

@@ -60,7 +60,21 @@ class MemoService
                     }
 
                     // Now use the properly formatted array
-                    $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
+                    // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
+                    if (!empty($progressStages)) {
+                        $requestLetter->progress = RequestStages::withTrashed()
+                            ->with("request_rejected")
+                            ->whereIn('id', $progressStages)
+                            ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
+                                // Only apply the ordering if there are items in the array
+                                return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
+                            })
+                            ->get();
+                    } else {
+                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                    }
+                    // return $requestLetter;
+                    // error_log($requestLetter);
                 });
 
 
@@ -96,6 +110,7 @@ class MemoService
 
                     $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
                 });
+                // error_log($memo);
 
                 return $memo;
             case 'memo.eksternal':
@@ -258,6 +273,7 @@ class MemoService
             $result[] = (int) $currentKey;
         }
 
+        error_log(json_encode($result));
         // dd($result);
         return $result;
     }

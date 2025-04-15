@@ -46,6 +46,7 @@ import { DataTable } from "./memo/data-table";
 import { columns } from "./memo/columns";
 import { User } from "@/types/UserType";
 import { Official } from "@/types/OfficialType";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Index({
     request,
@@ -60,6 +61,7 @@ export default function Index({
     official: Official[];
     // stages: any;
 }) {
+    const { toast } = useToast();
     console.log(userData);
     console.log(request);
     // console.log(stages);
@@ -75,7 +77,23 @@ export default function Index({
     console.log(request);
     const handleSubmit = () => {
         console.log(formData);
-        router.post("/request?intent=memo.create", formData);
+        router.post("/request?intent=memo.create", formData, {
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Memo berhasil dibuat",
+                });
+            },
+        });
     };
     // const handleApprove = ({ id }: { id: number }) => {
     //     router.post("/memo-approve/" + id);
@@ -98,7 +116,7 @@ export default function Index({
 
     return (
         <SidebarAuthenticated>
-            <Head title="Memo"  />
+            <Head title="Memo" />
             <div className="w-full p-10 bg-white">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>

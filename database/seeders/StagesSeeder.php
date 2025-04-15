@@ -49,7 +49,7 @@ class StagesSeeder extends Seeder
             'approver_id' => 1,
             'to_stage_id' => 4,
             'status_id' => 2,
-            'rejected_id' => 6,
+            'rejected_id' => 14,
         ]);
         // If Rejected Go Mark as Rejected and Done
         // DB::table('request_stages')->insert([
@@ -90,7 +90,7 @@ class StagesSeeder extends Seeder
             'id' => 6,
             'stage_name' => "Memo Eksternal Selesai",
             'sequence' => 0,
-            'description' => "Tahap ini merupakan tahap akhir dimana memo telah disetujui oleh manajer eksternal. Setelah disetujui.",
+            'description' => "Tahap ini merupakan tahap akhir dimana memo telah disetujui oleh manajer eksternal.",
             'letter_id' => 1,
             'approver_id' => 1,
             'to_stage_id' => NULL,
@@ -170,6 +170,17 @@ class StagesSeeder extends Seeder
             'sequence' => 0,
             'description' => "Approval Manajer Internal",
             'letter_id' => 2,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 14,
+            'stage_name' => "Memo Ditolak Manajer",
+            'sequence' => 0,
+            'description' => "Memo ditolak oleh Manajer Eksternal. Untuk memperbaiki buat memo baru.",
+            'letter_id' => 1,
             'approver_id' => 1,
             'to_stage_id' => NULL,
             'status_id' => 5,

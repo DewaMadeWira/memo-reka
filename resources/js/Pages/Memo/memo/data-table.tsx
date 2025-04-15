@@ -153,11 +153,11 @@ DataTableProps<TData, TValue>) {
                                     Tahapan
                                 </TableHead>
                                 <TableHead
-                                    className={
-                                        user.role_id != 1
-                                            ? "hidden"
-                                            : "text-center"
-                                    }
+                                    // className={
+                                    //     user.role_id != 1
+                                    //         ? "hidden"
+                                    //         : "text-center"
+                                    // }
                                 >
                                     Aksi
                                 </TableHead>
@@ -351,9 +351,9 @@ DataTableProps<TData, TValue>) {
                                         </Popover>
                                     </TableCell>
                                     <TableCell
-                                        className={
-                                            user.role_id != 1 ? "hidden" : ""
-                                        }
+                                    // className={
+                                    //     user.role_id != 1 ? "hidden" : ""
+                                    // }
                                     >
                                         <div className="flex gap-2 justify-center">
                                             <div className="flex gap-2">
@@ -363,8 +363,12 @@ DataTableProps<TData, TValue>) {
                                                             row.original.memo.id
                                                         )
                                                     }
-                                                    className={`bg-green-500 p-2 mt-2 text-white rounded-lg
-                                        `}
+                                                    className={
+                                                        user.role_id != 1
+                                                            ? "hidden"
+                                                            : `bg-green-500 p-2 mt-2 text-white rounded-lg
+                                        `
+                                                    }
                                                 >
                                                     Approve
                                                 </button>
@@ -374,8 +378,12 @@ DataTableProps<TData, TValue>) {
                                                             row.original.memo.id
                                                         )
                                                     }
-                                                    className={`bg-red-500 p-2 mt-2 text-white rounded-lg
-                                        `}
+                                                    className={
+                                                        user.role_id != 1
+                                                            ? "hidden"
+                                                            : `bg-red-500 p-2 mt-2 text-white rounded-lg
+                                        `
+                                                    }
                                                 >
                                                     Reject
                                                 </button>

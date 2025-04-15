@@ -127,7 +127,7 @@ export default function Template({ data }: { data: any }) {
                                     paddingLeft: "10px",
                                 }}
                             >
-                                Dari : {data.from_division.division_name}
+                                Dari : {data.from_division.division_code}
                             </Text>
                         </View>
                         <View
@@ -143,7 +143,7 @@ export default function Template({ data }: { data: any }) {
                                     paddingLeft: "10px",
                                 }}
                             >
-                                Kepada : {data.to_division.division_name}
+                                Kepada : {data.to_division.division_code}
                             </Text>
                         </View>
                     </View>
