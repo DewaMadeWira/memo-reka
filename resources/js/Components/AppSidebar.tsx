@@ -9,6 +9,7 @@ import {
     SidebarMenuItem,
     SidebarHeader,
     SidebarFooter,
+    useSidebar,
 } from "@/Components/ui/sidebar";
 import {
     DropdownMenu,
@@ -40,9 +41,10 @@ import {
 
 import ApplicationLogo from "./ApplicationLogo";
 import { Link, usePage } from "@inertiajs/react";
-import { url } from "inspector";
+import { console, url } from "inspector";
 import { title } from "process";
 import { User } from "@/types";
+import logo from "/public/assets/images/icon.png";
 
 const items = [
     {
@@ -104,10 +106,16 @@ const items = [
 export function AppSidebar() {
     const { url } = usePage();
     const { user } = usePage().props.auth as { user: User };
+    const { open } = useSidebar();
+    // console.log(open);
     return (
         <Sidebar collapsible="icon" className="w-1/6 ">
             <SidebarHeader className="bg-white flex justify-center w-full items-center ">
-                <ApplicationLogo width={150} height={150}></ApplicationLogo>
+                {open ? (
+                    <ApplicationLogo width={150} height={150}></ApplicationLogo>
+                ) : (
+                    <img src={logo} alt="" width={50} height={50} />
+                )}
             </SidebarHeader>
             <SidebarContent className="bg-white">
                 <SidebarGroup />
@@ -128,36 +136,39 @@ export function AppSidebar() {
                             >
                                 {item.subItems.length > 0 ? (
                                     <Collapsible className="group/collapsible">
-                                        <CollapsibleTrigger
-                                            className={`flex w-full items-center font-medium p-2 rounded-md
+                                        <SidebarMenuButton asChild>
+                                            <CollapsibleTrigger
+                                                className={`flex w-full items-center font-medium p-2 rounded-md
                                                 hover:bg-violet-300 hover:text-violet-800
                                                 ${
                                                     url.startsWith(item.url)
                                                         ? "bg-violet-300 text-violet-800"
                                                         : ""
                                                 }`}
-                                        >
-                                            <div className="w-10 flex justify-center items-center">
-                                                <item.icon size={20} />
-                                            </div>
-                                            <span className="text-sm">
-                                                {item.title}
-                                            </span>
-                                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
-                                        </CollapsibleTrigger>
+                                            >
+                                                <div className="w-10 flex justify-center items-center">
+                                                    <item.icon size={20} />
+                                                </div>
+                                                <span className="text-sm">
+                                                    {item.title}
+                                                </span>
+                                                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
+                                            </CollapsibleTrigger>
+                                        </SidebarMenuButton>
+
                                         <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
                                             {item.subItems.map((subItem) =>
                                                 subItem.type === "separator" ? (
                                                     <div
                                                         key={subItem.title}
-                                                        className="text-sm font-medium text-gray-500 mt-3 mb-1 px-2"
+                                                        className="text-sm font-medium text-gray-500 mt-3 mb-1 px-2 sidebar-text"
                                                     >
                                                         {subItem.title}
                                                     </div>
                                                 ) : (
                                                     <Link
                                                         key={subItem.title}
-                                                        className="mt-1 pl-5 p-2 hover:bg-gray-200 rounded-md text-xs"
+                                                        className="mt-1 pl-5 p-2 hover:bg-gray-200 rounded-md text-xs sidebar-text"
                                                         href={subItem.url!}
                                                     >
                                                         {subItem.title}
@@ -181,7 +192,7 @@ export function AppSidebar() {
                                             <div className="w-7 ml-1 flex justify-center items-center">
                                                 <item.icon size={20} />
                                             </div>
-                                            <span className="text-sm">
+                                            <span className=" text-sm">
                                                 {item.title}
                                             </span>
                                         </a>
