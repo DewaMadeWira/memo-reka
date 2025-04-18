@@ -73,7 +73,19 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 6,
             'status_id' => 3,
             'rejected_id' => 5,
+            'requires_file_upload' => true,
         ]);
+        // DB::table('request_stages')->insert([
+        //     'id' => 15,
+        //     'stage_name' => "Memo Eksternal Dikerjakan",
+        //     'sequence' => 0,
+        //     'description' => "Tahap ini merupakan tahap dimana memo telah disetujui oleh manajer eksternal. Setelah disetujui, memo akan dikerjakan oleh divisi tersebut.",
+        //     'letter_id' => 1,
+        //     'approver_id' => 1,
+        //     'to_stage_id' => 6,
+        //     'status_id' => 3,
+        //     'rejected_id' => 5,
+        // ]);
         DB::table('request_stages')->insert([
             'id' => 5,
             'stage_name' => "Memo Eksternal Ditolak Manajer Eksternal",

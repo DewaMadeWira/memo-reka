@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId("to_division");
             $table->foreignId("signatory");
             $table->foreignId("official_id");
+            $table->string('file_path')->nullable();
             $table->timestamps();
             $table->foreign('signatory')->references('id')->on('users');
             $table->foreign('official_id')->references('id')->on('officials');

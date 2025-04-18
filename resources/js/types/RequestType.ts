@@ -16,6 +16,7 @@ export type RequestLetter = {
     stages: {
         id: number;
         stage_name: string;
+        requires_file_upload: number;
     };
     request_rejected: {
         id: number;

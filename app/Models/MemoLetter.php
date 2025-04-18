@@ -21,6 +21,7 @@ class MemoLetter extends Model
         'letter_id',
         'from_division',
         'to_division',
+        'file_path',
     ];
     public function from_division(): BelongsTo
     {

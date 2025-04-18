@@ -72,6 +72,36 @@ export default function Index({
         official: "",
         to_division: null,
     });
+    const [filePreview, setFilePreview] = useState<string | null>(null);
+    const [fileData, setFileData] = useState<{
+        file: File | null;
+        memo_id: number;
+        fileName: string;
+    } | null>(null);
+    const handleFileUpload = () => {
+        if (!fileData?.file) return;
+
+        const formData = new FormData();
+        formData.append("file", fileData.file);
+        formData.append("memo_id", fileData.memo_id.toString());
+
+        // Here you would typically make an API call to upload the file
+        // Example:
+        // axios.post('/api/upload-memo-file', formData, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data',
+        //     },
+        // }).then(response => {
+        //     // Handle success
+        //     setFilePreview(null);
+        //     setFileData(null);
+        // }).catch(error => {
+        //     // Handle error
+        // });
+
+        // For now, just logging
+        console.log("Uploading file:", fileData);
+    };
     const { user } = usePage().props.auth as { user: User };
     console.log(user);
     console.log(request);
@@ -273,238 +303,16 @@ export default function Index({
                         user={user}
                         handleApprove={handleApprove}
                         handleReject={handleReject}
-                        // formData={formData}
-                        // setFormData={setFormData}
                         data={request}
                         columns={columns}
-                        // handleDelete={handleDelete}
-                        // handleChange={handleChange}
-                        // role={role}
-                        // division={division}
-                        // handleUpdate={handleUpdate}
+                        setFilePreview={setFilePreview}
+                        setFileData={setFileData}
+                        filePreview={filePreview}
+                        fileData={fileData}
+                        handleUpload={handleFileUpload}
                     />
                 </div>
-                {/* <table className="w-[80%]">
-                    <tr>
-                        <th>Id</th>
-                        <th>Request Name</th>
-                        <th>Divisi Tujuan</th>
-                        <th>Stages</th>
-                        <th>Status</th>
-                        <th>PDF</th>
-                        <th className={`${user.role_id == 1 ? "" : "hidden"}`}>
-                            Approval
-                        </th>
-                    </tr>
-                    {request.map((request: any, index: number) => (
-                        <tr key={request.id} className="">
-                            <td className="">{index + 1}</td>
-                            <td className="">{request.request_name}</td>
-                            <td className="">
-                                {request.memo.to_division.division_name}
-                            </td>
-                            <td className="text-center">
-                                <Popover>
-                                    <PopoverTrigger>
-                                        {request.stages.stage_name}
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-fit">
-                                        <div className="">
-                                            <h4 className="text-sm">
-                                                {request.stages.stage_name}
-                                            </h4>
-                                            <Menubar className="h-fit border-none shadow-none">
-                                                {request.progress.map(
-                                                    (
-                                                        prog: any,
-                                                        index: number
-                                                    ) => {
-                                                        const currentStageIndex =
-                                                            request.progress.findIndex(
-                                                                (p: any) =>
-                                                                    p.id ===
-                                                                    request.stages_id
-                                                            );
-                                                        const rejectedStageIndex =
-                                                            request.request_rejected
-                                                                ? request.progress.findIndex(
-                                                                      (
-                                                                          p: any
-                                                                      ) =>
-                                                                          p.id ===
-                                                                          request
-                                                                              .request_rejected
-                                                                              .id
-                                                                  )
-                                                                : -1;
-                                                        // Pick the *lowest* index between red and blue stages
-                                                        const targetStageIndex =
-                                                            currentStageIndex ===
-                                                            -1
-                                                                ? rejectedStageIndex
-                                                                : rejectedStageIndex ===
-                                                                  -1
-                                                                ? currentStageIndex
-                                                                : Math.min(
-                                                                      currentStageIndex,
-                                                                      rejectedStageIndex
-                                                                  );
-                                                        const isBeforeTargetStage =
-                                                            index <
-                                                            targetStageIndex;
-                                                        let triggerClass =
-                                                            "w-44 h-7 border-[1px] border-gray-200"; // default
-                                                        if (
-                                                            prog.id ===
-                                                            request
-                                                                .request_rejected
-                                                                ?.id
-                                                        ) {
-                                                            triggerClass =
-                                                                "bg-red-500 text-white w-44 h-7";
-                                                        } else if (
-                                                            prog.id ===
-                                                            request.stages_id
-                                                        ) {
-                                                            triggerClass =
-                                                                "bg-blue-500 text-white w-44 h-7";
-                                                        } else if (
-                                                            isBeforeTargetStage
-                                                        ) {
-                                                            triggerClass =
-                                                                "bg-blue-200 text-black w-44 h-7"; // for stages before red or blue
-                                                        }
-                                                        return (
-                                                            <div className="flex flex-col gap-2">
-                                                                <MenubarMenu>
-                                                                    <div className="text-sm">
-                                                                        <MenubarTrigger
-                                                                            className={
-                                                                                request.stages_id ===
-                                                                                prog
-                                                                                    .request_rejected
-                                                                                    ?.id
-                                                                                    ? "bg-red-500 text-white w-44 h-7 focus:bg-red-500 hover:bg-red-500 focus:hover:bg-red-500"
-                                                                                    : prog.id ===
-                                                                                      request.stages_id
-                                                                                    ? "bg-blue-500 text-white w-44 h-7 focus:bg-blue-500 hover:bg-blue-500 focus:hover:bg-blue-500"
-                                                                                    : "w-44 h-7 border-[1px] border-gray-200"
-                                                                            }
-                                                                        ></MenubarTrigger>
-                                                                    </div>
-                                                                    <MenubarContent className="border-b border-gray-200 w-1/3">
-                                                                        <div className="p-3 flex flex-col gap-1">
-                                                                            <h4 className="text-base">
-                                                                                <span className="font-bold">
-                                                                                    Tahapan
-                                                                                    :{" "}
-                                                                                </span>
-                                                                            </h4>
-                                                                            <h4 className="text-sm">
-                                                                                {
-                                                                                    prog.stage_name
-                                                                                }
-                                                                            </h4>
-                                                                            <p className="text-xs">
-                                                                                Lorem
-                                                                                ipsum
-                                                                                dolor
-                                                                                sit,
-                                                                                amet
-                                                                                consectetur
-                                                                                adipisicing
-                                                                                elit.
-                                                                                Pariatur,
-                                                                                in.
-                                                                                Laudantium
-                                                                                ex
-                                                                                molestias
-                                                                                optio
-                                                                                accusamus
-                                                                                velit,
-                                                                                nisi
-                                                                                ducimus
-                                                                                iusto
-                                                                                vitae?
-                                                                            </p>
-                                                                            <div
-                                                                                className={
-                                                                                    request.stages_id ===
-                                                                                    prog
-                                                                                        .request_rejected
-                                                                                        ?.id
-                                                                                        ? ""
-                                                                                        : "hidden"
-                                                                                }
-                                                                            >
-                                                                                <h4 className="text-sm font-bold">
-                                                                                    Tahapan
-                                                                                    Ditolak
-                                                                                    Pada
-                                                                                    :{" "}
-                                                                                </h4>
-                                                                                <p className="text-xs">
-                                                                                    {
-                                                                                        prog
-                                                                                            .request_rejected
-                                                                                            ?.stage_name
-                                                                                    }
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </MenubarContent>
-                                                                </MenubarMenu>
-                                                            </div>
-                                                        );
-                                                    }
-                                                )}
-                                            </Menubar>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                            </td>
-                            <td className="text-center">
-                                {request.stages.status.status_name}
-                            </td>
-                            <td className="text-center">
-                                <a
-                                    href={`/memo/${request.memo.id}`}
-                                    // onClick={() => router.re}
-                                    className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
-                                        `}
-                                >
-                                    Lihat PDF
-                                </a>
-                            </td>
-                            <td
-                                className={`${
-                                    user.role_id == 1 ? "" : "hidden"
-                                }`}
-                            >
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() =>
-                                            handleApprove(request.memo.id)
-                                        }
-                                        className={`bg-green-500 p-2 mt-2 text-white rounded-lg
-                                        `}
-                                    >
-                                        Approve
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            handleReject(request.memo.id)
-                                        }
-                                        className={`bg-red-500 p-2 mt-2 text-white rounded-lg
-                                        `}
-                                    >
-                                        Reject
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </table> */}
+                {/*  */}
 
                 {/* <button
                     onClick={handleSubmit}

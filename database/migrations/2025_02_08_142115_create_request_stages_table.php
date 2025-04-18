@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('to_stage_id')->nullable();
             $table->foreignId('rejected_id')->nullable();
             $table->foreignId('status_id');
+            $table->boolean('requires_file_upload')->default(false);
             $table->timestamps();
             $table->foreign('letter_id')->references('id')->on('letter_types');
             $table->foreign('approver_id')->references('id')->on('roles');

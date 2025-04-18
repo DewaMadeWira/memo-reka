@@ -70,14 +70,25 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
     // ) => void;
     handleApprove: (id: number) => void;
     handleReject: (id: number) => void;
+    handleUpload: (id: number) => void;
+    // request_file_upload: number;
     // formData: {
     //     role_name: string;
     // };
-    // setFormData: React.Dispatch<
-    //     React.SetStateAction<{
-    //         role_name: string;
-    //     }>
-    // >;
+    setFilePreview: React.Dispatch<React.SetStateAction<string | null>>;
+    setFileData: React.Dispatch<
+        React.SetStateAction<{
+            file: File | null;
+            memo_id: number;
+            fileName: string;
+        } | null>
+    >;
+    filePreview: string | null;
+    fileData: {
+        file: File | null;
+        memo_id: number;
+        fileName: string;
+    } | null;
 }
 
 export function DataTable<TData extends RequestLetter, TValue>({
@@ -86,13 +97,20 @@ export function DataTable<TData extends RequestLetter, TValue>({
     handleApprove,
     handleReject,
     user,
-}: // handleDelete,
+    fileData,
+    filePreview,
+    setFileData,
+    setFilePreview,
+    handleUpload,
+}: // request_file_upload,
+// handleDelete,
 // role,
 
 // division,
 // formData,
 // setFormData,
 DataTableProps<TData, TValue>) {
+    // console.log(request_file_upload);
     const [sorting, setSorting] = useState<SortingState>([]);
 
     const [pagination, setPagination] = useState({
@@ -153,11 +171,11 @@ DataTableProps<TData, TValue>) {
                                     Tahapan
                                 </TableHead>
                                 <TableHead
-                                    // className={
-                                    //     user.role_id != 1
-                                    //         ? "hidden"
-                                    //         : "text-center"
-                                    // }
+                                // className={
+                                //     user.role_id != 1
+                                //         ? "hidden"
+                                //         : "text-center"
+                                // }
                                 >
                                     Aksi
                                 </TableHead>
@@ -427,6 +445,189 @@ DataTableProps<TData, TValue>) {
                                                             </AlertDialogAction> */}
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
+                                                </AlertDialog>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger>
+                                                        {row.original.memo
+                                                            .file_path !=
+                                                        null ? (
+                                                            <button
+                                                                className={
+                                                                    row.original
+                                                                        .stages
+                                                                        .requires_file_upload !=
+                                                                    1
+                                                                        ? "hidden"
+                                                                        : `bg-blue-500 p-2 mt-2 text-white rounded-lg`
+                                                                }
+                                                            >
+                                                                Lihat File
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className={`bg-blue-500 p-2 mt-2 text-white rounded-lg`}
+                                                            >
+                                                                Upload File
+                                                            </button>
+                                                        )}
+                                                    </AlertDialogTrigger>
+                                                    {row.original.memo
+                                                        .file_path != null ? (
+                                                        <AlertDialogContent className="w-full max-w-7xl">
+                                                            <AlertDialogHeader className="">
+                                                                <AlertDialogTitle>
+                                                                    Preview File
+                                                                </AlertDialogTitle>
+                                                                <div className="">
+                                                                    {/* <PDFViewer className="w-full h-[80vh]">
+                                                                    <Template
+                                                                        data={
+                                                                            row
+                                                                                .original
+                                                                                .memo
+                                                                        }
+                                                                    />
+                                                                </PDFViewer> */}
+                                                                </div>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel className="bg-blue-500 text-white">
+                                                                    Kembali
+                                                                </AlertDialogCancel>
+                                                                {/* <AlertDialogAction>
+                                                                Continue
+                                                            </AlertDialogAction> */}
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    ) : (
+                                                        <AlertDialogContent className="w-full">
+                                                            <AlertDialogHeader className="">
+                                                                <AlertDialogTitle>
+                                                                    Upload File
+                                                                </AlertDialogTitle>
+                                                                <div className="">
+                                                                    <div className="">
+                                                                        <div className="mb-4">
+                                                                            <label
+                                                                                htmlFor="fileUpload"
+                                                                                className="block text-sm font-medium mb-2"
+                                                                            >
+                                                                                Upload
+                                                                                File
+                                                                                (Hanya
+                                                                                gambar
+                                                                                )
+                                                                            </label>
+                                                                            <input
+                                                                                type="file"
+                                                                                id="fileUpload"
+                                                                                name="fileUpload"
+                                                                                accept="image/*"
+                                                                                className="block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-md file:border-0
+                file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700
+                hover:file:bg-blue-100"
+                                                                                onChange={(
+                                                                                    e
+                                                                                ) => {
+                                                                                    const file =
+                                                                                        e
+                                                                                            .target
+                                                                                            .files?.[0];
+                                                                                    if (
+                                                                                        file
+                                                                                    ) {
+                                                                                        const reader =
+                                                                                            new FileReader();
+                                                                                        reader.onload =
+                                                                                            (
+                                                                                                event
+                                                                                            ) => {
+                                                                                                setFilePreview(
+                                                                                                    event
+                                                                                                        .target
+                                                                                                        ?.result as string
+                                                                                                );
+                                                                                            };
+                                                                                        reader.readAsDataURL(
+                                                                                            file
+                                                                                        );
+                                                                                        setFileData(
+                                                                                            {
+                                                                                                file: file,
+                                                                                                memo_id:
+                                                                                                    row
+                                                                                                        .original
+                                                                                                        .memo
+                                                                                                        .id,
+                                                                                                fileName:
+                                                                                                    file.name,
+                                                                                            }
+                                                                                        );
+                                                                                    }
+                                                                                }}
+                                                                            />
+                                                                        </div>
+
+                                                                        {filePreview && (
+                                                                            <div className="mt-4 mb-4">
+                                                                                <h4 className="text-sm font-medium mb-2">
+                                                                                    Preview:
+                                                                                </h4>
+                                                                                <div className="border rounded-md p-2 max-w-md">
+                                                                                    <img
+                                                                                        src={
+                                                                                            filePreview
+                                                                                        }
+                                                                                        alt="File Preview"
+                                                                                        className="max-h-48 max-w-full mx-auto"
+                                                                                    />
+                                                                                    <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                        {
+                                                                                            fileData?.fileName
+                                                                                        }
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+
+                                                                    {/* <input type="file" /> */}
+                                                                    {/* <PDFViewer className="w-full h-[80vh]">
+                                                                    <Template
+                                                                        data={
+                                                                            row
+                                                                                .original
+                                                                                .memo
+                                                                        }
+                                                                    />
+                                                                </PDFViewer> */}
+                                                                </div>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel className=" ">
+                                                                    Kembali
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    className="bg-blue-500 text-white"
+                                                                    onClick={() =>
+                                                                        handleUpload(
+                                                                            row
+                                                                                .original
+                                                                                .id
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        !fileData?.file
+                                                                    }
+                                                                >
+                                                                    Upload
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    )}
                                                 </AlertDialog>
                                             </div>
                                             {/* <AlertDialog>
