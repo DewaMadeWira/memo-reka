@@ -398,6 +398,10 @@ class MemoService
             return to_route('memo.index');
         }
 
+        MemoLetter::where('id', $id)->update([
+            'file_path' => NULL
+        ]);
+
         $request->update([
             "stages_id" => $nextStageId
         ]);

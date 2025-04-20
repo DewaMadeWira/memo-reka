@@ -463,7 +463,8 @@ DataTableProps<TData, TValue>) {
                                                             >
                                                                 Lihat File
                                                             </button>
-                                                        ) : (
+                                                        ) : user.role_id !=
+                                                          1 ? (
                                                             <button
                                                                 className={
                                                                     row.original
@@ -476,6 +477,8 @@ DataTableProps<TData, TValue>) {
                                                             >
                                                                 Upload File
                                                             </button>
+                                                        ) : (
+                                                            <></>
                                                         )}
                                                     </AlertDialogTrigger>
                                                     {row.original.memo
