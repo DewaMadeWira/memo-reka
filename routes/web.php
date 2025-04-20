@@ -8,6 +8,7 @@ use App\Http\Controllers\OfficialManagementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RoleManagementController;
+use App\Http\Controllers\ServeImageController;
 use App\Http\Controllers\StagesController;
 use App\Http\Controllers\UserManagementController;
 use App\Models\MemoLetter;
@@ -48,8 +49,23 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
         Route::resource('admin/manajemen-tipe-surat', LetterTypeManagement::class);
     });
+    Route::post('upload-bukti', function (Request $request) {
+        $file = $request['file'];
+        $memo_id = $request['memo_id'];
+        // dd($memo_id);
+        $ext = $file->getClientOriginalExtension();
+        $filename = rand(100000000, 999999999) . '.' . $ext;
+        Storage::disk('local')->put('private/bukti-memo/' . $filename, FacadesFile::get($file));
+        // $data['file'] = $filename;
+        MemoLetter::where('id', $memo_id)->update([
+            'file_path' => $filename,
+        ]);
+        // dd($file);
+        // return  $filePath = 'private/bukti-memo/' . $filename;
+    });
 
     Route::resource('memo', MemoController::class);
+    Route::get('/memo-file/{filename}', [ServeImageController::class, 'show'])->name('memo.file');
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');

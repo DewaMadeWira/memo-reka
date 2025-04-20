@@ -465,7 +465,14 @@ DataTableProps<TData, TValue>) {
                                                             </button>
                                                         ) : (
                                                             <button
-                                                                className={`bg-blue-500 p-2 mt-2 text-white rounded-lg`}
+                                                                className={
+                                                                    row.original
+                                                                        .stages
+                                                                        .requires_file_upload !=
+                                                                    1
+                                                                        ? "hidden"
+                                                                        : `bg-blue-500 p-2 mt-2 text-white rounded-lg`
+                                                                }
                                                             >
                                                                 Upload File
                                                             </button>
@@ -478,7 +485,11 @@ DataTableProps<TData, TValue>) {
                                                                 <AlertDialogTitle>
                                                                     Preview File
                                                                 </AlertDialogTitle>
-                                                                <div className="">
+                                                                <div className="flex w-full h-[50vh] justify-center items-center">
+                                                                    <img
+                                                                        src={`memo-file/${row.original.memo.file_path}`}
+                                                                        alt=""
+                                                                    />
                                                                     {/* <PDFViewer className="w-full h-[80vh]">
                                                                     <Template
                                                                         data={

@@ -84,6 +84,23 @@ export default function Index({
         const formData = new FormData();
         formData.append("file", fileData.file);
         formData.append("memo_id", fileData.memo_id.toString());
+        router.post("/upload-bukti", fileData, {
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Memo berhasil dibuat",
+                });
+            },
+        });
 
         // Here you would typically make an API call to upload the file
         // Example:
