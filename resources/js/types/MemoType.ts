@@ -1,3 +1,5 @@
+import { Division } from "./DivisionType";
+
 export type Memo = {
     id: number;
     memo_number: string;
@@ -5,8 +7,8 @@ export type Memo = {
     content: string;
     signatory: number;
     letter_id: number;
-    from_division: number;
-    to_division: number;
+    from_division: Division;
+    to_division: Division;
     created_at?: string;
     updated_at?: string;
     file_path?: string;

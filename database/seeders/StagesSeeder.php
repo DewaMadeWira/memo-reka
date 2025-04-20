@@ -25,6 +25,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 3,
             'status_id' => 1,
             'rejected_id' => 2,
+            'is_external' => false,
         ]);
         // May use is rejectable 
         // If Rejected Didn't go anywhere change status to Rejected
@@ -38,6 +39,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 1,
             'status_id' => 4,
             'rejected_id' => NULL,
+            'is_external' => false,
         ]);
 
         DB::table('request_stages')->insert([
@@ -50,6 +52,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 4,
             'status_id' => 2,
             'rejected_id' => 14,
+            'is_external' => true,
         ]);
         // If Rejected Go Mark as Rejected and Done
         // DB::table('request_stages')->insert([
@@ -74,6 +77,7 @@ class StagesSeeder extends Seeder
             'status_id' => 3,
             'rejected_id' => 5,
             'requires_file_upload' => true,
+            'is_external' => true,
         ]);
         // DB::table('request_stages')->insert([
         //     'id' => 15,
@@ -96,6 +100,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => 4,
             'status_id' => 4,
             'rejected_id' => NULL,
+            'is_external' => true,
         ]);
         // If rejected didn't go anywhere 
         DB::table('request_stages')->insert([

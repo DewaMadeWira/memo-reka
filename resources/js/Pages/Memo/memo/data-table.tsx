@@ -375,36 +375,99 @@ DataTableProps<TData, TValue>) {
                                     >
                                         <div className="flex gap-2 justify-center">
                                             <div className="flex gap-2">
-                                                <button
-                                                    onClick={() =>
-                                                        handleApprove(
-                                                            row.original.memo.id
-                                                        )
-                                                    }
-                                                    className={
-                                                        user.role_id != 1
-                                                            ? "hidden"
-                                                            : `bg-green-500 p-2 mt-2 text-white rounded-lg
-                                        `
-                                                    }
-                                                >
-                                                    Approve
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        handleReject(
-                                                            row.original.memo.id
-                                                        )
-                                                    }
-                                                    className={
-                                                        user.role_id != 1
-                                                            ? "hidden"
-                                                            : `bg-red-500 p-2 mt-2 text-white rounded-lg
-                                        `
-                                                    }
-                                                >
-                                                    Reject
-                                                </button>
+                                                <>
+                                                    {row.original.stages
+                                                        .is_external == 1
+                                                        ? row.original.memo
+                                                              .to_division.id ==
+                                                              user.division_id && (
+                                                              <>
+                                                                  <button
+                                                                      onClick={() =>
+                                                                          handleApprove(
+                                                                              row
+                                                                                  .original
+                                                                                  .memo
+                                                                                  .id
+                                                                          )
+                                                                      }
+                                                                      className={
+                                                                          user.role_id !=
+                                                                          1
+                                                                              ? "hidden"
+                                                                              : `bg-green-500 p-2 mt-2 text-white rounded-lg
+                                                                                            `
+                                                                      }
+                                                                  >
+                                                                      Approve
+                                                                  </button>
+                                                                  <button
+                                                                      onClick={() =>
+                                                                          handleReject(
+                                                                              row
+                                                                                  .original
+                                                                                  .memo
+                                                                                  .id
+                                                                          )
+                                                                      }
+                                                                      className={
+                                                                          user.role_id !=
+                                                                          1
+                                                                              ? "hidden"
+                                                                              : `bg-red-500 p-2 mt-2 text-white rounded-lg
+                                                                                            `
+                                                                      }
+                                                                  >
+                                                                      Reject
+                                                                  </button>
+                                                              </>
+                                                          )
+                                                        : row.original.memo
+                                                              .from_division
+                                                              .id ==
+                                                              user.division_id && (
+                                                              <>
+                                                                  <button
+                                                                      onClick={() =>
+                                                                          handleApprove(
+                                                                              row
+                                                                                  .original
+                                                                                  .memo
+                                                                                  .id
+                                                                          )
+                                                                      }
+                                                                      className={
+                                                                          user.role_id !=
+                                                                          1
+                                                                              ? "hidden"
+                                                                              : `bg-green-500 p-2 mt-2 text-white rounded-lg
+                                                                                            `
+                                                                      }
+                                                                  >
+                                                                      Approve
+                                                                  </button>
+                                                                  <button
+                                                                      onClick={() =>
+                                                                          handleReject(
+                                                                              row
+                                                                                  .original
+                                                                                  .memo
+                                                                                  .id
+                                                                          )
+                                                                      }
+                                                                      className={
+                                                                          user.role_id !=
+                                                                          1
+                                                                              ? "hidden"
+                                                                              : `bg-red-500 p-2 mt-2 text-white rounded-lg
+                                                                                            `
+                                                                      }
+                                                                  >
+                                                                      Reject
+                                                                  </button>
+                                                              </>
+                                                          )}
+                                                </>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger>
                                                         <button

@@ -17,4 +17,6 @@ export type Stages = {
     status: Status;
     request_approved: Stages | null;
     request_rejected: Stages | null;
+    requires_file_upload: number;
+    is_external: number;
 };

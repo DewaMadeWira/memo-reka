@@ -1,5 +1,6 @@
 import { Division } from "./DivisionType";
 import { Memo } from "./MemoType";
+import { Stages } from "./StagesType";
 import { User } from "./UserType";
 
 export type RequestLetter = {
@@ -13,11 +14,12 @@ export type RequestLetter = {
     invitation_id: number | null;
     created_at: string;
     updated_at: string;
-    stages: {
-        id: number;
-        stage_name: string;
-        requires_file_upload: number;
-    };
+    stages: Stages;
+    // stages: {
+    //     id: number;
+    //     stage_name: string;
+    //     requires_file_upload: number;
+    // };
     request_rejected: {
         id: number;
         // other properties
