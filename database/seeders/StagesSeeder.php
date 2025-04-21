@@ -113,6 +113,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => NULL,
             'status_id' => 5,
             'rejected_id' => NULL,
+            
         ]);
         DB::table('request_stages')->insert([
             'id' => 7,

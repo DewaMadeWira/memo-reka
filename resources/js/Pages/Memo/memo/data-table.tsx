@@ -393,7 +393,12 @@ DataTableProps<TData, TValue>) {
                                                                       }
                                                                       className={
                                                                           user.role_id !=
-                                                                          1
+                                                                              1 ||
+                                                                          row
+                                                                              .original
+                                                                              .stages
+                                                                              .to_stage_id ==
+                                                                              null
                                                                               ? "hidden"
                                                                               : `bg-green-500 p-2 mt-2 text-white rounded-lg
                                                                                             `
@@ -412,7 +417,12 @@ DataTableProps<TData, TValue>) {
                                                                       }
                                                                       className={
                                                                           user.role_id !=
-                                                                          1
+                                                                              1 ||
+                                                                          row
+                                                                              .original
+                                                                              .stages
+                                                                              .rejected_id ==
+                                                                              null
                                                                               ? "hidden"
                                                                               : `bg-red-500 p-2 mt-2 text-white rounded-lg
                                                                                             `
@@ -438,7 +448,12 @@ DataTableProps<TData, TValue>) {
                                                                       }
                                                                       className={
                                                                           user.role_id !=
-                                                                          1
+                                                                              1 ||
+                                                                          row
+                                                                              .original
+                                                                              .stages
+                                                                              .to_stage_id ==
+                                                                              null
                                                                               ? "hidden"
                                                                               : `bg-green-500 p-2 mt-2 text-white rounded-lg
                                                                                             `
@@ -457,7 +472,12 @@ DataTableProps<TData, TValue>) {
                                                                       }
                                                                       className={
                                                                           user.role_id !=
-                                                                          1
+                                                                              1 ||
+                                                                          row
+                                                                              .original
+                                                                              .stages
+                                                                              .rejected_id ==
+                                                                              null
                                                                               ? "hidden"
                                                                               : `bg-red-500 p-2 mt-2 text-white rounded-lg
                                                                                             `
