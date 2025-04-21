@@ -50,6 +50,13 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/Components/ui/popover";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/Components/ui/tooltip";
+
 import { Button } from "@/Components/ui/button";
 import { useState } from "react";
 import { Memo } from "@/types/MemoType";
@@ -382,30 +389,107 @@ DataTableProps<TData, TValue>) {
                                                               .to_division.id ==
                                                               user.division_id && (
                                                               <>
-                                                                  <button
-                                                                      onClick={() =>
-                                                                          handleApprove(
-                                                                              row
-                                                                                  .original
-                                                                                  .memo
-                                                                                  .id
-                                                                          )
+                                                                  <TooltipProvider
+                                                                      delayDuration={
+                                                                          100
                                                                       }
-                                                                      className={
-                                                                          user.role_id !=
-                                                                              1 ||
-                                                                          row
-                                                                              .original
-                                                                              .stages
-                                                                              .to_stage_id ==
-                                                                              null
-                                                                              ? "hidden"
-                                                                              : `bg-green-500 p-2 mt-2 text-white rounded-lg
-                                                                                            `
+                                                                      skipDelayDuration={
+                                                                          0
                                                                       }
                                                                   >
-                                                                      Approve
-                                                                  </button>
+                                                                      <Tooltip>
+                                                                          <TooltipTrigger
+                                                                              className={
+                                                                                  user.role_id !=
+                                                                                      1 ||
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .to_stage_id ==
+                                                                                      null
+                                                                                      ? "hidden"
+                                                                                      : ""
+                                                                              }
+                                                                          >
+                                                                              <button
+                                                                                  onClick={() =>
+                                                                                      handleApprove(
+                                                                                          row
+                                                                                              .original
+                                                                                              .memo
+                                                                                              .id
+                                                                                      )
+                                                                                  }
+                                                                                  className={
+                                                                                      user.role_id !=
+                                                                                          1 ||
+                                                                                      row
+                                                                                          .original
+                                                                                          .stages
+                                                                                          .to_stage_id ==
+                                                                                          null
+                                                                                          ? "hidden"
+                                                                                          : `bg-green-500 p-2 mt-2 text-white rounded-lg ${
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .stages
+                                                                                                    .requires_file_upload ==
+                                                                                                    1 &&
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .memo
+                                                                                                    .file_path ==
+                                                                                                    null
+                                                                                                    ? "opacity-50 cursor-not-allowed"
+                                                                                                    : ""
+                                                                                            }`
+                                                                                  }
+                                                                                  disabled={
+                                                                                      row
+                                                                                          .original
+                                                                                          .stages
+                                                                                          .requires_file_upload ==
+                                                                                          1 &&
+                                                                                      row
+                                                                                          .original
+                                                                                          .memo
+                                                                                          .file_path ==
+                                                                                          null
+                                                                                  }
+                                                                              >
+                                                                                  {/* {row.original.memo.f} */}
+                                                                                  Approve
+                                                                              </button>
+                                                                          </TooltipTrigger>
+                                                                          <TooltipContent
+                                                                              className={
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .requires_file_upload ==
+                                                                                      1 &&
+                                                                                  row
+                                                                                      .original
+                                                                                      .memo
+                                                                                      .file_path ==
+                                                                                      null
+                                                                                      ? ""
+                                                                                      : "hidden"
+                                                                              }
+                                                                              side="top"
+                                                                              sideOffset={
+                                                                                  -10
+                                                                              }
+                                                                          >
+                                                                              <p>
+                                                                                  File
+                                                                                  Belum
+                                                                                  Diupload.
+                                                                              </p>
+                                                                          </TooltipContent>
+                                                                      </Tooltip>
+                                                                  </TooltipProvider>
+
                                                                   <button
                                                                       onClick={() =>
                                                                           handleReject(
