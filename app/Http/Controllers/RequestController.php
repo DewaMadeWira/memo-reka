@@ -150,9 +150,9 @@ class RequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!Gate::allows('admin')) {
-            abort(403);
-        }
+        // if (!Gate::allows('admin')) {
+        //     abort(403);
+        // }
         $intent = $request->get("intent");
         switch ($intent) {
             case 'memo.approve':

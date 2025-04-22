@@ -66,6 +66,7 @@ interface DataTableProps<TData extends Stages, TValue> {
     letter: Letter[];
     role: Role[];
     // handleDelete: (id: number) => void;
+
     handleChange: (
         e: React.ChangeEvent<
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -83,14 +84,26 @@ interface DataTableProps<TData extends Stages, TValue> {
     deleteStages: (id: number) => void;
     handleEdit: (id: number) => void;
     // handleReject: (id: number) => void;
-    // formData: {
-    //     role_name: string;
-    // };
-    // setFormData: React.Dispatch<
-    //     React.SetStateAction<{
-    //         role_name: string;
-    //     }>
-    // >;
+    formData: {
+        stage_name: string;
+        sequence: string;
+        to_stage_id: string;
+        rejected_id: string;
+        letter_id: string;
+        approver_id: string;
+        status_id: string;
+    };
+    setFormData: React.Dispatch<
+        React.SetStateAction<{
+            stage_name: string;
+            sequence: string;
+            to_stage_id: string;
+            rejected_id: string;
+            letter_id: string;
+            approver_id: string;
+            status_id: string;
+        }>
+    >;
 }
 
 export function DataTable<TData extends Stages, TValue>({
@@ -104,6 +117,8 @@ export function DataTable<TData extends Stages, TValue>({
     handleEdit,
     user,
     statuses,
+    setFormData,
+    formData,
 }: // handleDelete,
 // role,
 
@@ -259,6 +274,31 @@ DataTableProps<TData, TValue>) {
                                         <div className="flex gap-2">
                                             <AlertDialog>
                                                 <AlertDialogTrigger
+                                                    onClick={() =>
+                                                        setFormData({
+                                                            approver_id:
+                                                                row.original
+                                                                    .approver_id,
+                                                            letter_id:
+                                                                row.original
+                                                                    .letter_id,
+                                                            rejected_id:
+                                                                row.original
+                                                                    .rejected_id,
+                                                            sequence:
+                                                                row.original
+                                                                    .sequence,
+                                                            stage_name:
+                                                                row.original
+                                                                    .stage_name,
+                                                            status_id:
+                                                                row.original
+                                                                    .status_id,
+                                                            to_stage_id:
+                                                                row.original
+                                                                    .to_stage_id,
+                                                        })
+                                                    }
                                                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
                                                         user.role_id == 2
                                                             ? "hidden"
@@ -286,6 +326,9 @@ DataTableProps<TData, TValue>) {
                                                                 type="text"
                                                                 name="stage_name"
                                                                 id=""
+                                                                value={
+                                                                    formData.stage_name
+                                                                }
                                                                 className="w-full p-2 border rounded-lg"
                                                             />
                                                             <label
@@ -300,6 +343,9 @@ DataTableProps<TData, TValue>) {
                                                                 className="w-full p-2 border rounded-lg"
                                                                 onChange={
                                                                     handleChange
+                                                                }
+                                                                value={
+                                                                    formData.sequence
                                                                 }
                                                             >
                                                                 <option>
@@ -328,6 +374,9 @@ DataTableProps<TData, TValue>) {
                                                                 className="w-full p-2 border rounded-lg"
                                                                 onChange={
                                                                     handleChange
+                                                                }
+                                                                value={
+                                                                    formData.letter_id
                                                                 }
                                                             >
                                                                 <option>
@@ -362,6 +411,9 @@ DataTableProps<TData, TValue>) {
                                                                 onChange={
                                                                     handleChange
                                                                 }
+                                                                value={
+                                                                    formData.approver_id
+                                                                }
                                                             >
                                                                 <option>
                                                                     Pilih Opsi
@@ -394,6 +446,9 @@ DataTableProps<TData, TValue>) {
                                                                 className="w-full p-2 border rounded-lg"
                                                                 onChange={
                                                                     handleChange
+                                                                }
+                                                                value={
+                                                                    formData.to_stage_id
                                                                 }
                                                             >
                                                                 <option>
@@ -428,6 +483,9 @@ DataTableProps<TData, TValue>) {
                                                                 onChange={
                                                                     handleChange
                                                                 }
+                                                                value={
+                                                                    formData.rejected_id
+                                                                }
                                                             >
                                                                 <option>
                                                                     Pilih Opsi
@@ -460,6 +518,9 @@ DataTableProps<TData, TValue>) {
                                                                 className="w-full p-2 border rounded-lg"
                                                                 onChange={
                                                                     handleChange
+                                                                }
+                                                                value={
+                                                                    formData.status_id
                                                                 }
                                                             >
                                                                 <option>

@@ -122,7 +122,7 @@ DataTableProps<TData, TValue>) {
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 2, // or whatever default page size you want
+        pageSize: 5, // or whatever default page size you want
     });
 
     const setEdit = (data: any) => {
@@ -422,7 +422,10 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                                   className={
                                                                                       user.role_id !=
-                                                                                          1 ||
+                                                                                          row
+                                                                                              .original
+                                                                                              .stages
+                                                                                              .approver_id ||
                                                                                       row
                                                                                           .original
                                                                                           .stages
@@ -458,7 +461,10 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                               >
                                                                                   {/* {row.original.memo.f} */}
-                                                                                  Approve
+                                                                                  {user.role_id ==
+                                                                                  1
+                                                                                      ? "Approve"
+                                                                                      : "Perbaiki"}
                                                                               </button>
                                                                           </TooltipTrigger>
                                                                           <TooltipContent
@@ -501,7 +507,10 @@ DataTableProps<TData, TValue>) {
                                                                       }
                                                                       className={
                                                                           user.role_id !=
-                                                                              1 ||
+                                                                              row
+                                                                                  .original
+                                                                                  .stages
+                                                                                  .approver_id ||
                                                                           row
                                                                               .original
                                                                               .stages
@@ -532,7 +541,10 @@ DataTableProps<TData, TValue>) {
                                                                       }
                                                                       className={
                                                                           user.role_id !=
-                                                                              1 ||
+                                                                              row
+                                                                                  .original
+                                                                                  .stages
+                                                                                  .approver_id ||
                                                                           row
                                                                               .original
                                                                               .stages
@@ -543,7 +555,10 @@ DataTableProps<TData, TValue>) {
                                                                                             `
                                                                       }
                                                                   >
-                                                                      Approve
+                                                                      {user.role_id ==
+                                                                      1
+                                                                          ? "Approve"
+                                                                          : "Perbaiki"}
                                                                   </button>
                                                                   <button
                                                                       onClick={() =>
@@ -556,7 +571,10 @@ DataTableProps<TData, TValue>) {
                                                                       }
                                                                       className={
                                                                           user.role_id !=
-                                                                              1 ||
+                                                                              row
+                                                                                  .original
+                                                                                  .stages
+                                                                                  .approver_id ||
                                                                           row
                                                                               .original
                                                                               .stages

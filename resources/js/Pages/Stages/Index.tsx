@@ -63,21 +63,25 @@ export default function Index({
     const { user } = usePage().props.auth as { user: User };
     const handleSubmit = () => {
         console.log(formData);
-        router.post("/admin/manajemen-tahapan-surat?intent=stages.create", formData, {
-            onSuccess: () => {
-                toast({
-                    className: "bg-green-500 text-white",
-                    title: "Berhasil !",
-                    description: "Tahapan berhasil dibuat",
-                });
-            },
-            onError: (errors) => {
-                toast({
-                    title: "Terjadi Kesalahan !",
-                    description: errors.message,
-                });
-            },
-        });
+        router.post(
+            "/admin/manajemen-tahapan-surat?intent=stages.create",
+            formData,
+            {
+                onSuccess: () => {
+                    toast({
+                        className: "bg-green-500 text-white",
+                        title: "Berhasil !",
+                        description: "Tahapan berhasil dibuat",
+                    });
+                },
+                onError: (errors) => {
+                    toast({
+                        title: "Terjadi Kesalahan !",
+                        description: errors.message,
+                    });
+                },
+            }
+        );
     };
     const handleEdit = (id: number) => {
         console.log(formData);
@@ -201,7 +205,7 @@ export default function Index({
 
     return (
         <SidebarAuthenticated>
-            <Head title="Manajemen Tahapan Surat"  />
+            <Head title="Manajemen Tahapan Surat" />
             <div className="w-full p-10 ">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>
@@ -473,6 +477,8 @@ export default function Index({
                 </table> */}
                 <div className="mt-8">
                     <DataTable
+                        formData={formData}
+                        setFormData={setFormData}
                         statuses={statuses}
                         deleteStages={deleteStages}
                         user={user}
