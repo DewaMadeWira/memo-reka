@@ -122,7 +122,7 @@ DataTableProps<TData, TValue>) {
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 5, // or whatever default page size you want
+        pageSize: 10, // or whatever default page size you want
     });
 
     const setEdit = (data: any) => {
