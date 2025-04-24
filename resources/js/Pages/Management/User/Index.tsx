@@ -79,7 +79,7 @@ export default function Index({
 
     return (
         <SidebarAuthenticated>
-            <Head title="Manajemen Pengguna"  />
+            <Head title="Manajemen Pengguna" />
             <div className="w-full p-10">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>
@@ -109,12 +109,12 @@ export default function Index({
                         <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
                             + Tambah Pengguna
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className=" ">
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="">
                                     Buat Pengguna Baru
                                 </AlertDialogTitle>
-                                <div className="flex flex-col gap-3">
+                                <div className="flex flex-col gap-3 max-w-md">
                                     <div className="flex flex-col gap-2">
                                         <label htmlFor="name">Nama</label>
                                         <input
@@ -187,7 +187,7 @@ export default function Index({
                                     </div>
                                 </div>
                             </AlertDialogHeader>
-                            <AlertDialogFooter>
+                            <AlertDialogFooter className="max-w-md">
                                 <AlertDialogCancel>Kembali</AlertDialogCancel>
                                 <AlertDialogAction
                                     onClick={handleSubmit}
