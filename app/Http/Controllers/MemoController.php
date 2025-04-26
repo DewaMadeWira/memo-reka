@@ -115,38 +115,38 @@ class MemoController extends Controller
     public function store(Request $request)
     {
         //
-        if (Gate::allows('admin')) {
-            abort(403);
-        }
-        $user = Auth::user();
-        $user = User::with('role')->with('division')->where("id", $user->id)->first();
-        $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
-            $q->where('role_name', "admin");
-        })->first();
-        // dd($request->official);
-        $memo = MemoLetter::create([
-            'memo_number' => '1234/MemoNumber/Test',
-            'perihal' => $request->perihal,
-            'content' => $request->content,
-            'signatory' => $manager->id,
-            'letter_id' => 1,
-            'official_id' => $request->official,
-            'from_division' => $user->division->id,
-            'to_division' => $request->to_division,
-        ]);
-        $stages = MemoLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
-        // return $memo;
-        // return $stages;
-        $request = RequestLetter::create([
-            "request_name" => $request->request_name,
-            "user_id" => $user->id,
-            // "status_id" => $stages->letter->request_stages[0]->status_id,
-            "stages_id" => $stages->letter->request_stages->where('sequence', 1)->first()->id,
-            "letter_type_id" => $memo->letter_id,
-            "memo_id" => $memo->id,
-        ]);
-        // $requestCreated = RequestLetter::with('user')->with("memo")->with("status")->with("stages")->get();
-        return to_route('memo.index');
+        // if (Gate::allows('admin')) {
+        //     abort(403);
+        // }
+        // $user = Auth::user();
+        // $user = User::with('role')->with('division')->where("id", $user->id)->first();
+        // $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
+        //     $q->where('role_name', "admin");
+        // })->first();
+        // // dd($request->official);
+        // $memo = MemoLetter::create([
+        //     'memo_number' => '1234/MemoNumber/Test',
+        //     'perihal' => $request->perihal,
+        //     'content' => $request->content,
+        //     'signatory' => $manager->id,
+        //     'letter_id' => 1,
+        //     'official_id' => $request->official,
+        //     'from_division' => $user->division->id,
+        //     'to_division' => $request->to_division,
+        // ]);
+        // $stages = MemoLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
+        // // return $memo;
+        // // return $stages;
+        // $request = RequestLetter::create([
+        //     "request_name" => $request->request_name,
+        //     "user_id" => $user->id,
+        //     // "status_id" => $stages->letter->request_stages[0]->status_id,
+        //     "stages_id" => $stages->letter->request_stages->where('sequence', 1)->first()->id,
+        //     "letter_type_id" => $memo->letter_id,
+        //     "memo_id" => $memo->id,
+        // ]);
+        // // $requestCreated = RequestLetter::with('user')->with("memo")->with("status")->with("stages")->get();
+        // return to_route('memo.index');
     }
 
     /**
@@ -156,9 +156,9 @@ class MemoController extends Controller
     {
         //
         // return $id;
-        $request = MemoLetter::with("from_division", "to_division", "signatory")->where("id", $id)->first();
-        return Inertia::render('Pdf/Index', ["data" => $request]);
-        return $request;
+        // $request = MemoLetter::with("from_division", "to_division", "signatory")->where("id", $id)->first();
+        // return Inertia::render('Pdf/Index', ["data" => $request]);
+        // return $request;
     }
 
     /**
@@ -175,6 +175,46 @@ class MemoController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        try {
+
+            $validated = $request->validate([
+                'perihal' => 'required|string|max:255',
+                'content' => 'required|string|max:255',
+            ]);
+
+            // dd($this->generateNomorSurat($user, $official)->memo_number);
+            $memo = MemoLetter::where("id", $id)->update([
+                // 'memo_number' => '1234/MemoNumber/Test',
+                'perihal' => $request->perihal,
+                'content' => $request->content,
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()
+                ->withErrors(['message' => 'Memo tidak ditemukan.'])
+                ->withInput();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // if (isset($e->validator->failed()['division_name']['Unique'])) {
+            //     return redirect()->back()
+            //         ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])
+            //         ->withInput();
+            // }
+            if (isset($e->validator->failed()['perihal']['Required'])) {
+                return redirect()->back()
+                    ->withErrors(['message' => 'Perihal tidak boleh kosong'])
+                    ->withInput();
+            }
+            if (isset($e->validator->failed()['content']['Required'])) {
+                return redirect()->back()
+                    ->withErrors(['message' => 'Isi tidak boleh kosong'])
+                    ->withInput();
+            }
+            return redirect()->back()
+                ->withErrors(['message' => 'Terjadi kesalahan saat mengubah Memo.'])
+                ->withInput();
+
+            // Re-throw other validation errors to be handled by the framework
+            throw $e;
+        }
     }
 
     /**

@@ -77,11 +77,30 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
     // ) => void;
     handleApprove: (id: number) => void;
     handleReject: (id: number) => void;
+    handleUpdate: (id: number) => void;
     handleUpload: (id: number) => void;
     // request_file_upload: number;
-    // formData: {
-    //     role_name: string;
-    // };
+    formData: {
+        request_name: string;
+        perihal: string;
+        content: string;
+        official: string;
+        to_division: null;
+    };
+    setFormData: React.Dispatch<
+        React.SetStateAction<{
+            perihal: string;
+            content: string;
+            request_name: string;
+            official: string;
+            to_division: null;
+        }>
+    >;
+    handleChange: (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+    ) => void;
     setFilePreview: React.Dispatch<React.SetStateAction<string | null>>;
     setFileData: React.Dispatch<
         React.SetStateAction<{
@@ -109,6 +128,10 @@ export function DataTable<TData extends RequestLetter, TValue>({
     setFileData,
     setFilePreview,
     handleUpload,
+    formData,
+    setFormData,
+    handleChange,
+    handleUpdate,
 }: // request_file_upload,
 // handleDelete,
 // role,
@@ -590,6 +613,121 @@ DataTableProps<TData, TValue>) {
                                                               </>
                                                           )}
                                                 </>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger
+                                                        //   onClick={() =>
+                                                        //       setFormData(
+                                                        //           {
+                                                        //               perihal:
+                                                        //                   row
+                                                        //                       .original
+                                                        //                       .memo
+                                                        //                       .perihal,
+                                                        //               content:
+                                                        //                   row
+                                                        //                       .original
+                                                        //                       .memo
+                                                        //                       .content,
+                                                        //           }
+                                                        //       )
+                                                        //   }
+                                                        onClick={() =>
+                                                            setFormData({
+                                                                official: "",
+                                                                request_name:
+                                                                    "",
+                                                                to_division:
+                                                                    null,
+                                                                perihal:
+                                                                    row.original
+                                                                        .memo
+                                                                        .perihal,
+                                                                content:
+                                                                    row.original
+                                                                        .memo
+                                                                        .content,
+                                                            })
+                                                        }
+                                                        // onClick={() =>
+                                                        //     alert(
+                                                        //         row.original
+                                                        //             .memo
+                                                        //             .perihal
+                                                        //     )
+                                                        // }
+                                                        className={`bg-blue-500 p-2 mt-2 text-white text-sm font-medium rounded-lg`}
+                                                    >
+                                                        Edit Memo
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent className="w-[300rem]">
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle className="font-medium">
+                                                                Edit Memo{" "}
+                                                                {
+                                                                    row.original
+                                                                        .memo
+                                                                        .memo_number
+                                                                }
+                                                            </AlertDialogTitle>
+                                                            <div className="">
+                                                                <label
+                                                                    htmlFor="perihal"
+                                                                    className="block mb-2"
+                                                                >
+                                                                    Perihal
+                                                                </label>
+                                                                <input
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    type="text"
+                                                                    name="perihal"
+                                                                    id=""
+                                                                    className="w-full p-2 border rounded-lg"
+                                                                    value={
+                                                                        formData.perihal
+                                                                    }
+                                                                />
+                                                                <label
+                                                                    htmlFor="content"
+                                                                    className="block mb-2"
+                                                                >
+                                                                    Isi
+                                                                </label>
+                                                                <textarea
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    rows={10}
+                                                                    name="content"
+                                                                    id=""
+                                                                    className="w-full p-2 border rounded-lg"
+                                                                    value={
+                                                                        formData.content
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Kembali
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                onClick={() =>
+                                                                    handleUpdate(
+                                                                        row
+                                                                            .original
+                                                                            .memo
+                                                                            .id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Edit Memo
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger>
                                                         <button

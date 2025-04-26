@@ -151,6 +151,25 @@ export default function Index({
     function handleReject(id: number) {
         router.put("/request/" + id + "?intent=memo.reject");
     }
+    function handleUpdate(id: number) {
+        router.put("/memo/" + id, formData, {
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Memo berhasil diubah",
+                });
+            },
+        });
+    }
     const handleChange = (
         e: React.ChangeEvent<
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -322,11 +341,15 @@ export default function Index({
                         handleReject={handleReject}
                         data={request}
                         columns={columns}
+                        formData={formData}
+                        setFormData={setFormData}
+                        handleChange={handleChange}
                         setFilePreview={setFilePreview}
                         setFileData={setFileData}
                         filePreview={filePreview}
                         fileData={fileData}
                         handleUpload={handleFileUpload}
+                        handleUpdate={handleUpdate}
                     />
                 </div>
                 {/*  */}
