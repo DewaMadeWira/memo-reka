@@ -21,7 +21,7 @@ class StagesSeeder extends Seeder
             'sequence' => 1,
             'description' => "Tahap ini merupakan awal dari pembuatan memo. Memo ini akan dikirimkan ke manajer internal untuk disetujui.",
             'letter_id' => 1,
-            'approver_id' => 2,
+            'approver_id' => 1,
             'to_stage_id' => 3,
             'status_id' => 1,
             'rejected_id' => 2,
@@ -113,7 +113,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => NULL,
             'status_id' => 5,
             'rejected_id' => NULL,
-            
+
         ]);
         DB::table('request_stages')->insert([
             'id' => 7,
