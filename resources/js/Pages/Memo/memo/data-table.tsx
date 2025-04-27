@@ -556,36 +556,80 @@ DataTableProps<TData, TValue>) {
                                                               .id ==
                                                               user.division_id && (
                                                               <>
-                                                                  <button
-                                                                      onClick={() =>
-                                                                          handleApprove(
-                                                                              row
-                                                                                  .original
-                                                                                  .memo
-                                                                                  .id
-                                                                          )
-                                                                      }
-                                                                      className={
-                                                                          user.role_id !=
-                                                                              row
-                                                                                  .original
-                                                                                  .stages
-                                                                                  .approver_id ||
-                                                                          row
-                                                                              .original
-                                                                              .stages
-                                                                              .to_stage_id ==
-                                                                              null
-                                                                              ? "hidden"
-                                                                              : `bg-green-500 p-2 mt-2 text-white rounded-lg
+                                                                  <AlertDialog>
+                                                                      <AlertDialogTrigger>
+                                                                          <button
+                                                                              className={
+                                                                                  user.role_id !=
+                                                                                      row
+                                                                                          .original
+                                                                                          .stages
+                                                                                          .approver_id ||
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .to_stage_id ==
+                                                                                      null
+                                                                                      ? "hidden"
+                                                                                      : `bg-green-500 p-2 mt-2 text-white rounded-lg
                                                                                             `
-                                                                      }
-                                                                  >
-                                                                      {user.role_id ==
-                                                                      1
-                                                                          ? "Approve"
-                                                                          : "Perbaiki"}
-                                                                  </button>
+                                                                              }
+                                                                          >
+                                                                              {user.role_id ==
+                                                                              1
+                                                                                  ? "Approve"
+                                                                                  : "Perbaiki"}
+                                                                          </button>
+                                                                      </AlertDialogTrigger>
+                                                                      <AlertDialogContent>
+                                                                          <AlertDialogHeader>
+                                                                              <AlertDialogTitle>
+                                                                                  Apakah
+                                                                                  Anda
+                                                                                  Yakin
+                                                                                  ?
+                                                                              </AlertDialogTitle>
+                                                                              <AlertDialogDescription>
+                                                                                  Memo
+                                                                                  akan
+                                                                                  dikirimkan
+                                                                                  ke
+                                                                                  manajer.
+                                                                                  Apakah
+                                                                                  anda
+                                                                                  yakin
+                                                                                  dengan
+                                                                                  perubahan
+                                                                                  yang
+                                                                                  sudah
+                                                                                  dibuat
+                                                                                  ?
+                                                                              </AlertDialogDescription>
+                                                                          </AlertDialogHeader>
+                                                                          <AlertDialogFooter>
+                                                                              <AlertDialogCancel>
+                                                                                  Kembali
+                                                                              </AlertDialogCancel>
+                                                                              <AlertDialogAction
+                                                                                  onClick={() => {
+                                                                                      handleApprove(
+                                                                                          row
+                                                                                              .original
+                                                                                              .memo
+                                                                                              .id
+                                                                                      );
+                                                                                  }}
+                                                                                  className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                              >
+                                                                                  Kirim
+                                                                                  Memo
+                                                                                  ke
+                                                                                  Manajer
+                                                                              </AlertDialogAction>
+                                                                          </AlertDialogFooter>
+                                                                      </AlertDialogContent>
+                                                                  </AlertDialog>
+
                                                                   <button
                                                                       onClick={() =>
                                                                           handleReject(
@@ -729,74 +773,19 @@ DataTableProps<TData, TValue>) {
                                                             <AlertDialogCancel>
                                                                 Kembali
                                                             </AlertDialogCancel>
-                                                            <AlertDialog>
-                                                                <AlertDialogTrigger>
-                                                                    <AlertDialogAction className="bg-blue-500 font-normal hover:bg-blue-600">
-                                                                        Simpan
-                                                                        Perubahan
-                                                                        Memo
-                                                                    </AlertDialogAction>
-                                                                </AlertDialogTrigger>
-                                                                <AlertDialogContent>
-                                                                    <AlertDialogHeader>
-                                                                        <AlertDialogTitle>
-                                                                            Apakah
-                                                                            Anda
-                                                                            Yakin
-                                                                            ?
-                                                                        </AlertDialogTitle>
-                                                                        <AlertDialogDescription>
-                                                                            Memo
-                                                                            akan
-                                                                            dikirimkan
-                                                                            ke
-                                                                            manajer.
-                                                                            Apakah
-                                                                            anda
-                                                                            yakin
-                                                                            dengan
-                                                                            perubahan
-                                                                            yang
-                                                                            sudah
-                                                                            dibuat
-                                                                            ?
-                                                                        </AlertDialogDescription>
-                                                                    </AlertDialogHeader>
-                                                                    <AlertDialogFooter>
-                                                                        <AlertDialogCancel>
-                                                                            Kembali
-                                                                        </AlertDialogCancel>
-                                                                        <AlertDialogAction
-                                                                            onClick={() => {
-                                                                                handleUpdate(
-                                                                                    row
-                                                                                        .original
-                                                                                        .memo
-                                                                                        .id
-                                                                                );
-                                                                                handleApprove(
-                                                                                    row
-                                                                                        .original
-                                                                                        .memo
-                                                                                        .id
-                                                                                );
-                                                                                setConfirmDialogOpen(
-                                                                                    false
-                                                                                );
-                                                                                setEditDialogOpen(
-                                                                                    false
-                                                                                );
-                                                                            }}
-                                                                            className="bg-blue-500 font-normal hover:bg-blue-600"
-                                                                        >
-                                                                            Kirim
-                                                                            Memo
-                                                                            ke
-                                                                            Manajer
-                                                                        </AlertDialogAction>
-                                                                    </AlertDialogFooter>
-                                                                </AlertDialogContent>
-                                                            </AlertDialog>
+                                                            <AlertDialogAction
+                                                                onClick={() =>
+                                                                    handleUpdate(
+                                                                        row
+                                                                            .original
+                                                                            .id
+                                                                    )
+                                                                }
+                                                                className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                            >
+                                                                Simpan Perubahan
+                                                                Memo
+                                                            </AlertDialogAction>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
                                                 </AlertDialog>
