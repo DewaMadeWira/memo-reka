@@ -22,6 +22,7 @@ class MemoLetter extends Model
         'from_division',
         'to_division',
         'file_path',
+        'rejection_reason',
     ];
     public function from_division(): BelongsTo
     {

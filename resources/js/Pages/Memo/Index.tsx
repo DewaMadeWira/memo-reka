@@ -148,8 +148,10 @@ export default function Index({
     function handleApprove(id: number) {
         router.put("/request/" + id + "?intent=memo.approve");
     }
-    function handleReject(id: number) {
-        router.put("/request/" + id + "?intent=memo.reject");
+    function handleReject(id: number, rejectionReason?: string) {
+        router.put("/request/" + id + "?intent=memo.reject", {
+            rejection_reason: rejectionReason,
+        });
     }
     function handleUpdate(id: number) {
         router.put("/memo/" + id, formData, {

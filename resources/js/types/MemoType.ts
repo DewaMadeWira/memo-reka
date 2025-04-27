@@ -12,4 +12,5 @@ export type Memo = {
     created_at?: string;
     updated_at?: string;
     file_path?: string;
+    rejection_reason?: string;
 };

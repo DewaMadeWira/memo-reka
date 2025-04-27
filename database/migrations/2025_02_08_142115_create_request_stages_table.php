@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('status_id');
             $table->boolean('requires_file_upload')->default(false);
             $table->boolean('is_fixable')->default(false);
-            // $table->boolean('requires_rejection_reason')->default(false);
+            $table->boolean('requires_rejection_reason')->default(false);
             $table->boolean('is_external')->default(false);
             $table->timestamps();
             $table->foreign('letter_id')->references('id')->on('letter_types');

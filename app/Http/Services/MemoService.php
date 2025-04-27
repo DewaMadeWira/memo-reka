@@ -8,7 +8,7 @@ use App\Models\RequestLetter;
 use App\Models\RequestStages;
 use App\Models\User;
 use Illuminate\Container\Attributes\Log;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -389,22 +389,23 @@ class MemoService
         ]);
         $request->save();
     }
-    public function reject($id)
+    public function reject($id, Request $request)
     {
-        $request = RequestLetter::with('memo')->where('memo_id', $id)->first();
-        $nextStageId = json_decode($request->rejected_stages, true);
-        $nextStageId = $nextStageId[$request->stages_id] ?? null;
+        $request_letter = RequestLetter::with('memo')->where('memo_id', $id)->first();
+        $nextStageId = json_decode($request_letter->rejected_stages, true);
+        $nextStageId = $nextStageId[$request_letter->stages_id] ?? null;
         if ($nextStageId == null) {
             return to_route('memo.index');
         }
 
         MemoLetter::where('id', $id)->update([
-            'file_path' => NULL
+            'file_path' => NULL,
+            'rejection_reason' => 'Memo ditolak oleh ' . Auth::user()->name . ' karena ' . $request->rejection_reason
         ]);
 
-        $request->update([
+        $request_letter->update([
             "stages_id" => $nextStageId
         ]);
-        $request->save();
+        $request_letter->save();
     }
 }

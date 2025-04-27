@@ -160,7 +160,7 @@ class RequestController extends Controller
                 return $memo;
                 // return to_route('memo.index');
             case 'memo.reject':
-                $memo = $this->memoService->reject($id);
+                $memo = $this->memoService->reject($id, $request);
                 return to_route('memo.index');
             case 'invitation.approve':
                 $invite = $this->invitationService->approve($id);

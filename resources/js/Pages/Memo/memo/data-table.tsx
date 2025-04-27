@@ -65,6 +65,7 @@ import { User } from "@/types/UserType";
 import { PDFViewer } from "@react-pdf/renderer";
 import Template from "@/Pages/Pdf/Template";
 import { Check, FileSearch, FileText, FileUp, X } from "lucide-react";
+import { Textarea } from "@/Components/ui/textarea";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -77,9 +78,11 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
     //     >
     // ) => void;
     handleApprove: (id: number) => void;
-    handleReject: (id: number) => void;
+    // handleReject: (id: number) => void;
+    handleReject: (id: number, rejectionReason?: string) => void;
     handleUpdate: (id: number) => void;
     handleUpload: (id: number) => void;
+
     // request_file_upload: number;
     formData: {
         request_name: string;
@@ -174,6 +177,8 @@ DataTableProps<TData, TValue>) {
 
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
+    const [rejectionReason, setRejectionReason] = useState<string>("");
 
     const actionButtonClass =
         "bg-blue-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
@@ -532,58 +537,100 @@ DataTableProps<TData, TValue>) {
                                                                       </Tooltip>
                                                                   </TooltipProvider>
 
-                                                                  <button
-                                                                      onClick={() =>
-                                                                          handleReject(
-                                                                              row
-                                                                                  .original
-                                                                                  .memo
-                                                                                  .id
-                                                                          )
-                                                                      }
-                                                                      className={
-                                                                          user.role_id !=
-                                                                              row
-                                                                                  .original
-                                                                                  .stages
-                                                                                  .approver_id ||
-                                                                          row
-                                                                              .original
-                                                                              .stages
-                                                                              .rejected_id ==
-                                                                              null
-                                                                              ? "hidden"
-                                                                              : `${rejectButtonClass}
+                                                                  <AlertDialog>
+                                                                      <AlertDialogTrigger>
+                                                                          <button
+                                                                              //   onClick={() =>
+                                                                              //       handleReject(
+                                                                              //           row
+                                                                              //               .original
+                                                                              //               .memo
+                                                                              //               .id
+                                                                              //       )
+                                                                              //   }
+                                                                              className={
+                                                                                  user.role_id !=
+                                                                                      row
+                                                                                          .original
+                                                                                          .stages
+                                                                                          .approver_id ||
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .rejected_id ==
+                                                                                      null
+                                                                                      ? "hidden"
+                                                                                      : `${rejectButtonClass}
                                                                                             `
-                                                                      }
-                                                                  >
-                                                                      <TooltipProvider
-                                                                          delayDuration={
-                                                                              100
-                                                                          }
-                                                                          skipDelayDuration={
-                                                                              0
-                                                                          }
-                                                                      >
-                                                                          <Tooltip>
-                                                                              <TooltipTrigger>
-                                                                                  <X></X>
-                                                                              </TooltipTrigger>
-                                                                              <TooltipContent
-                                                                                  side="top"
-                                                                                  sideOffset={
-                                                                                      10
+                                                                              }
+                                                                          >
+                                                                              <TooltipProvider
+                                                                                  delayDuration={
+                                                                                      100
+                                                                                  }
+                                                                                  skipDelayDuration={
+                                                                                      0
                                                                                   }
                                                                               >
-                                                                                  <p>
-                                                                                      Tolak
-                                                                                      Memo
-                                                                                  </p>
-                                                                              </TooltipContent>
-                                                                          </Tooltip>
-                                                                      </TooltipProvider>
-                                                                      {/* Reject */}
-                                                                  </button>
+                                                                                  <Tooltip>
+                                                                                      <TooltipTrigger>
+                                                                                          <X></X>
+                                                                                      </TooltipTrigger>
+                                                                                      <TooltipContent
+                                                                                          side="top"
+                                                                                          sideOffset={
+                                                                                              10
+                                                                                          }
+                                                                                      >
+                                                                                          <p>
+                                                                                              Tolak
+                                                                                              Memo
+                                                                                          </p>
+                                                                                      </TooltipContent>
+                                                                                  </Tooltip>
+                                                                              </TooltipProvider>
+                                                                              {/* Reject */}
+                                                                          </button>
+                                                                      </AlertDialogTrigger>
+                                                                      <AlertDialogContent>
+                                                                          <AlertDialogHeader>
+                                                                              <AlertDialogTitle>
+                                                                                  Are
+                                                                                  you
+                                                                                  absolutely
+                                                                                  sure?
+                                                                              </AlertDialogTitle>
+                                                                              <AlertDialogDescription>
+                                                                                  This
+                                                                                  action
+                                                                                  cannot
+                                                                                  be
+                                                                                  undone.
+                                                                                  This
+                                                                                  will
+                                                                                  permanently
+                                                                                  delete
+                                                                                  your
+                                                                                  account
+                                                                                  and
+                                                                                  remove
+                                                                                  your
+                                                                                  data
+                                                                                  from
+                                                                                  our
+                                                                                  servers.
+                                                                              </AlertDialogDescription>
+                                                                          </AlertDialogHeader>
+                                                                          <AlertDialogFooter>
+                                                                              <AlertDialogCancel>
+                                                                                  Cancel
+                                                                              </AlertDialogCancel>
+                                                                              <AlertDialogAction>
+                                                                                  Continue
+                                                                              </AlertDialogAction>
+                                                                          </AlertDialogFooter>
+                                                                      </AlertDialogContent>
+                                                                  </AlertDialog>
                                                               </>
                                                           )
                                                         : row.original.memo
@@ -720,58 +767,138 @@ DataTableProps<TData, TValue>) {
                                                                       </AlertDialogContent>
                                                                   </AlertDialog>
 
-                                                                  <button
-                                                                      onClick={() =>
-                                                                          handleReject(
-                                                                              row
-                                                                                  .original
-                                                                                  .memo
-                                                                                  .id
-                                                                          )
-                                                                      }
-                                                                      className={
-                                                                          user.role_id !=
-                                                                              row
-                                                                                  .original
-                                                                                  .stages
-                                                                                  .approver_id ||
-                                                                          row
-                                                                              .original
-                                                                              .stages
-                                                                              .rejected_id ==
-                                                                              null
-                                                                              ? "hidden"
-                                                                              : `${rejectButtonClass}`
-                                                                      }
-                                                                  >
-                                                                      <TooltipProvider
-                                                                          delayDuration={
-                                                                              100
-                                                                          }
-                                                                          skipDelayDuration={
-                                                                              0
-                                                                          }
-                                                                      >
-                                                                          <Tooltip>
-                                                                              <TooltipTrigger>
-                                                                                  <X></X>
-                                                                              </TooltipTrigger>
-                                                                              <TooltipContent
-                                                                                  side="top"
-                                                                                  sideOffset={
-                                                                                      10
+                                                                  <AlertDialog>
+                                                                      <AlertDialogTrigger>
+                                                                          <button
+                                                                              //   onClick={() =>
+                                                                              //       handleReject(
+                                                                              //           row
+                                                                              //               .original
+                                                                              //               .memo
+                                                                              //               .id
+                                                                              //       )
+                                                                              //   }
+                                                                              className={
+                                                                                  user.role_id !=
+                                                                                      row
+                                                                                          .original
+                                                                                          .stages
+                                                                                          .approver_id ||
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .rejected_id ==
+                                                                                      null
+                                                                                      ? "hidden"
+                                                                                      : `${rejectButtonClass}
+                                                                                            `
+                                                                              }
+                                                                          >
+                                                                              <TooltipProvider
+                                                                                  delayDuration={
+                                                                                      100
+                                                                                  }
+                                                                                  skipDelayDuration={
+                                                                                      0
                                                                                   }
                                                                               >
-                                                                                  <p>
-                                                                                      Tolak
-                                                                                      Memo
-                                                                                  </p>
-                                                                              </TooltipContent>
-                                                                          </Tooltip>
-                                                                      </TooltipProvider>
-
-                                                                      {/* Reject */}
-                                                                  </button>
+                                                                                  <Tooltip>
+                                                                                      <TooltipTrigger>
+                                                                                          <X></X>
+                                                                                      </TooltipTrigger>
+                                                                                      <TooltipContent
+                                                                                          side="top"
+                                                                                          sideOffset={
+                                                                                              10
+                                                                                          }
+                                                                                      >
+                                                                                          <p>
+                                                                                              Tolak
+                                                                                              Memo
+                                                                                          </p>
+                                                                                      </TooltipContent>
+                                                                                  </Tooltip>
+                                                                              </TooltipProvider>
+                                                                              {/* Reject */}
+                                                                          </button>
+                                                                      </AlertDialogTrigger>
+                                                                      <AlertDialogContent>
+                                                                          <AlertDialogHeader>
+                                                                              <AlertDialogTitle>
+                                                                                  Alasan
+                                                                                  Penolakan
+                                                                              </AlertDialogTitle>
+                                                                              <AlertDialogDescription>
+                                                                                  Mohon
+                                                                                  berikan
+                                                                                  alasan
+                                                                                  penolakan
+                                                                                  memo
+                                                                                  ini.
+                                                                              </AlertDialogDescription>
+                                                                              <div className="mt-4">
+                                                                                  <Textarea
+                                                                                      placeholder="Alasan penolakan..."
+                                                                                      value={
+                                                                                          rejectionReason
+                                                                                      }
+                                                                                      onChange={(
+                                                                                          e
+                                                                                      ) =>
+                                                                                          setRejectionReason(
+                                                                                              e
+                                                                                                  .target
+                                                                                                  .value
+                                                                                          )
+                                                                                      }
+                                                                                      className="w-full min-h-[100px]"
+                                                                                  />
+                                                                              </div>
+                                                                          </AlertDialogHeader>
+                                                                          <AlertDialogFooter>
+                                                                              <AlertDialogCancel
+                                                                                  onClick={() => {
+                                                                                      setRejectionReason(
+                                                                                          ""
+                                                                                      );
+                                                                                      // setMemoToReject(
+                                                                                      //     null
+                                                                                      // );
+                                                                                  }}
+                                                                              >
+                                                                                  Batal
+                                                                              </AlertDialogCancel>
+                                                                              <AlertDialogAction
+                                                                                  onClick={() => {
+                                                                                      // if (
+                                                                                      //     memoToReject
+                                                                                      // ) {
+                                                                                      handleReject(
+                                                                                          row
+                                                                                              .original
+                                                                                              .id,
+                                                                                          rejectionReason
+                                                                                      );
+                                                                                      setRejectionReason(
+                                                                                          ""
+                                                                                      );
+                                                                                      // setMemoToReject(
+                                                                                      //     null
+                                                                                      // );
+                                                                                      // }
+                                                                                  }}
+                                                                                  className="bg-red-500 hover:bg-red-600"
+                                                                                  disabled={
+                                                                                      rejectionReason.trim() ===
+                                                                                      ""
+                                                                                  }
+                                                                              >
+                                                                                  Tolak
+                                                                                  Memo
+                                                                              </AlertDialogAction>
+                                                                          </AlertDialogFooter>
+                                                                      </AlertDialogContent>
+                                                                  </AlertDialog>
                                                               </>
                                                           )}
                                                 </>

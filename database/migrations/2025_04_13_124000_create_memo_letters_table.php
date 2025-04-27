@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("memo_number")->nullable();
             $table->integer("monthly_counter")->nullable();
             $table->integer("yearly_counter")->nullable();
+            $table->string("rejection_reason")->nullable();
             $table->string("perihal");
             $table->text("content");
             $table->foreignId("letter_id");
