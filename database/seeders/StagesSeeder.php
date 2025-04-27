@@ -73,7 +73,7 @@ class StagesSeeder extends Seeder
             'sequence' => 0,
             'description' => "Tahap ini merupakan tahap dimana memo telah disetujui oleh manajer eksternal. Setelah disetujui, memo akan dikerjakan oleh divisi tersebut.",
             'letter_id' => 1,
-            'approver_id' => 1,
+            'approver_id' => 2,
             'to_stage_id' => 6,
             'status_id' => 3,
             'rejected_id' => 5,

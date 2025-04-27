@@ -64,6 +64,7 @@ import { RequestLetter } from "@/types/RequestType";
 import { User } from "@/types/UserType";
 import { PDFViewer } from "@react-pdf/renderer";
 import Template from "@/Pages/Pdf/Template";
+import { Check, FileSearch, FileText, FileUp, X } from "lucide-react";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -173,6 +174,13 @@ DataTableProps<TData, TValue>) {
 
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
+    const actionButtonClass =
+        "bg-blue-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+    const rejectButtonClass =
+        "bg-red-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+    const approveButtonClass =
+        "bg-green-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
 
     return (
         <div>
@@ -458,7 +466,7 @@ DataTableProps<TData, TValue>) {
                                                                                           .to_stage_id ==
                                                                                           null
                                                                                           ? "hidden"
-                                                                                          : `bg-green-500 p-2 mt-2 text-white rounded-lg ${
+                                                                                          : `${approveButtonClass} ${
                                                                                                 row
                                                                                                     .original
                                                                                                     .stages
@@ -487,10 +495,35 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                               >
                                                                                   {/* {row.original.memo.f} */}
-                                                                                  {user.role_id ==
+                                                                                  <TooltipProvider
+                                                                                      delayDuration={
+                                                                                          100
+                                                                                      }
+                                                                                      skipDelayDuration={
+                                                                                          0
+                                                                                      }
+                                                                                  >
+                                                                                      <Tooltip>
+                                                                                          <TooltipTrigger>
+                                                                                              <Check></Check>
+                                                                                          </TooltipTrigger>
+                                                                                          <TooltipContent
+                                                                                              side="top"
+                                                                                              sideOffset={
+                                                                                                  10
+                                                                                              }
+                                                                                          >
+                                                                                              <p>
+                                                                                                  Setujui
+                                                                                                  Memo
+                                                                                              </p>
+                                                                                          </TooltipContent>
+                                                                                      </Tooltip>
+                                                                                  </TooltipProvider>
+                                                                                  {/* {user.role_id ==
                                                                                   1
-                                                                                      ? "Approve"
-                                                                                      : "Perbaiki"}
+                                                                                      ? (<Check></Check>)
+                                                                                      : "Perbaiki"} */}
                                                                               </button>
                                                                           </TooltipTrigger>
                                                                           <TooltipContent
@@ -543,11 +576,36 @@ DataTableProps<TData, TValue>) {
                                                                               .rejected_id ==
                                                                               null
                                                                               ? "hidden"
-                                                                              : `bg-red-500 p-2 mt-2 text-white rounded-lg
+                                                                              : `${rejectButtonClass}
                                                                                             `
                                                                       }
                                                                   >
-                                                                      Reject
+                                                                      <TooltipProvider
+                                                                          delayDuration={
+                                                                              100
+                                                                          }
+                                                                          skipDelayDuration={
+                                                                              0
+                                                                          }
+                                                                      >
+                                                                          <Tooltip>
+                                                                              <TooltipTrigger>
+                                                                                  <X></X>
+                                                                              </TooltipTrigger>
+                                                                              <TooltipContent
+                                                                                  side="top"
+                                                                                  sideOffset={
+                                                                                      10
+                                                                                  }
+                                                                              >
+                                                                                  <p>
+                                                                                      Tolak
+                                                                                      Memo
+                                                                                  </p>
+                                                                              </TooltipContent>
+                                                                          </Tooltip>
+                                                                      </TooltipProvider>
+                                                                      {/* Reject */}
                                                                   </button>
                                                               </>
                                                           )
@@ -571,14 +629,38 @@ DataTableProps<TData, TValue>) {
                                                                                       .to_stage_id ==
                                                                                       null
                                                                                       ? "hidden"
-                                                                                      : `bg-green-500 p-2 mt-2 text-white rounded-lg
-                                                                                            `
+                                                                                      : `${approveButtonClass}`
                                                                               }
                                                                           >
-                                                                              {user.role_id ==
+                                                                              <TooltipProvider
+                                                                                  delayDuration={
+                                                                                      100
+                                                                                  }
+                                                                                  skipDelayDuration={
+                                                                                      0
+                                                                                  }
+                                                                              >
+                                                                                  <Tooltip>
+                                                                                      <TooltipTrigger>
+                                                                                          <Check></Check>
+                                                                                      </TooltipTrigger>
+                                                                                      <TooltipContent
+                                                                                          side="top"
+                                                                                          sideOffset={
+                                                                                              10
+                                                                                          }
+                                                                                      >
+                                                                                          <p>
+                                                                                              Setujui
+                                                                                              Memo
+                                                                                          </p>
+                                                                                      </TooltipContent>
+                                                                                  </Tooltip>
+                                                                              </TooltipProvider>
+                                                                              {/* {user.role_id ==
                                                                               1
                                                                                   ? "Approve"
-                                                                                  : "Perbaiki"}
+                                                                                  : "Perbaiki"} */}
                                                                           </button>
                                                                       </AlertDialogTrigger>
                                                                       <AlertDialogContent>
@@ -590,6 +672,35 @@ DataTableProps<TData, TValue>) {
                                                                                   ?
                                                                               </AlertDialogTitle>
                                                                               <AlertDialogDescription>
+                                                                                  {row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .is_fixable ==
+                                                                                  0 ? (
+                                                                                      <>
+                                                                                          Memo
+                                                                                          akan
+                                                                                          dikirimkan
+                                                                                          ke
+                                                                                          manajer
+                                                                                          divisi{" "}
+                                                                                          <span className="font-bold">
+                                                                                              {
+                                                                                                  row
+                                                                                                      .original
+                                                                                                      .memo
+                                                                                                      .to_division
+                                                                                                      .division_name
+                                                                                              }
+                                                                                          </span>{" "}
+                                                                                          apakah
+                                                                                          anda
+                                                                                          yakin
+                                                                                          ?
+                                                                                      </>
+                                                                                  ) : (
+                                                                                      `
+                                                                                      
                                                                                   Memo
                                                                                   akan
                                                                                   dikirimkan
@@ -604,6 +715,8 @@ DataTableProps<TData, TValue>) {
                                                                                   sudah
                                                                                   dibuat
                                                                                   ?
+                                                                                      `
+                                                                                  )}
                                                                               </AlertDialogDescription>
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
@@ -651,11 +764,36 @@ DataTableProps<TData, TValue>) {
                                                                               .rejected_id ==
                                                                               null
                                                                               ? "hidden"
-                                                                              : `bg-red-500 p-2 mt-2 text-white rounded-lg
-                                                                                            `
+                                                                              : `${rejectButtonClass}`
                                                                       }
                                                                   >
-                                                                      Reject
+                                                                      <TooltipProvider
+                                                                          delayDuration={
+                                                                              100
+                                                                          }
+                                                                          skipDelayDuration={
+                                                                              0
+                                                                          }
+                                                                      >
+                                                                          <Tooltip>
+                                                                              <TooltipTrigger>
+                                                                                  <X></X>
+                                                                              </TooltipTrigger>
+                                                                              <TooltipContent
+                                                                                  side="top"
+                                                                                  sideOffset={
+                                                                                      10
+                                                                                  }
+                                                                              >
+                                                                                  <p>
+                                                                                      Tolak
+                                                                                      Memo
+                                                                                  </p>
+                                                                              </TooltipContent>
+                                                                          </Tooltip>
+                                                                      </TooltipProvider>
+
+                                                                      {/* Reject */}
                                                                   </button>
                                                               </>
                                                           )}
@@ -797,10 +935,38 @@ DataTableProps<TData, TValue>) {
                                                             //         row.original.memo.id
                                                             //     )
                                                             // }
-                                                            className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
-                                        `}
+                                                            //                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
+                                                            // `}
+                                                            className={
+                                                                actionButtonClass
+                                                            }
                                                         >
-                                                            Lihat PDF
+                                                            <TooltipProvider
+                                                                delayDuration={
+                                                                    100
+                                                                }
+                                                                skipDelayDuration={
+                                                                    0
+                                                                }
+                                                            >
+                                                                <Tooltip>
+                                                                    <TooltipTrigger>
+                                                                        <FileText></FileText>
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent
+                                                                        side="top"
+                                                                        sideOffset={
+                                                                            10
+                                                                        }
+                                                                    >
+                                                                        <p>
+                                                                            Preview
+                                                                            PDF
+                                                                        </p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            </TooltipProvider>
+                                                            {/* Lihat PDF */}
                                                         </button>{" "}
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent className="w-full max-w-7xl">
@@ -845,7 +1011,8 @@ DataTableProps<TData, TValue>) {
                                                                         : `bg-blue-500 p-2 mt-2 text-white rounded-lg`
                                                                 }
                                                             >
-                                                                Lihat File
+                                                                <FileSearch></FileSearch>
+                                                                {/* Lihat File */}
                                                             </button>
                                                         ) : user.role_id !=
                                                           1 ? (
@@ -854,12 +1021,41 @@ DataTableProps<TData, TValue>) {
                                                                     row.original
                                                                         .stages
                                                                         .requires_file_upload !=
-                                                                    1
+                                                                        1 ||
+                                                                    row.original
+                                                                        .memo
+                                                                        .to_division
+                                                                        .id !=
+                                                                        user.division_id
                                                                         ? "hidden"
-                                                                        : `bg-blue-500 p-2 mt-2 text-white rounded-lg`
+                                                                        : `${actionButtonClass}`
                                                                 }
                                                             >
-                                                                Upload File
+                                                                <TooltipProvider
+                                                                    delayDuration={
+                                                                        100
+                                                                    }
+                                                                    skipDelayDuration={
+                                                                        0
+                                                                    }
+                                                                >
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger>
+                                                                            <FileUp></FileUp>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent
+                                                                            side="top"
+                                                                            sideOffset={
+                                                                                10
+                                                                            }
+                                                                        >
+                                                                            <p>
+                                                                                Upload
+                                                                                File
+                                                                            </p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
                                                             </button>
                                                         ) : (
                                                             <></>
@@ -875,6 +1071,7 @@ DataTableProps<TData, TValue>) {
                                                                 <div className="flex w-full h-[50vh] justify-center items-center">
                                                                     <img
                                                                         src={`memo-file/${row.original.memo.file_path}`}
+                                                                        className="h-[90%] w-[90%] object-fill"
                                                                         alt=""
                                                                     />
                                                                     {/* <PDFViewer className="w-full h-[80vh]">
