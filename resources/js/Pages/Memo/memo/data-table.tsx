@@ -431,11 +431,15 @@ DataTableProps<TData, TValue>) {
                                                                           0
                                                                       }
                                                                   >
+                                                                      {/* Show the appropriate tooltip based on file upload status */}
                                                                       <Tooltip>
                                                                           <TooltipTrigger
                                                                               className={
                                                                                   user.role_id !=
-                                                                                      1 ||
+                                                                                      row
+                                                                                          .original
+                                                                                          .stages
+                                                                                          .approver_id ||
                                                                                   row
                                                                                       .original
                                                                                       .stages
@@ -494,63 +498,36 @@ DataTableProps<TData, TValue>) {
                                                                                           null
                                                                                   }
                                                                               >
-                                                                                  {/* {row.original.memo.f} */}
-                                                                                  <TooltipProvider
-                                                                                      delayDuration={
-                                                                                          100
-                                                                                      }
-                                                                                      skipDelayDuration={
-                                                                                          0
-                                                                                      }
-                                                                                  >
-                                                                                      <Tooltip>
-                                                                                          <TooltipTrigger>
-                                                                                              <Check></Check>
-                                                                                          </TooltipTrigger>
-                                                                                          <TooltipContent
-                                                                                              side="top"
-                                                                                              sideOffset={
-                                                                                                  10
-                                                                                              }
-                                                                                          >
-                                                                                              <p>
-                                                                                                  Setujui
-                                                                                                  Memo
-                                                                                              </p>
-                                                                                          </TooltipContent>
-                                                                                      </Tooltip>
-                                                                                  </TooltipProvider>
-                                                                                  {/* {user.role_id ==
-                                                                                  1
-                                                                                      ? (<Check></Check>)
-                                                                                      : "Perbaiki"} */}
+                                                                                  <Check />
                                                                               </button>
                                                                           </TooltipTrigger>
                                                                           <TooltipContent
-                                                                              className={
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .requires_file_upload ==
-                                                                                      1 &&
-                                                                                  row
-                                                                                      .original
-                                                                                      .memo
-                                                                                      .file_path ==
-                                                                                      null
-                                                                                      ? ""
-                                                                                      : "hidden"
-                                                                              }
                                                                               side="top"
                                                                               sideOffset={
-                                                                                  -10
+                                                                                  10
                                                                               }
                                                                           >
-                                                                              <p>
-                                                                                  File
-                                                                                  Belum
-                                                                                  Diupload.
-                                                                              </p>
+                                                                              {row
+                                                                                  .original
+                                                                                  .stages
+                                                                                  .requires_file_upload ==
+                                                                                  1 &&
+                                                                              row
+                                                                                  .original
+                                                                                  .memo
+                                                                                  .file_path ==
+                                                                                  null ? (
+                                                                                  <p>
+                                                                                      File
+                                                                                      Belum
+                                                                                      Diupload.
+                                                                                  </p>
+                                                                              ) : (
+                                                                                  <p>
+                                                                                      Setujui
+                                                                                      Memo
+                                                                                  </p>
+                                                                              )}
                                                                           </TooltipContent>
                                                                       </Tooltip>
                                                                   </TooltipProvider>
@@ -1068,30 +1045,95 @@ DataTableProps<TData, TValue>) {
                                                                 <AlertDialogTitle>
                                                                     Preview File
                                                                 </AlertDialogTitle>
-                                                                <div className="flex w-full h-[50vh] justify-center items-center">
-                                                                    <img
-                                                                        src={`memo-file/${row.original.memo.file_path}`}
-                                                                        className="h-[90%] w-[90%] object-fill"
-                                                                        alt=""
-                                                                    />
-                                                                    {/* <PDFViewer className="w-full h-[80vh]">
-                                                                    <Template
-                                                                        data={
-                                                                            row
-                                                                                .original
-                                                                                .memo
-                                                                        }
-                                                                    />
-                                                                </PDFViewer> */}
+                                                                <div className="flex flex-col w-full">
+                                                                    {/* Image viewer with zoom functionality */}
+                                                                    <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
+                                                                        {/* Loading indicator */}
+                                                                        <div
+                                                                            className="absolute inset-0 flex items-center justify-center z-10 bg-white/50"
+                                                                            id="loading-indicator"
+                                                                        >
+                                                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                                                                        </div>
+
+                                                                        {/* Actual image with zoom functionality */}
+                                                                        <div className="w-full h-full flex items-center justify-center overflow-auto">
+                                                                            <img
+                                                                                src={`memo-file/${row.original.memo.file_path}`}
+                                                                                className="max-w-full max-h-full object-contain transition-transform duration-200 hover:scale-105"
+                                                                                alt="Document preview"
+                                                                                onLoad={(
+                                                                                    e
+                                                                                ) => {
+                                                                                    // Hide loading indicator when image loads
+                                                                                    const loadingEl =
+                                                                                        document.getElementById(
+                                                                                            "loading-indicator"
+                                                                                        );
+                                                                                    if (
+                                                                                        loadingEl
+                                                                                    )
+                                                                                        loadingEl.style.display =
+                                                                                            "none";
+                                                                                }}
+                                                                                onError={(
+                                                                                    e
+                                                                                ) => {
+                                                                                    // Show error message if image fails to load
+                                                                                    e.currentTarget.src =
+                                                                                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAwYzYuNjIzIDAgMTIgNS4zNzcgMTIgMTJzLTUuMzc3IDEyLTEyIDEyLTEyLTUuMzc3LTEyLTEyIDUuMzc3LTEyIDEyLTEyem0wIDFjNi4wNzEgMCAxMSA0LjkyOSAxMSAxMXMtNC45MjkgMTEtMTEgMTEtMTEtNC45MjktMTEtMTEgNC45MjktMTEgMTEtMTF6bS41IDEyaC0ydi02aDJ2NnptLTEtNi43NWMtLjY5IDAtMS4yNS0uNTYtMS4yNS0xLjI1cy41Ni0xLjI1IDEuMjUtMS4yNSAxLjI1LjU2IDEuMjUgMS4yNS0uNTYgMS4yNS0xLjI1IDEuMjV6Ii8+PC9zdmc+";
+                                                                                    e.currentTarget.className =
+                                                                                        "w-24 h-24 opacity-60";
+                                                                                    const loadingEl =
+                                                                                        document.getElementById(
+                                                                                            "loading-indicator"
+                                                                                        );
+                                                                                    if (
+                                                                                        loadingEl
+                                                                                    ) {
+                                                                                        loadingEl.innerHTML =
+                                                                                            '<p class="text-red-500">Failed to load image</p>';
+                                                                                        loadingEl.classList.remove(
+                                                                                            "bg-white/50"
+                                                                                        );
+                                                                                    }
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Image controls */}
+                                                                    <div className="flex items-center justify-between mt-4">
+                                                                        <div className="text-sm text-gray-500">
+                                                                            {row.original.memo.file_path
+                                                                                ?.split(
+                                                                                    "/"
+                                                                                )
+                                                                                .pop()}
+                                                                        </div>
+                                                                        <div className="flex gap-2">
+                                                                            <button
+                                                                                className="px-3 py-1 bg-gray-200 rounded-md text-sm"
+                                                                                onClick={() =>
+                                                                                    window.open(
+                                                                                        `memo-file/${row.original.memo.file_path}`,
+                                                                                        "_blank"
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                Buka
+                                                                                di
+                                                                                tab
+                                                                                baru
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
                                                                 <AlertDialogCancel className="bg-blue-500 text-white">
                                                                     Kembali
                                                                 </AlertDialogCancel>
-                                                                {/* <AlertDialogAction>
-                                                                Continue
-                                                            </AlertDialogAction> */}
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     ) : (
