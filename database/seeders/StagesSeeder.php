@@ -40,6 +40,7 @@ class StagesSeeder extends Seeder
             'status_id' => 4,
             'rejected_id' => NULL,
             'is_external' => false,
+            'is_fixable' => true,
         ]);
 
         DB::table('request_stages')->insert([

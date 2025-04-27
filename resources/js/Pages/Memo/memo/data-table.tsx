@@ -171,6 +171,9 @@ DataTableProps<TData, TValue>) {
         },
     });
 
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
     return (
         <div>
             <div className="rounded-md border">
@@ -613,7 +616,12 @@ DataTableProps<TData, TValue>) {
                                                               </>
                                                           )}
                                                 </>
-                                                <AlertDialog>
+                                                <AlertDialog
+                                                    open={editDialogOpen}
+                                                    onOpenChange={
+                                                        setEditDialogOpen
+                                                    }
+                                                >
                                                     <AlertDialogTrigger
                                                         //   onClick={() =>
                                                         //       setFormData(
@@ -655,7 +663,16 @@ DataTableProps<TData, TValue>) {
                                                         //             .perihal
                                                         //     )
                                                         // }
-                                                        className={`bg-blue-500 p-2 mt-2 text-white text-sm font-medium rounded-lg`}
+                                                        className={`bg-blue-500 p-2 mt-2 text-white text-sm font-normal rounded-lg ${
+                                                            row.original.stages
+                                                                .is_fixable ==
+                                                                1 &&
+                                                            row.original.stages
+                                                                .approver_id ==
+                                                                user.role_id
+                                                                ? ""
+                                                                : "hidden"
+                                                        }`}
                                                     >
                                                         Edit Memo
                                                     </AlertDialogTrigger>
@@ -712,19 +729,74 @@ DataTableProps<TData, TValue>) {
                                                             <AlertDialogCancel>
                                                                 Kembali
                                                             </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className="bg-blue-500 font-normal hover:bg-blue-600"
-                                                                onClick={() =>
-                                                                    handleUpdate(
-                                                                        row
-                                                                            .original
-                                                                            .memo
-                                                                            .id
-                                                                    )
-                                                                }
-                                                            >
-                                                                Edit Memo
-                                                            </AlertDialogAction>
+                                                            <AlertDialog>
+                                                                <AlertDialogTrigger>
+                                                                    <AlertDialogAction className="bg-blue-500 font-normal hover:bg-blue-600">
+                                                                        Simpan
+                                                                        Perubahan
+                                                                        Memo
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogTrigger>
+                                                                <AlertDialogContent>
+                                                                    <AlertDialogHeader>
+                                                                        <AlertDialogTitle>
+                                                                            Apakah
+                                                                            Anda
+                                                                            Yakin
+                                                                            ?
+                                                                        </AlertDialogTitle>
+                                                                        <AlertDialogDescription>
+                                                                            Memo
+                                                                            akan
+                                                                            dikirimkan
+                                                                            ke
+                                                                            manajer.
+                                                                            Apakah
+                                                                            anda
+                                                                            yakin
+                                                                            dengan
+                                                                            perubahan
+                                                                            yang
+                                                                            sudah
+                                                                            dibuat
+                                                                            ?
+                                                                        </AlertDialogDescription>
+                                                                    </AlertDialogHeader>
+                                                                    <AlertDialogFooter>
+                                                                        <AlertDialogCancel>
+                                                                            Kembali
+                                                                        </AlertDialogCancel>
+                                                                        <AlertDialogAction
+                                                                            onClick={() => {
+                                                                                handleUpdate(
+                                                                                    row
+                                                                                        .original
+                                                                                        .memo
+                                                                                        .id
+                                                                                );
+                                                                                handleApprove(
+                                                                                    row
+                                                                                        .original
+                                                                                        .memo
+                                                                                        .id
+                                                                                );
+                                                                                setConfirmDialogOpen(
+                                                                                    false
+                                                                                );
+                                                                                setEditDialogOpen(
+                                                                                    false
+                                                                                );
+                                                                            }}
+                                                                            className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                        >
+                                                                            Kirim
+                                                                            Memo
+                                                                            ke
+                                                                            Manajer
+                                                                        </AlertDialogAction>
+                                                                    </AlertDialogFooter>
+                                                                </AlertDialogContent>
+                                                            </AlertDialog>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
                                                 </AlertDialog>
