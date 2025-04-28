@@ -382,6 +382,9 @@ class MemoService
         if ($nextStageId == null) {
             return to_route('memo.index');
         }
+        MemoLetter::where('id', $id)->update([
+            'rejection_reason' => NULL
+        ]);
         // return response()->json($nextStageId);
         $request->update([
             // "stages_id" => $request->stages->to_stage_id,

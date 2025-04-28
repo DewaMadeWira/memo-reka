@@ -64,7 +64,7 @@ import { RequestLetter } from "@/types/RequestType";
 import { User } from "@/types/UserType";
 import { PDFViewer } from "@react-pdf/renderer";
 import Template from "@/Pages/Pdf/Template";
-import { Check, FileSearch, FileText, FileUp, X } from "lucide-react";
+import { Check, FileSearch, FileText, FileUp, Info, X } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
@@ -766,7 +766,93 @@ DataTableProps<TData, TValue>) {
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
                                                                   </AlertDialog>
+                                                                  <AlertDialog>
+                                                                      <AlertDialogTrigger>
+                                                                          <button
+                                                                              className={
+                                                                                  row
+                                                                                      .original
+                                                                                      .memo
+                                                                                      .rejection_reason
+                                                                                      ? `${actionButtonClass} bg-yellow-500`
+                                                                                      : "hidden"
+                                                                              }
+                                                                          >
+                                                                              <TooltipProvider
+                                                                                  delayDuration={
+                                                                                      100
+                                                                                  }
+                                                                                  skipDelayDuration={
+                                                                                      0
+                                                                                  }
+                                                                              >
+                                                                                  <Tooltip>
+                                                                                      <TooltipTrigger>
+                                                                                          <Info
+                                                                                              size={
+                                                                                                  18
+                                                                                              }
+                                                                                          />
+                                                                                      </TooltipTrigger>
+                                                                                      <TooltipContent
+                                                                                          side="top"
+                                                                                          sideOffset={
+                                                                                              10
+                                                                                          }
+                                                                                      >
+                                                                                          <p>
+                                                                                              Lihat
+                                                                                              Alasan
+                                                                                              Penolakan
+                                                                                          </p>
+                                                                                      </TooltipContent>
+                                                                                  </Tooltip>
+                                                                              </TooltipProvider>
+                                                                          </button>
+                                                                      </AlertDialogTrigger>
+                                                                      <AlertDialogContent>
+                                                                          <AlertDialogHeader>
+                                                                              <AlertDialogTitle>
+                                                                                  Alasan
+                                                                                  Penolakan
+                                                                                  Memo
+                                                                              </AlertDialogTitle>
+                                                                              <AlertDialogDescription>
+                                                                                  <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                          Ditolak
+                                                                                          pada
+                                                                                          tahap:
+                                                                                      </p>
+                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                                                                          {row
+                                                                                              .original
+                                                                                              .stages
+                                                                                              .stage_name ||
+                                                                                              "Tidak diketahui"}
+                                                                                      </p>
 
+                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                          Alasan
+                                                                                          penolakan:
+                                                                                      </p>
+                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                                                                                          {row
+                                                                                              .original
+                                                                                              .memo
+                                                                                              .rejection_reason ||
+                                                                                              "Tidak ada alasan yang diberikan"}
+                                                                                      </p>
+                                                                                  </div>
+                                                                              </AlertDialogDescription>
+                                                                          </AlertDialogHeader>
+                                                                          <AlertDialogFooter>
+                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600">
+                                                                                  Tutup
+                                                                              </AlertDialogCancel>
+                                                                          </AlertDialogFooter>
+                                                                      </AlertDialogContent>
+                                                                  </AlertDialog>
                                                                   <AlertDialog>
                                                                       <AlertDialogTrigger>
                                                                           <button
