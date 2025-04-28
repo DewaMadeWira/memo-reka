@@ -403,7 +403,7 @@ class MemoService
 
         MemoLetter::where('id', $id)->update([
             'file_path' => NULL,
-            'rejection_reason' => 'Memo ditolak oleh ' . Auth::user()->name . ' karena ' . $request->rejection_reason
+            'rejection_reason' => 'Memo ditolak oleh ' . Auth::user()->name . ' karena ' . "\n\n" . $request->rejection_reason
         ]);
 
         $request_letter->update([

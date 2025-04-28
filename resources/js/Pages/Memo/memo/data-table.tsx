@@ -64,7 +64,15 @@ import { RequestLetter } from "@/types/RequestType";
 import { User } from "@/types/UserType";
 import { PDFViewer } from "@react-pdf/renderer";
 import Template from "@/Pages/Pdf/Template";
-import { Check, FileSearch, FileText, FileUp, Info, X } from "lucide-react";
+import {
+    Check,
+    FileSearch,
+    FileText,
+    FileUp,
+    Info,
+    Pencil,
+    X,
+} from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
@@ -1160,7 +1168,7 @@ DataTableProps<TData, TValue>) {
                                                         //             .perihal
                                                         //     )
                                                         // }
-                                                        className={`bg-blue-500 p-2 mt-2 text-white text-sm font-normal rounded-lg ${
+                                                        className={`${actionButtonClass} ${
                                                             row.original.stages
                                                                 .is_fixable ==
                                                                 1 &&
@@ -1171,7 +1179,8 @@ DataTableProps<TData, TValue>) {
                                                                 : "hidden"
                                                         }`}
                                                     >
-                                                        Edit Memo
+                                                        <Pencil></Pencil>
+                                                        {/* Edit Memo */}
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent className="w-[300rem]">
                                                         <AlertDialogHeader>
