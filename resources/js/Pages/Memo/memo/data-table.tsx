@@ -536,6 +536,93 @@ DataTableProps<TData, TValue>) {
                                                                           </TooltipContent>
                                                                       </Tooltip>
                                                                   </TooltipProvider>
+                                                                  <AlertDialog>
+                                                                      <AlertDialogTrigger>
+                                                                          <button
+                                                                              className={
+                                                                                  row
+                                                                                      .original
+                                                                                      .memo
+                                                                                      .rejection_reason
+                                                                                      ? `${actionButtonClass} bg-yellow-500`
+                                                                                      : "hidden"
+                                                                              }
+                                                                          >
+                                                                              <TooltipProvider
+                                                                                  delayDuration={
+                                                                                      100
+                                                                                  }
+                                                                                  skipDelayDuration={
+                                                                                      0
+                                                                                  }
+                                                                              >
+                                                                                  <Tooltip>
+                                                                                      <TooltipTrigger>
+                                                                                          <Info
+                                                                                          //   size={
+                                                                                          //       18
+                                                                                          //   }
+                                                                                          />
+                                                                                      </TooltipTrigger>
+                                                                                      <TooltipContent
+                                                                                          side="top"
+                                                                                          sideOffset={
+                                                                                              10
+                                                                                          }
+                                                                                      >
+                                                                                          <p>
+                                                                                              Lihat
+                                                                                              Alasan
+                                                                                              Penolakan
+                                                                                          </p>
+                                                                                      </TooltipContent>
+                                                                                  </Tooltip>
+                                                                              </TooltipProvider>
+                                                                          </button>
+                                                                      </AlertDialogTrigger>
+                                                                      <AlertDialogContent>
+                                                                          <AlertDialogHeader>
+                                                                              <AlertDialogTitle>
+                                                                                  Alasan
+                                                                                  Penolakan
+                                                                                  Memo
+                                                                              </AlertDialogTitle>
+                                                                              <AlertDialogDescription>
+                                                                                  <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                          Ditolak
+                                                                                          pada
+                                                                                          tahap:
+                                                                                      </p>
+                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                                                                          {row
+                                                                                              .original
+                                                                                              .stages
+                                                                                              .stage_name ||
+                                                                                              "Tidak diketahui"}
+                                                                                      </p>
+
+                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                          Alasan
+                                                                                          penolakan:
+                                                                                      </p>
+                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                                                                                          {row
+                                                                                              .original
+                                                                                              .memo
+                                                                                              .rejection_reason ||
+                                                                                              "Tidak ada alasan yang diberikan"}
+                                                                                      </p>
+                                                                                  </div>
+                                                                              </AlertDialogDescription>
+                                                                          </AlertDialogHeader>
+                                                                          <AlertDialogFooter>
+                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600">
+                                                                                  Tutup
+                                                                              </AlertDialogCancel>
+                                                                          </AlertDialogFooter>
+                                                                      </AlertDialogContent>
+                                                                  </AlertDialog>
 
                                                                   <AlertDialog>
                                                                       <AlertDialogTrigger>
@@ -595,38 +682,76 @@ DataTableProps<TData, TValue>) {
                                                                       <AlertDialogContent>
                                                                           <AlertDialogHeader>
                                                                               <AlertDialogTitle>
-                                                                                  Are
-                                                                                  you
-                                                                                  absolutely
-                                                                                  sure?
+                                                                                  Alasan
+                                                                                  Penolakan
                                                                               </AlertDialogTitle>
                                                                               <AlertDialogDescription>
-                                                                                  This
-                                                                                  action
-                                                                                  cannot
-                                                                                  be
-                                                                                  undone.
-                                                                                  This
-                                                                                  will
-                                                                                  permanently
-                                                                                  delete
-                                                                                  your
-                                                                                  account
-                                                                                  and
-                                                                                  remove
-                                                                                  your
-                                                                                  data
-                                                                                  from
-                                                                                  our
-                                                                                  servers.
+                                                                                  Mohon
+                                                                                  berikan
+                                                                                  alasan
+                                                                                  penolakan
+                                                                                  memo
+                                                                                  ini.
                                                                               </AlertDialogDescription>
+                                                                              <div className="mt-4">
+                                                                                  <Textarea
+                                                                                      placeholder="Alasan penolakan..."
+                                                                                      value={
+                                                                                          rejectionReason
+                                                                                      }
+                                                                                      onChange={(
+                                                                                          e
+                                                                                      ) =>
+                                                                                          setRejectionReason(
+                                                                                              e
+                                                                                                  .target
+                                                                                                  .value
+                                                                                          )
+                                                                                      }
+                                                                                      className="w-full min-h-[100px]"
+                                                                                  />
+                                                                              </div>
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
-                                                                              <AlertDialogCancel>
-                                                                                  Cancel
+                                                                              <AlertDialogCancel
+                                                                                  onClick={() => {
+                                                                                      setRejectionReason(
+                                                                                          ""
+                                                                                      );
+                                                                                      // setMemoToReject(
+                                                                                      //     null
+                                                                                      // );
+                                                                                  }}
+                                                                              >
+                                                                                  Batal
                                                                               </AlertDialogCancel>
-                                                                              <AlertDialogAction>
-                                                                                  Continue
+                                                                              <AlertDialogAction
+                                                                                  onClick={() => {
+                                                                                      // if (
+                                                                                      //     memoToReject
+                                                                                      // ) {
+                                                                                      handleReject(
+                                                                                          row
+                                                                                              .original
+                                                                                              .id,
+                                                                                          rejectionReason
+                                                                                      );
+                                                                                      setRejectionReason(
+                                                                                          ""
+                                                                                      );
+                                                                                      // setMemoToReject(
+                                                                                      //     null
+                                                                                      // );
+                                                                                      // }
+                                                                                  }}
+                                                                                  className="bg-red-500 hover:bg-red-600"
+                                                                                  disabled={
+                                                                                      rejectionReason.trim() ===
+                                                                                      ""
+                                                                                  }
+                                                                              >
+                                                                                  Tolak
+                                                                                  Memo
                                                                               </AlertDialogAction>
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
@@ -789,9 +914,9 @@ DataTableProps<TData, TValue>) {
                                                                                   <Tooltip>
                                                                                       <TooltipTrigger>
                                                                                           <Info
-                                                                                              size={
-                                                                                                  18
-                                                                                              }
+                                                                                          //   size={
+                                                                                          //       18
+                                                                                          //   }
                                                                                           />
                                                                                       </TooltipTrigger>
                                                                                       <TooltipContent
