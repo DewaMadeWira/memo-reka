@@ -185,7 +185,9 @@ export default function Template({ data }: { data: any }) {
                     }}
                 >
                     <Text style={{ fontSize: 12 }}>Hormat Kami,</Text>
-                    <Text style={{ fontSize: 12 }}>M QMSHETI</Text>
+                    <Text style={{ fontSize: 12 }}>
+                        M {data.from_division.division_code}
+                    </Text>
                     <Text
                         style={{
                             fontSize: 12,

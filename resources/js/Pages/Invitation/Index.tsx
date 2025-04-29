@@ -26,6 +26,7 @@ import { Division } from "@/types/DivisionType";
 import { DataTable } from "./invitation/data-table";
 import { columns } from "./invitation/columns";
 import { User } from "@/types/UserType";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 
 export default function Index({
     request,
@@ -58,6 +59,10 @@ export default function Index({
         perihal: "",
         content: "",
         official: "",
+        hari_tanggal: "",
+        waktu: "",
+        tempat: "",
+        agenda: "",
         to_division: null,
     });
     const handleChange = (
@@ -105,85 +110,143 @@ export default function Index({
                                 <AlertDialogTitle className="font-medium">
                                     Buat Undangan Rapat Baru
                                 </AlertDialogTitle>
-                                <div className="">
-                                    <label
-                                        htmlFor="perihal"
-                                        className="block mb-2"
-                                    >
-                                        Nama Permintaan Persetujuan
-                                    </label>
-                                    <input
-                                        onChange={handleChange}
-                                        type="text"
-                                        name="request_name"
-                                        id=""
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-                                    <label
-                                        htmlFor="perihal"
-                                        className="block mb-2"
-                                    >
-                                        Perihal
-                                    </label>
-                                    <input
-                                        onChange={handleChange}
-                                        type="text"
-                                        name="perihal"
-                                        id=""
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-                                    <label
-                                        htmlFor="content"
-                                        className="block mb-2"
-                                    >
-                                        Isi
-                                    </label>
-                                    <textarea
-                                        onChange={handleChange}
-                                        rows={10}
-                                        name="content"
-                                        id=""
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-                                    <label
-                                        htmlFor="official"
-                                        className="block mb-2"
-                                    >
-                                        Pejabat
-                                    </label>
-                                    <select
-                                        name="official"
-                                        id=""
-                                        onChange={handleChange}
-                                        className="w-full p-2 border rounded-lg"
-                                    >
-                                        <option value="">Pilih Pejabat</option>
-                                        {official.map((offi) => (
-                                            <option value={offi.id}>
-                                                {offi.official_name}
+                                <ScrollArea className="h-[500px] w-full pr-4">
+                                    <div className="">
+                                        <label
+                                            htmlFor="perihal"
+                                            className="block mb-2"
+                                        >
+                                            Nama Permintaan Persetujuan
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="request_name"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="perihal"
+                                            className="block mb-2"
+                                        >
+                                            Perihal
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="perihal"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="content"
+                                            className="block mb-2"
+                                        >
+                                            Isi
+                                        </label>
+                                        <textarea
+                                            onChange={handleChange}
+                                            rows={10}
+                                            name="content"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="hari_tanggal"
+                                            className="block mb-2"
+                                        >
+                                            Hari / tanggal
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="date"
+                                            name="hari_tanggal"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="waktu"
+                                            className="block mb-2"
+                                        >
+                                            Waktu
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="waktu"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="tempat"
+                                            className="block mb-2"
+                                        >
+                                            Tempat
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="tempat"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="agenda"
+                                            className="block mb-2"
+                                        >
+                                            Agenda
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="agenda"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="official"
+                                            className="block mb-2"
+                                        >
+                                            Pejabat
+                                        </label>
+                                        <select
+                                            name="official"
+                                            id=""
+                                            onChange={handleChange}
+                                            className="w-full p-2 border rounded-lg"
+                                        >
+                                            <option value="">
+                                                Pilih Pejabat
                                             </option>
-                                        ))}
-                                    </select>
-                                    <label
-                                        htmlFor="to_division"
-                                        className="block mb-2"
-                                    >
-                                        Divisi Tujuan
-                                    </label>
-                                    <select
-                                        name="to_division"
-                                        id=""
-                                        onChange={handleChange}
-                                        className="w-full p-2 border rounded-lg"
-                                    >
-                                        <option value="">Pilih Divisi</option>
-                                        {division.map((divi: any) => (
-                                            <option value={divi.id}>
-                                                {divi.division_name}
+                                            {official.map((offi) => (
+                                                <option value={offi.id}>
+                                                    {offi.official_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label
+                                            htmlFor="to_division"
+                                            className="block mb-2"
+                                        >
+                                            Divisi Tujuan
+                                        </label>
+                                        <select
+                                            name="to_division"
+                                            id=""
+                                            onChange={handleChange}
+                                            className="w-full p-2 border rounded-lg"
+                                        >
+                                            <option value="">
+                                                Pilih Divisi
                                             </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                            {division.map((divi: any) => (
+                                                <option value={divi.id}>
+                                                    {divi.division_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </ScrollArea>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Kembali</AlertDialogCancel>

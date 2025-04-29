@@ -20,6 +20,10 @@ class InvitationLetter extends Model
         'rejection_reason',
         'signatory',
         'official_id',
+        'hari_tanggal',
+        'waktu',
+        'tempat',
+        'agenda',
     ];
     public function from_division(): BelongsTo
     {

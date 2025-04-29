@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
-Route::resource('undangan-rapat', InvitationController::class);
+// Route::resource('undangan-rapat', InvitationController::class);
 Route::resource('request', RequestController::class);
 // Route::resource('stages', StagesController::class);
 

@@ -91,8 +91,12 @@ class InvitationService
             'signatory' => $manager->id,
             'official_id' => $request->official,
             'from_division' => $user->division->id,
-            'to_division' => 2,
+            'to_division' => $request->to_division,
             'letter_id' => 2,
+            'hari_tanggal' => $request->hari_tanggal,
+            'waktu' => $request->waktu,
+            'tempat' => $request->tempat,
+            'agenda' => $request->agenda,
         ]);
         // $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
 

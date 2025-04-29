@@ -74,6 +74,7 @@ import {
     X,
 } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
+import UndanganTemplate from "@/Pages/Pdf/UndanganTemplate";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -98,6 +99,10 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
         content: string;
         official: string;
         to_division: null;
+        hari_tanggal: string;
+        waktu: string;
+        tempat: string;
+        agenda: string;
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
@@ -106,6 +111,10 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
             request_name: string;
             official: string;
             to_division: null;
+            hari_tanggal: string;
+            waktu: string;
+            tempat: string;
+            agenda: string;
         }>
     >;
     handleChange: (
@@ -1143,23 +1152,23 @@ DataTableProps<TData, TValue>) {
                                                         //           }
                                                         //       )
                                                         //   }
-                                                        onClick={() =>
-                                                            setFormData({
-                                                                official: "",
-                                                                request_name:
-                                                                    "",
-                                                                to_division:
-                                                                    null,
-                                                                perihal:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .perihal,
-                                                                content:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .content,
-                                                            })
-                                                        }
+                                                        // onClick={() =>
+                                                        //     setFormData({
+                                                        //         official: "",
+                                                        //         request_name:
+                                                        //             "",
+                                                        //         to_division:
+                                                        //             null,
+                                                        //         perihal:
+                                                        //             row.original
+                                                        //                 .invite!
+                                                        //                 .perihal,
+                                                        //         content:
+                                                        //             row.original
+                                                        //                 .invite!
+                                                        //                 .content,
+                                                        //     })
+                                                        // }
                                                         // onClick={() =>
                                                         //     alert(
                                                         //         row.original
@@ -1299,7 +1308,7 @@ DataTableProps<TData, TValue>) {
                                                             </AlertDialogTitle>
                                                             <div className="">
                                                                 <PDFViewer className="w-full h-[80vh]">
-                                                                    <Template
+                                                                    <UndanganTemplate
                                                                         data={
                                                                             row
                                                                                 .original

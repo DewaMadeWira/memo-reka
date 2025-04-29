@@ -16,6 +16,10 @@ return new class extends Migration
             $table->timestamps();
             // $table->string("invitation_name");
             $table->string("invitation_number");
+            $table->datetime("hari_tanggal");
+            $table->string("waktu");
+            $table->string("tempat");
+            $table->string("agenda");
             $table->foreignId("letter_id");
             $table->foreignId("from_division");
             $table->foreignId("to_division");
