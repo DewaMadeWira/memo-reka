@@ -188,13 +188,13 @@ export default function Index({
             <div className="w-full p-10 bg-white">
                 <Breadcrumb className="mb-6">
                     <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="">Manajemen</BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>Manajemen Divisi</BreadcrumbPage>
-                        </BreadcrumbItem>
+                        {/* <BreadcrumbItem>
+                            <BreadcrumbLink href="">Memo</BreadcrumbLink>
+                        </BreadcrumbItem> */}
+                        {/* <BreadcrumbSeparator /> */}
+                        {/* <BreadcrumbItem>
+                            <BreadcrumbPage>Memo Divisi</BreadcrumbPage>
+                        </BreadcrumbItem> */}
                     </BreadcrumbList>
                 </Breadcrumb>
                 <div className="flex justify-between items-center">

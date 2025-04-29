@@ -31,10 +31,12 @@ export default function Index({
     request,
     official,
     division,
+    userData,
 }: {
     request: any;
     official: Official[];
     division: Division[];
+    userData: any;
 }) {
     const { user } = usePage().props.auth as { user: User };
     console.log(user);
@@ -68,10 +70,10 @@ export default function Index({
     };
     return (
         <SidebarAuthenticated>
-            <Head title="Memo" />
+            <Head title="Undangan Rapat" />
             <div className="w-full p-10 bg-white">
                 <Breadcrumb className="mb-6">
-                    <BreadcrumbList>
+                    {/* <BreadcrumbList>
                         <BreadcrumbItem>
                             <BreadcrumbLink href="">Manajemen</BreadcrumbLink>
                         </BreadcrumbItem>
@@ -79,13 +81,15 @@ export default function Index({
                         <BreadcrumbItem>
                             <BreadcrumbPage>Manajemen Divisi</BreadcrumbPage>
                         </BreadcrumbItem>
-                    </BreadcrumbList>
+                    </BreadcrumbList> */}
                 </Breadcrumb>
                 <div className="flex justify-between items-center">
                     <div className="">
-                        <h1 className="text-2xl font-semibold">Memo</h1>
+                        <h1 className="text-2xl font-semibold">
+                            Undangan Rapat
+                        </h1>
                         <h1 className="text-xl font-medium mt-2">
-                            {/* Divisi : {userData.division.division_name} */}
+                            Divisi : {userData.division.division_name}
                         </h1>
                     </div>
                     <AlertDialog>
@@ -238,6 +242,25 @@ export default function Index({
                         handleUpdate={() => {
                             return null;
                         }}
+                        handleUpload={function (id: number): void {
+                            throw new Error("Function not implemented.");
+                        }}
+                        setFilePreview={function (
+                            value: React.SetStateAction<string | null>
+                        ): void {
+                            throw new Error("Function not implemented.");
+                        }}
+                        setFileData={function (
+                            value: React.SetStateAction<{
+                                file: File | null;
+                                memo_id: number;
+                                fileName: string;
+                            } | null>
+                        ): void {
+                            throw new Error("Function not implemented.");
+                        }}
+                        filePreview={null}
+                        fileData={null}
                     />
                 </div>
                 {/*  */}

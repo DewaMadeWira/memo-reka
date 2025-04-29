@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\InvitationService;
+use App\Models\Division;
+use App\Models\Official;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class InvitationController extends Controller
@@ -20,9 +24,16 @@ class InvitationController extends Controller
     public function index()
     {
         $data = $this->invitationService->index();
+        $division = Division::get();
+        $official = Official::get();
+        $user = Auth::user();
+        $user = User::with('role')->with('division')->where("id", $user->id)->first();
 
         return Inertia::render('Invitation/Index', [
-            'request' => $data
+            'request' => $data,
+            'division' => $division,
+            'official' => $official,
+            'userData' => $user,
         ]);
     }
 
