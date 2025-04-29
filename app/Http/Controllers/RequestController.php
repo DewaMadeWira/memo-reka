@@ -100,11 +100,14 @@ class RequestController extends Controller
         switch ($intent) {
             case 'memo.create':
                 $memo = $this->memoService->create($request);
+                // dd($request);
                 return $memo;
                 // return to_route('memo.index');
             case 'invitation.create':
+                // dd($request);
                 $invitation = $this->invitationService->create($request);
-                return to_route('undangan-rapat.index');
+                return $invitation;
+                // return to_route('undangan-rapat.index');
 
             default:
                 return response()->json(['error' => 'Invalid letter type'], 400);

@@ -42,7 +42,7 @@ export default function Index({
     console.log(user);
     console.log(request);
     const handleSubmit = () => {
-        router.post("/request?intent=invitation.create");
+        router.post("/request?intent=invitation.create", formData);
     };
     // const handleApprove = ({ id }: { id: number }) => {
     //     router.post("/invite-approve/" + id);

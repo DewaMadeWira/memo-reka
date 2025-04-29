@@ -33,4 +33,12 @@ class InvitationLetter extends Model
     {
         return $this->belongsTo(LetterType::class, 'letter_id', 'id');
     }
+    public function signatory(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'signatory', 'id');
+    }
+    public function official_id(): BelongsTo
+    {
+        return $this->belongsTo(Official::class, 'official_id', 'id');
+    }
 }

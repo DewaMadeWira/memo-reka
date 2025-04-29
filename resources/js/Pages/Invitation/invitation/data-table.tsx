@@ -432,12 +432,11 @@ DataTableProps<TData, TValue>) {
                                                 <>
                                                     {row.original.stages
                                                         .is_external == 1
-                                                        ? row.original
-                                                              .invitation!
+                                                        ? row.original.invite!
                                                               .to_division.id ==
                                                               user.division_id && (
                                                               <>
-                                                                  <TooltipProvider
+                                                                  {/* <TooltipProvider
                                                                       delayDuration={
                                                                           100
                                                                       }
@@ -445,7 +444,6 @@ DataTableProps<TData, TValue>) {
                                                                           0
                                                                       }
                                                                   >
-                                                                      {/* Show the appropriate tooltip based on file upload status */}
                                                                       <Tooltip>
                                                                           <TooltipTrigger
                                                                               className={
@@ -468,7 +466,7 @@ DataTableProps<TData, TValue>) {
                                                                                       handleApprove(
                                                                                           row
                                                                                               .original
-                                                                                              .invitation!
+                                                                                              .invite!
                                                                                               .id
                                                                                       )
                                                                                   }
@@ -492,7 +490,7 @@ DataTableProps<TData, TValue>) {
                                                                                                     1 &&
                                                                                                 row
                                                                                                     .original
-                                                                                                    .invitation!
+                                                                                                    .invite!
                                                                                                     .file_path ==
                                                                                                     null
                                                                                                     ? "opacity-50 cursor-not-allowed"
@@ -507,7 +505,7 @@ DataTableProps<TData, TValue>) {
                                                                                           1 &&
                                                                                       row
                                                                                           .original
-                                                                                          .invitation!
+                                                                                          .invite!
                                                                                           .file_path ==
                                                                                           null
                                                                                   }
@@ -528,7 +526,7 @@ DataTableProps<TData, TValue>) {
                                                                                   1 &&
                                                                               row
                                                                                   .original
-                                                                                  .invitation!
+                                                                                  .invite!
                                                                                   .file_path ==
                                                                                   null ? (
                                                                                   <p>
@@ -544,14 +542,14 @@ DataTableProps<TData, TValue>) {
                                                                               )}
                                                                           </TooltipContent>
                                                                       </Tooltip>
-                                                                  </TooltipProvider>
+                                                                  </TooltipProvider> */}
                                                                   <AlertDialog>
                                                                       <AlertDialogTrigger>
                                                                           <button
                                                                               className={
                                                                                   row
                                                                                       .original
-                                                                                      .invitation!
+                                                                                      .invite!
                                                                                       .rejection_reason
                                                                                       ? `${actionButtonClass} bg-yellow-500`
                                                                                       : "hidden"
@@ -618,7 +616,7 @@ DataTableProps<TData, TValue>) {
                                                                                       <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
                                                                                           {row
                                                                                               .original
-                                                                                              .invitation!
+                                                                                              .invite!
                                                                                               .rejection_reason ||
                                                                                               "Tidak ada alasan yang diberikan"}
                                                                                       </p>
@@ -640,7 +638,7 @@ DataTableProps<TData, TValue>) {
                                                                               //       handleReject(
                                                                               //           row
                                                                               //               .original
-                                                                              //               .invitation!
+                                                                              //               .invite!
                                                                               //               .id
                                                                               //       )
                                                                               //   }
@@ -699,7 +697,7 @@ DataTableProps<TData, TValue>) {
                                                                                   berikan
                                                                                   alasan
                                                                                   penolakan
-                                                                                  invitation!
+                                                                                  invite!
                                                                                   ini.
                                                                               </AlertDialogDescription>
                                                                               <div className="mt-4">
@@ -767,7 +765,7 @@ DataTableProps<TData, TValue>) {
                                                                   </AlertDialog>
                                                               </>
                                                           )
-                                                        : row.original.invitation!
+                                                        : row.original.invite!
                                                               .from_division
                                                               .id ==
                                                               user.division_id && (
@@ -846,7 +844,7 @@ DataTableProps<TData, TValue>) {
                                                                                               {
                                                                                                   row
                                                                                                       .original
-                                                                                                      .invitation!
+                                                                                                      .invite!
                                                                                                       .to_division
                                                                                                       .division_name
                                                                                               }
@@ -886,7 +884,7 @@ DataTableProps<TData, TValue>) {
                                                                                       handleApprove(
                                                                                           row
                                                                                               .original
-                                                                                              .invitation!
+                                                                                              .invite!
                                                                                               .id
                                                                                       );
                                                                                   }}
@@ -906,7 +904,7 @@ DataTableProps<TData, TValue>) {
                                                                               className={
                                                                                   row
                                                                                       .original
-                                                                                      .invitation!
+                                                                                      .invite!
                                                                                       .rejection_reason
                                                                                       ? `${actionButtonClass} bg-yellow-500`
                                                                                       : "hidden"
@@ -973,7 +971,7 @@ DataTableProps<TData, TValue>) {
                                                                                       <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
                                                                                           {row
                                                                                               .original
-                                                                                              .invitation!
+                                                                                              .invite!
                                                                                               .rejection_reason ||
                                                                                               "Tidak ada alasan yang diberikan"}
                                                                                       </p>
@@ -994,7 +992,7 @@ DataTableProps<TData, TValue>) {
                                                                               //       handleReject(
                                                                               //           row
                                                                               //               .original
-                                                                              //               .invitation!
+                                                                              //               .invite!
                                                                               //               .id
                                                                               //       )
                                                                               //   }
@@ -1053,7 +1051,7 @@ DataTableProps<TData, TValue>) {
                                                                                   berikan
                                                                                   alasan
                                                                                   penolakan
-                                                                                  invitation!
+                                                                                  invite!
                                                                                   ini.
                                                                               </AlertDialogDescription>
                                                                               <div className="mt-4">
@@ -1135,12 +1133,12 @@ DataTableProps<TData, TValue>) {
                                                         //               perihal:
                                                         //                   row
                                                         //                       .original
-                                                        //                       .invitation!
+                                                        //                       .invite!
                                                         //                       .perihal,
                                                         //               content:
                                                         //                   row
                                                         //                       .original
-                                                        //                       .invitation!
+                                                        //                       .invite!
                                                         //                       .content,
                                                         //           }
                                                         //       )
@@ -1154,18 +1152,18 @@ DataTableProps<TData, TValue>) {
                                                                     null,
                                                                 perihal:
                                                                     row.original
-                                                                        .invitation!
+                                                                        .invite!
                                                                         .perihal,
                                                                 content:
                                                                     row.original
-                                                                        .invitation!
+                                                                        .invite!
                                                                         .content,
                                                             })
                                                         }
                                                         // onClick={() =>
                                                         //     alert(
                                                         //         row.original
-                                                        //             .invitation!
+                                                        //             .invite!
                                                         //             .perihal
                                                         //     )
                                                         // }
@@ -1189,8 +1187,8 @@ DataTableProps<TData, TValue>) {
                                                                 Edit Memo{" "}
                                                                 {
                                                                     row.original
-                                                                        .invitation!
-                                                                        .memo_number
+                                                                        .invite!
+                                                                        .invitation_number
                                                                 }
                                                             </AlertDialogTitle>
                                                             <div className="">
@@ -1257,7 +1255,7 @@ DataTableProps<TData, TValue>) {
                                                         <button
                                                             // onClick={() =>
                                                             //     handleApprove(
-                                                            //         row.original.invitation!.id
+                                                            //         row.original.invite!.id
                                                             //     )
                                                             // }
                                                             //                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
@@ -1305,7 +1303,7 @@ DataTableProps<TData, TValue>) {
                                                                         data={
                                                                             row
                                                                                 .original
-                                                                                .invitation!
+                                                                                .invite!
                                                                         }
                                                                     />
                                                                 </PDFViewer>
@@ -1321,9 +1319,9 @@ DataTableProps<TData, TValue>) {
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
                                                 </AlertDialog>
-                                                <AlertDialog>
+                                                {/* <AlertDialog>
                                                     <AlertDialogTrigger>
-                                                        {row.original.invitation!
+                                                        {row.original.invite!
                                                             .file_path !=
                                                         null ? (
                                                             <button
@@ -1337,7 +1335,6 @@ DataTableProps<TData, TValue>) {
                                                                 }
                                                             >
                                                                 <FileSearch></FileSearch>
-                                                                {/* Lihat File */}
                                                             </button>
                                                         ) : user.role_id !=
                                                           1 ? (
@@ -1348,7 +1345,7 @@ DataTableProps<TData, TValue>) {
                                                                         .requires_file_upload !=
                                                                         1 ||
                                                                     row.original
-                                                                        .invitation!
+                                                                        .invite!
                                                                         .to_division
                                                                         .id !=
                                                                         user.division_id
@@ -1386,7 +1383,7 @@ DataTableProps<TData, TValue>) {
                                                             <></>
                                                         )}
                                                     </AlertDialogTrigger>
-                                                    {row.original.invitation!
+                                                    {row.original.invite!
                                                         .file_path != null ? (
                                                         <AlertDialogContent className="w-full max-w-7xl">
                                                             <AlertDialogHeader className="">
@@ -1394,9 +1391,7 @@ DataTableProps<TData, TValue>) {
                                                                     Preview File
                                                                 </AlertDialogTitle>
                                                                 <div className="flex flex-col w-full">
-                                                                    {/* Image viewer with zoom functionality */}
                                                                     <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
-                                                                        {/* Loading indicator */}
                                                                         <div
                                                                             className="absolute inset-0 flex items-center justify-center z-10 bg-white/50"
                                                                             id="loading-indicator"
@@ -1404,10 +1399,14 @@ DataTableProps<TData, TValue>) {
                                                                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                                                                         </div>
 
-                                                                        {/* Actual image with zoom functionality */}
                                                                         <div className="w-full h-full flex items-center justify-center overflow-auto">
                                                                             <img
-                                                                                src={`invitation!-file/${row.original.invitation!.file_path}`}
+                                                                                src={`invite!-file/${
+                                                                                    row
+                                                                                        .original
+                                                                                        .invite!
+                                                                                        .file_path
+                                                                                }`}
                                                                                 className="max-w-full max-h-full object-contain transition-transform duration-200 hover:scale-105"
                                                                                 alt="Document preview"
                                                                                 onLoad={(
@@ -1427,7 +1426,6 @@ DataTableProps<TData, TValue>) {
                                                                                 onError={(
                                                                                     e
                                                                                 ) => {
-                                                                                    // Show error message if image fails to load
                                                                                     e.currentTarget.src =
                                                                                         "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAwYzYuNjIzIDAgMTIgNS4zNzcgMTIgMTJzLTUuMzc3IDEyLTEyIDEyLTEyLTUuMzc3LTEyLTEyIDUuMzc3LTEyIDEyLTEyem0wIDFjNi4wNzEgMCAxMSA0LjkyOSAxMSAxMXMtNC45MjkgMTEtMTEgMTEtMTEtNC45MjktMTEtMTEgNC45MjktMTEgMTEtMTF6bS41IDEyaC0ydi02aDJ2NnptLTEtNi43NWMtLjY5IDAtMS4yNS0uNTYtMS4yNS0xLjI1cy41Ni0xLjI1IDEuMjUtMS4yNSAxLjI1LjU2IDEuMjUgMS4yNS0uNTYgMS4yNS0xLjI1IDEuMjV6Ii8+PC9zdmc+";
                                                                                     e.currentTarget.className =
@@ -1450,11 +1448,10 @@ DataTableProps<TData, TValue>) {
                                                                         </div>
                                                                     </div>
 
-                                                                    {/* Image controls */}
                                                                     <div className="flex items-center justify-between mt-4">
                                                                         <div className="text-sm text-gray-500">
-                                                                            {row.original.invitation!.file_path
-                                                                                ?.split(
+                                                                            {row.original
+                                                                                .invite!.file_path?.split(
                                                                                     "/"
                                                                                 )
                                                                                 .pop()}
@@ -1464,7 +1461,12 @@ DataTableProps<TData, TValue>) {
                                                                                 className="px-3 py-1 bg-gray-200 rounded-md text-sm"
                                                                                 onClick={() =>
                                                                                     window.open(
-                                                                                        `invitation!-file/${row.original.invitation!.file_path}`,
+                                                                                        `invite!-file/${
+                                                                                            row
+                                                                                                .original
+                                                                                                .invite!
+                                                                                                .file_path
+                                                                                        }`,
                                                                                         "_blank"
                                                                                     )
                                                                                 }
@@ -1545,7 +1547,7 @@ DataTableProps<TData, TValue>) {
                                                                                                 memo_id:
                                                                                                     row
                                                                                                         .original
-                                                                                                        .invitation!
+                                                                                                        .invite!
                                                                                                         .id,
                                                                                                 fileName:
                                                                                                     file.name,
@@ -1579,16 +1581,6 @@ DataTableProps<TData, TValue>) {
                                                                         )}
                                                                     </div>
 
-                                                                    {/* <input type="file" /> */}
-                                                                    {/* <PDFViewer className="w-full h-[80vh]">
-                                                                    <Template
-                                                                        data={
-                                                                            row
-                                                                                .original
-                                                                                .invitation!
-                                                                        }
-                                                                    />
-                                                                </PDFViewer> */}
                                                                 </div>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
@@ -1613,7 +1605,7 @@ DataTableProps<TData, TValue>) {
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     )}
-                                                </AlertDialog>
+                                                </AlertDialog> */}
                                             </div>
                                             {/* <AlertDialog>
                                                 <AlertDialogTrigger
