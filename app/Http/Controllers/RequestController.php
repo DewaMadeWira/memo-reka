@@ -103,7 +103,7 @@ class RequestController extends Controller
                 return $memo;
                 // return to_route('memo.index');
             case 'invitation.create':
-                $invitation = $this->invitationService->create();
+                $invitation = $this->invitationService->create($request);
                 return to_route('undangan-rapat.index');
 
             default:

@@ -10,7 +10,7 @@ class InvitationLetter extends Model
     //
     protected $primaryKey = 'id';
     protected $fillable = [
-        'invitation_name',
+        // 'invitation_name',
         'invitation_number',
         'letter_id',
         'from_division',

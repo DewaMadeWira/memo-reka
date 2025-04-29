@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Models\InvitationLetter;
 use App\Models\MemoLetter;
 use App\Models\RequestLetter;
+use App\Models\RequestStages;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -36,32 +37,93 @@ class InvitationService
         })->get();
         return $invite;
     }
-    public function create()
+    public function create($request)
     {
 
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
 
+        $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
+            $q->where('role_name', "admin");
+        })->first();
+
         $invite = InvitationLetter::create([
-            'invitation_name' => "Test Invitation",
+            // 'invitation_name' => "Test Invitation",
             'invitation_number' => "1234",
+            'perihal' => $request->perihal,
+            'content' => $request->content,
+            'signatory' => $manager->id,
+            'official_id' => $request->official,
             'from_division' => $user->division->id,
             'to_division' => 2,
             'letter_id' => 2,
         ]);
-        $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
+        // $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
+
+        $stages = RequestStages::where('letter_id', $invite->letter_id)->get();
+        $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
+        $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
+        $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
         // return $stages;
         // $stages_id = $stages->letter->request_stages->where('sequence', 1)->first()->id;
         // $stages_id = $stages->letter->request_stages;
 
+        // $request = RequestLetter::create([
+        //     "request_name" => "Test Request Baru Invitation",
+        //     "user_id" => $user->id,
+        //     // "status_id" => $stages->letter->request_stages[0]->status_id,
+        //     "stages_id" => $stages->letter->request_stages->where('sequence', 1)->first()->id,
+        //     "letter_type_id" => $invite->letter_id,
+        //     "invitation_id" => $invite->id,
+        // ]);
         $request = RequestLetter::create([
-            "request_name" => "Test Request Baru Invitation",
+            "request_name" => $request->request_name,
             "user_id" => $user->id,
             // "status_id" => $stages->letter->request_stages[0]->status_id,
-            "stages_id" => $stages->letter->request_stages->where('sequence', 1)->first()->id,
+            "stages_id" => $stages->where('sequence', 1)->first()->id,
             "letter_type_id" => $invite->letter_id,
             "invitation_id" => $invite->id,
+            "to_stages" => $nextStageMap->toJson(),
+            "rejected_stages" => $rejectedStageMap->toJson(),
+            "progress_stages" => json_encode($progressStageMap),
         ]);
+    }
+    public function extract_progress_stage($to_stages)
+    {
+
+        $result = [];
+        if (empty($to_stages)) {
+            return $result;
+        }
+        $visited = [];
+        $currentKey = array_key_first($to_stages); // Start from the first key
+
+
+        // while ($currentKey !== null && isset($to_stages[$currentKey]) && !in_array($currentKey, $visited)) {
+        //     $visited[] = $currentKey; // Avoid infinite loops
+        //     $result[] = (int) $currentKey; // Store the current key (stage ID)
+        //     $nextKey = (string) $to_stages[$currentKey]; // Move to the next reference
+
+        //     if (!in_array($nextKey, $result)) {
+        //         $result[] = (int) $nextKey; // Store the next stage ID
+        //     }
+
+        //     $currentKey = $nextKey;
+        // }
+        while ($currentKey !== null && isset($to_stages[$currentKey]) && !in_array($currentKey, $visited)) {
+            $visited[] = $currentKey; // Avoid infinite loops
+            $result[] = (int) $currentKey; // Store the current key (stage ID)
+            $currentKey = (string) $to_stages[$currentKey]; // Move to the next reference
+        }
+
+        // Add the last referenced stage ID only if it's not already in the result
+        if ($currentKey !== null && !in_array((int) $currentKey, $result)) {
+            $result[] = (int) $currentKey;
+        }
+
+        error_log(json_encode($result));
+        // dd($result);
+        return $result;
     }
     public function approve($id)
     {

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invitation_letters', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("invitation_name");
+            // $table->string("invitation_name");
             $table->string("invitation_number");
             $table->foreignId("letter_id");
             $table->foreignId("from_division");
