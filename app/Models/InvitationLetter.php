@@ -15,6 +15,11 @@ class InvitationLetter extends Model
         'letter_id',
         'from_division',
         'to_division',
+        'perihal',
+        'content',
+        'rejection_reason',
+        'signatory',
+        'official_id',
     ];
     public function from_division(): BelongsTo
     {

@@ -5,7 +5,8 @@ import { User } from "./UserType";
 
 export type RequestLetter = {
     id: number;
-    memo: Memo;
+    memo?: Memo;
+    invitation?: Memo;
     request_name: string;
     user_id: number;
     stages_id: number;

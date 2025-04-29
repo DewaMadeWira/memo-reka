@@ -19,6 +19,10 @@ return new class extends Migration
             $table->foreignId("letter_id");
             $table->foreignId("from_division");
             $table->foreignId("to_division");
+            $table->string("perihal");
+            $table->text("content");
+            $table->foreignId("signatory");
+            $table->foreignId("official_id");
             $table->foreign('from_division')->references('id')->on('divisions');
             $table->foreign('to_division')->references('id')->on('divisions');
         });

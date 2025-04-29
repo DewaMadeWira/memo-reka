@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::resource('memo', MemoController::class);
+    Route::resource('undangan-rapat', InvitationController::class);
     Route::get('/memo-file/{filename}', [ServeImageController::class, 'show'])->name('memo.file');
 });
 

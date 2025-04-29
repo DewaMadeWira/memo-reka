@@ -65,11 +65,11 @@ const items = [
     },
     {
         title: "Undangan Rapat",
-        url: "/admin/undangan-rapat",
+        url: "undangan-rapat",
         icon: Calendar,
         subItems: [
-            { title: "Makan", url: "/admin/undangan-rapat/makan" },
-            { title: "Siang", url: "/admin/undangan-rapat/siang" },
+            { title: "Semua Undangan Rapat", url: "/undangan-rapat/" },
+            { title: "Siang", url: "/undangan-rapat/" },
         ],
     },
     {

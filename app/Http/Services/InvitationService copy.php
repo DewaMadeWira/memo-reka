@@ -22,17 +22,8 @@ class InvitationService
     {
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
-        $division = $this->authService->userDivision();
-
-        // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
-        //     $q->where('from_division', $user->division->id);
-        // })->get();
-
-        $invite = RequestLetter::with(['user', 'stages' => function ($query) {
-            $query->withTrashed();
-        }, 'stages.status', 'invite'])->whereHas('invite', function ($q) use ($division) {
-            $q->where('from_division', $division)
-                ->orWhere('to_division', $division);;
+        $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
+            $q->where('from_division', $user->division->id);
         })->get();
         return $invite;
     }
