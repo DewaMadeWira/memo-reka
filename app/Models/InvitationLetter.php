@@ -45,4 +45,8 @@ class InvitationLetter extends Model
     {
         return $this->belongsTo(Official::class, 'official_id', 'id');
     }
+    public function attendees()
+    {
+        return $this->hasMany(MeetingAttendees::class);
+    }
 }

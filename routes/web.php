@@ -11,6 +11,7 @@ use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\ServeImageController;
 use App\Http\Controllers\StagesController;
 use App\Http\Controllers\UserManagementController;
+use App\Models\InvitationLetter;
 use App\Models\MemoLetter;
 use Faker\Core\File;
 use Illuminate\Foundation\Application;
@@ -93,6 +94,12 @@ Route::post('upload', function (Request $request) {
     // $data['file'] = $filename;
     // dd($file);
     return $file;
+});
+
+Route::get('/invite-test', function () {
+    $invitation = InvitationLetter::with("attendees.user")->first();
+    // dd($invitation);
+    return $invitation;
 });
 
 Route::get('/test-unauthorized', function () {
