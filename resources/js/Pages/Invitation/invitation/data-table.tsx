@@ -103,6 +103,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
         waktu: string;
         tempat: string;
         agenda: string;
+        invited_users: string[];
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
@@ -115,6 +116,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
             waktu: string;
             tempat: string;
             agenda: string;
+            invited_users: string[];
         }>
     >;
     handleChange: (

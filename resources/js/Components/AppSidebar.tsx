@@ -69,7 +69,14 @@ const items = [
         icon: Calendar,
         subItems: [
             { title: "Semua Undangan Rapat", url: "/undangan-rapat/" },
-            { title: "Siang", url: "/undangan-rapat/" },
+            {
+                title: "Undangan Rapat Dikirim",
+                url: "/undangan-rapat?intent=invitation.internal",
+            },
+            {
+                title: "Undangan Rapat Diterima",
+                url: "/undangan-rapat?intent=invitation.external",
+            },
         ],
     },
     {

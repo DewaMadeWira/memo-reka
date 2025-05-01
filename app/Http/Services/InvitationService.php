@@ -20,57 +20,168 @@ class InvitationService
     {
         $this->authService = $authService;
     }
-    public function index()
+    public function index($intent)
     {
-        $user = Auth::user();
-        $user = User::with('role')->with('division')->where("id", $user->id)->first();
-        $division = $this->authService->userDivision();
 
-        // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
-        //     $q->where('from_division', $user->division->id);
-        // })->get();
+        switch ($intent) {
+            case '':
+                // $invite = $this->index('all');
+                $user = Auth::user();
+                $user = User::with('role')->with('division')->where("id", $user->id)->first();
+                $division = $this->authService->userDivision();
 
-        $invite = RequestLetter::with(['user', 'stages' => function ($query) {
-            $query->withTrashed();
-        }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
-            $q->where('from_division', $division)
-                ->orWhere('to_division', $division);;
-        })->get();
+                // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
+                //     $q->where('from_division', $user->division->id);
+                // })->get();
 
-        $invite->each(function ($requestLetter) {
-            // Handle different possible types of progress_stages
-            $progressStages = [];
+                $invite = RequestLetter::with(['user', 'stages' => function ($query) {
+                    $query->withTrashed();
+                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
+                    $q->where('from_division', $division)
+                        ->orWhere('to_division', $division);;
+                })->get();
 
-            if (isset($requestLetter->progress_stages)) {
-                if (is_string($requestLetter->progress_stages)) {
-                    // Try to decode JSON string
-                    $decoded = json_decode($requestLetter->progress_stages, true);
-                    if (is_array($decoded)) {
-                        $progressStages = $decoded;
+                $invite->each(function ($requestLetter) {
+                    // Handle different possible types of progress_stages
+                    $progressStages = [];
+
+                    if (isset($requestLetter->progress_stages)) {
+                        if (is_string($requestLetter->progress_stages)) {
+                            // Try to decode JSON string
+                            $decoded = json_decode($requestLetter->progress_stages, true);
+                            if (is_array($decoded)) {
+                                $progressStages = $decoded;
+                            }
+                        } elseif (is_array($requestLetter->progress_stages)) {
+                            $progressStages = $requestLetter->progress_stages;
+                        }
                     }
-                } elseif (is_array($requestLetter->progress_stages)) {
-                    $progressStages = $requestLetter->progress_stages;
-                }
-            }
 
-            // Now use the properly formatted array
-            // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
-            if (!empty($progressStages)) {
-                $requestLetter->progress = RequestStages::withTrashed()
-                    ->with("request_rejected")
-                    ->whereIn('id', $progressStages)
-                    ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
-                        // Only apply the ordering if there are items in the array
-                        return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
-                    })
-                    ->get();
-            } else {
-                $requestLetter->progress = collect(); // Empty collection if no progress stages
-            }
-            // return $requestLetter;
-            // error_log($requestLetter);
-        });
-        return $invite;
+                    // Now use the properly formatted array
+                    // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
+                    if (!empty($progressStages)) {
+                        $requestLetter->progress = RequestStages::withTrashed()
+                            ->with("request_rejected")
+                            ->whereIn('id', $progressStages)
+                            ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
+                                // Only apply the ordering if there are items in the array
+                                return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
+                            })
+                            ->get();
+                    } else {
+                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                    }
+                    // return $requestLetter;
+                    // error_log($requestLetter);
+                });
+                return $invite;
+
+            case 'invitation.internal':
+                // $invite = $this->index('all');
+                $user = Auth::user();
+                $user = User::with('role')->with('division')->where("id", $user->id)->first();
+                $division = $this->authService->userDivision();
+
+                // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
+                //     $q->where('from_division', $user->division->id);
+                // })->get();
+
+                $invite = RequestLetter::with(['user', 'stages' => function ($query) {
+                    $query->withTrashed();
+                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
+                    $q->where('from_division', $division);
+                })->get();
+
+                $invite->each(function ($requestLetter) {
+                    // Handle different possible types of progress_stages
+                    $progressStages = [];
+
+                    if (isset($requestLetter->progress_stages)) {
+                        if (is_string($requestLetter->progress_stages)) {
+                            // Try to decode JSON string
+                            $decoded = json_decode($requestLetter->progress_stages, true);
+                            if (is_array($decoded)) {
+                                $progressStages = $decoded;
+                            }
+                        } elseif (is_array($requestLetter->progress_stages)) {
+                            $progressStages = $requestLetter->progress_stages;
+                        }
+                    }
+
+                    // Now use the properly formatted array
+                    // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
+                    if (!empty($progressStages)) {
+                        $requestLetter->progress = RequestStages::withTrashed()
+                            ->with("request_rejected")
+                            ->whereIn('id', $progressStages)
+                            ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
+                                // Only apply the ordering if there are items in the array
+                                return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
+                            })
+                            ->get();
+                    } else {
+                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                    }
+                    // return $requestLetter;
+                    // error_log($requestLetter);
+                });
+                return $invite;
+
+            case 'invitation.external':
+                $user = Auth::user();
+                $user = User::with('role')->with('division')->where("id", $user->id)->first();
+                $division = $this->authService->userDivision();
+
+                // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
+                //     $q->where('from_division', $user->division->id);
+                // })->get();
+
+                $invite = RequestLetter::with(['user', 'stages' => function ($query) {
+                    $query->withTrashed();
+                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
+                    $q->where('to_division', $division);
+                })->get();
+
+                $invite->each(function ($requestLetter) {
+                    // Handle different possible types of progress_stages
+                    $progressStages = [];
+
+                    if (isset($requestLetter->progress_stages)) {
+                        if (is_string($requestLetter->progress_stages)) {
+                            // Try to decode JSON string
+                            $decoded = json_decode($requestLetter->progress_stages, true);
+                            if (is_array($decoded)) {
+                                $progressStages = $decoded;
+                            }
+                        } elseif (is_array($requestLetter->progress_stages)) {
+                            $progressStages = $requestLetter->progress_stages;
+                        }
+                    }
+
+                    // Now use the properly formatted array
+                    // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
+                    if (!empty($progressStages)) {
+                        $requestLetter->progress = RequestStages::withTrashed()
+                            ->with("request_rejected")
+                            ->whereIn('id', $progressStages)
+                            ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
+                                // Only apply the ordering if there are items in the array
+                                return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
+                            })
+                            ->get();
+                    } else {
+                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                    }
+                    // return $requestLetter;
+                    // error_log($requestLetter);
+                });
+                return $invite;
+
+
+            default:
+                $invite = $this->index('all');
+                break;
+        }
     }
     public function create($request)
     {

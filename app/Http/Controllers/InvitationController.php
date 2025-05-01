@@ -21,9 +21,10 @@ class InvitationController extends Controller
     {
         $this->invitationService = $invitationService;
     }
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->invitationService->index();
+        $intent = $request->get("intent");
+        $data = $this->invitationService->index($intent);
         $division = Division::get();
         $official = Official::get();
         $user = Auth::user();

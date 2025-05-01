@@ -282,53 +282,10 @@ export default function Index({
                                             ))}
                                         </select>
 
-                                        {/* New checkbox list for inviting users */}
                                         <label className="block mb-2 mt-4 font-medium">
                                             Undang Peserta
                                         </label>
-                                        {/* Dummy user data with checkboxes */}
-                                        {/* {[
-                                                {
-                                                    id: "1",
-                                                    name: "John Doe",
-                                                    division: "Marketing",
-                                                },
-                                                {
-                                                    id: "2",
-                                                    name: "Jane Smith",
-                                                    division: "Finance",
-                                                },
-                                                {
-                                                    id: "3",
-                                                    name: "Robert Johnson",
-                                                    division: "HR",
-                                                },
-                                                {
-                                                    id: "4",
-                                                    name: "Emily Davis",
-                                                    division: "IT",
-                                                },
-                                                {
-                                                    id: "5",
-                                                    name: "Michael Wilson",
-                                                    division: "Operations",
-                                                },
-                                                {
-                                                    id: "6",
-                                                    name: "Sarah Brown",
-                                                    division: "Legal",
-                                                },
-                                                {
-                                                    id: "7",
-                                                    name: "David Miller",
-                                                    division: "Sales",
-                                                },
-                                                {
-                                                    id: "8",
-                                                    name: "Lisa Garcia",
-                                                    division: "Research",
-                                                },
-                                            ].map((user) => ( */}
+
                                         <div className="border rounded-lg p-3 max-h-48 overflow-y-auto">
                                             <div className="mb-2">
                                                 <input
@@ -409,7 +366,6 @@ export default function Index({
                                                                             if (
                                                                                 isChecked
                                                                             ) {
-                                                                                // Add user to the array if checked
                                                                                 return {
                                                                                     ...prevData,
                                                                                     invited_users:
@@ -419,7 +375,6 @@ export default function Index({
                                                                                         ],
                                                                                 };
                                                                             } else {
-                                                                                // Remove user from the array if unchecked
                                                                                 return {
                                                                                     ...prevData,
                                                                                     invited_users:
@@ -440,7 +395,6 @@ export default function Index({
                                                     );
                                                 })}
 
-                                            {/* Show more button - only visible when there are more users to show */}
                                             {filteredUsers.length >
                                                 visibleUsers && (
                                                 <Button
@@ -457,7 +411,6 @@ export default function Index({
                                                 </Button>
                                             )}
 
-                                            {/* Show selected count */}
                                             {formData.invited_users.length >
                                                 0 && (
                                                 <div className="mt-2 text-sm text-blue-600 font-medium">
