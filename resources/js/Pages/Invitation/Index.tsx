@@ -1,7 +1,7 @@
 import { Head, router } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
 import SidebarAuthenticated from "@/Layouts/SidebarAuthenticated";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -27,20 +27,27 @@ import { DataTable } from "./invitation/data-table";
 import { columns } from "./invitation/columns";
 import { User } from "@/types/UserType";
 import { ScrollArea } from "@/Components/ui/scroll-area";
+import { Button } from "@/Components/ui/button";
 
+interface UserWithDivision extends User {
+    division: Division;
+}
 export default function Index({
     request,
     official,
     division,
     userData,
+    all_user,
 }: {
     request: any;
     official: Official[];
     division: Division[];
     userData: any;
+    all_user: UserWithDivision[];
 }) {
     const { user } = usePage().props.auth as { user: User };
     console.log(user);
+    console.log(all_user);
     console.log(request);
     const handleSubmit = () => {
         router.post("/request?intent=invitation.create", formData);
@@ -64,7 +71,36 @@ export default function Index({
         tempat: "",
         agenda: "",
         to_division: null,
+        invited_users: [] as string[],
     });
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [visibleUsers, setVisibleUsers] = useState(2);
+    const [filteredUsers, setFilteredUsers] = useState<UserWithDivision[]>([]);
+
+    useEffect(() => {
+        // First filter users based on search query
+        let filtered = all_user.filter(
+            (user) =>
+                user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                user.division.division_code
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase())
+        );
+
+        // Then sort the filtered list to put selected users at the top
+        filtered = [...filtered].sort((a, b) => {
+            const aSelected = formData.invited_users.includes(a.id.toString());
+            const bSelected = formData.invited_users.includes(b.id.toString());
+
+            if (aSelected && !bSelected) return -1;
+            if (!aSelected && bSelected) return 1;
+            return 0;
+        });
+
+        setFilteredUsers(filtered);
+    }, [searchQuery, all_user, formData.invited_users]);
+
     const handleChange = (
         e: React.ChangeEvent<
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -245,6 +281,194 @@ export default function Index({
                                                 </option>
                                             ))}
                                         </select>
+
+                                        {/* New checkbox list for inviting users */}
+                                        <label className="block mb-2 mt-4 font-medium">
+                                            Undang Peserta
+                                        </label>
+                                        {/* Dummy user data with checkboxes */}
+                                        {/* {[
+                                                {
+                                                    id: "1",
+                                                    name: "John Doe",
+                                                    division: "Marketing",
+                                                },
+                                                {
+                                                    id: "2",
+                                                    name: "Jane Smith",
+                                                    division: "Finance",
+                                                },
+                                                {
+                                                    id: "3",
+                                                    name: "Robert Johnson",
+                                                    division: "HR",
+                                                },
+                                                {
+                                                    id: "4",
+                                                    name: "Emily Davis",
+                                                    division: "IT",
+                                                },
+                                                {
+                                                    id: "5",
+                                                    name: "Michael Wilson",
+                                                    division: "Operations",
+                                                },
+                                                {
+                                                    id: "6",
+                                                    name: "Sarah Brown",
+                                                    division: "Legal",
+                                                },
+                                                {
+                                                    id: "7",
+                                                    name: "David Miller",
+                                                    division: "Sales",
+                                                },
+                                                {
+                                                    id: "8",
+                                                    name: "Lisa Garcia",
+                                                    division: "Research",
+                                                },
+                                            ].map((user) => ( */}
+                                        <div className="border rounded-lg p-3 max-h-48 overflow-y-auto">
+                                            <div className="mb-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search users..."
+                                                    value={searchQuery}
+                                                    onChange={(e) =>
+                                                        setSearchQuery(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full mb-2"
+                                                />
+                                            </div>
+
+                                            {filteredUsers
+                                                .slice(0, visibleUsers)
+                                                .map((user) => {
+                                                    const isSelected =
+                                                        formData.invited_users.includes(
+                                                            user.id.toString()
+                                                        );
+
+                                                    return (
+                                                        <div
+                                                            key={user.id}
+                                                            className={`flex w-[70%] justify-between mb-2 p-1 ${
+                                                                isSelected
+                                                                    ? "bg-blue-50 rounded border border-blue-200"
+                                                                    : ""
+                                                            }`}
+                                                        >
+                                                            <label
+                                                                htmlFor={`user-${user.id}`}
+                                                                className={`text-sm ${
+                                                                    isSelected
+                                                                        ? "font-medium"
+                                                                        : ""
+                                                                }`}
+                                                            >
+                                                                {user.name}{" "}
+                                                                <span className="text-gray-500">
+                                                                    (
+                                                                    {
+                                                                        user
+                                                                            .division
+                                                                            .division_code
+                                                                    }
+                                                                    )
+                                                                </span>
+                                                            </label>
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`user-${user.id}`}
+                                                                value={user.id}
+                                                                checked={
+                                                                    isSelected
+                                                                }
+                                                                className="ml-2 h-4 w-4"
+                                                                onChange={(
+                                                                    e
+                                                                ) => {
+                                                                    const userId =
+                                                                        e.target
+                                                                            .value;
+                                                                    const isChecked =
+                                                                        e.target
+                                                                            .checked;
+
+                                                                    setFormData(
+                                                                        (
+                                                                            prevData
+                                                                        ) => {
+                                                                            const currentUsers =
+                                                                                prevData.invited_users ||
+                                                                                [];
+
+                                                                            if (
+                                                                                isChecked
+                                                                            ) {
+                                                                                // Add user to the array if checked
+                                                                                return {
+                                                                                    ...prevData,
+                                                                                    invited_users:
+                                                                                        [
+                                                                                            ...currentUsers,
+                                                                                            userId,
+                                                                                        ],
+                                                                                };
+                                                                            } else {
+                                                                                // Remove user from the array if unchecked
+                                                                                return {
+                                                                                    ...prevData,
+                                                                                    invited_users:
+                                                                                        currentUsers.filter(
+                                                                                            (
+                                                                                                id
+                                                                                            ) =>
+                                                                                                id !==
+                                                                                                userId
+                                                                                        ),
+                                                                                };
+                                                                            }
+                                                                        }
+                                                                    );
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    );
+                                                })}
+
+                                            {/* Show more button - only visible when there are more users to show */}
+                                            {filteredUsers.length >
+                                                visibleUsers && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="w-full mt-2"
+                                                    onClick={() =>
+                                                        setVisibleUsers(
+                                                            (prev) => prev + 5
+                                                        )
+                                                    }
+                                                >
+                                                    Show More
+                                                </Button>
+                                            )}
+
+                                            {/* Show selected count */}
+                                            {formData.invited_users.length >
+                                                0 && (
+                                                <div className="mt-2 text-sm text-blue-600 font-medium">
+                                                    {
+                                                        formData.invited_users
+                                                            .length
+                                                    }{" "}
+                                                    user(s) selected
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </ScrollArea>
                             </AlertDialogHeader>

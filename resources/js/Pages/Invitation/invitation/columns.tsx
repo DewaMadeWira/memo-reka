@@ -46,7 +46,7 @@ export const columns: ColumnDef<RequestLetter>[] = [
         header: "Nomor Undangan",
     },
     {
-        accessorKey: "invitation.to_division.division_name",
+        accessorKey: "invite.to_division.division_name",
         header: "Divisi Tujuan",
     },
     {

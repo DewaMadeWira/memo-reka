@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\InvitationLetter;
+use App\Models\MeetingAttendees;
 use App\Models\MemoLetter;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
@@ -31,7 +32,7 @@ class InvitationService
 
         $invite = RequestLetter::with(['user', 'stages' => function ($query) {
             $query->withTrashed();
-        }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory'])->whereHas('invite', function ($q) use ($division) {
+        }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
             $q->where('from_division', $division)
                 ->orWhere('to_division', $division);;
         })->get();
@@ -98,6 +99,14 @@ class InvitationService
             'tempat' => $request->tempat,
             'agenda' => $request->agenda,
         ]);
+
+        foreach ($request->invited_users as $userId) {
+            MeetingAttendees::create([
+                'invitation_letter_id' => $invite->id,
+                'user_id' => $userId,
+            ]);
+        }
+
         // $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
 
         $stages = RequestStages::where('letter_id', $invite->letter_id)->get();

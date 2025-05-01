@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\InvitationLetter;
+use App\Models\MeetingAttendees;
 use App\Models\MemoLetter;
 use App\Models\RequestLetter;
 use App\Models\User;

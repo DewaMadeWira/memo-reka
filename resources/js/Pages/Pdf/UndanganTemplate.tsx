@@ -85,6 +85,7 @@ const formatDate = (dateString: string, isHeader: boolean) => {
 };
 
 export default function UndanganTemplate({ data }: { data: any }) {
+    console.log(data);
     return (
         <Document>
             <Page size="A4" style={styles.page}>
@@ -156,16 +157,19 @@ export default function UndanganTemplate({ data }: { data: any }) {
                                 width: "100%",
                             }}
                         >
-                            <Text
-                                style={{
-                                    fontSize: 11,
-                                    marginTop: 5,
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                1. GM Makan
-                            </Text>
-                            <Text
+                            {data.attendees.map((user: any, index: number) => (
+                                <Text
+                                    style={{
+                                        fontSize: 11,
+                                        marginTop: 5,
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    {/* {index + 1}. {user.user.name} */}
+                                    {index + 1}. {user.user.name}
+                                </Text>
+                            ))}
+                            {/* <Text
                                 style={{
                                     fontSize: 11,
                                     marginTop: 5,
@@ -173,7 +177,7 @@ export default function UndanganTemplate({ data }: { data: any }) {
                                 }}
                             >
                                 2. Manager Siang
-                            </Text>
+                            </Text> */}
                         </View>
                     </View>
                 </View>
