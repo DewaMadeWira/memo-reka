@@ -12,4 +12,8 @@ export type Invitation = {
     created_at?: string;
     updated_at?: string;
     rejection_reason?: string;
+    hari_tanggal: any;
+    waktu: string;
+    tempat: string;
+    agenda: string;
 };

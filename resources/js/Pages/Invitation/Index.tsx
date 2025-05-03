@@ -29,7 +29,7 @@ import { User } from "@/types/UserType";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import { Button } from "@/Components/ui/button";
 
-interface UserWithDivision extends User {
+export interface UserWithDivision extends User {
     division: Division;
 }
 export default function Index({
@@ -501,6 +501,8 @@ export default function Index({
                         }}
                         filePreview={null}
                         fileData={null}
+                        official={official}
+                        division={division}
                     />
                 </div>
                 {/*  */}

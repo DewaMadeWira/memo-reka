@@ -75,6 +75,12 @@ import {
 } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
 import UndanganTemplate from "@/Pages/Pdf/UndanganTemplate";
+import { ScrollArea } from "@/Components/ui/scroll-area";
+import { Official } from "@/types/OfficialType";
+import { Division } from "@/types/DivisionType";
+import { UserWithDivision } from "../Index";
+
+import { format, parseISO } from "date-fns";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -86,6 +92,8 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
     //         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     //     >
     // ) => void;
+    official: Official[];
+    division: Division[];
     handleApprove: (id: number) => void;
     // handleReject: (id: number) => void;
     handleReject: (id: number, rejectionReason?: string) => void;
@@ -155,6 +163,8 @@ export function DataTable<TData extends RequestLetter, TValue>({
     setFormData,
     handleChange,
     handleUpdate,
+    official,
+    division,
 }: // request_file_upload,
 // handleDelete,
 // role,
@@ -194,6 +204,10 @@ DataTableProps<TData, TValue>) {
         },
     });
 
+    const [searchQuery, setSearchQuery] = useState("");
+    const [visibleUsers, setVisibleUsers] = useState(2);
+    const [filteredUsers, setFilteredUsers] = useState<UserWithDivision[]>([]);
+
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
@@ -205,6 +219,16 @@ DataTableProps<TData, TValue>) {
         "bg-red-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
     const approveButtonClass =
         "bg-green-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+
+    const safeFormatDate = (dateString: string | null | undefined) => {
+        if (!dateString) return "";
+        try {
+            return format(parseISO(dateString), "yyyy-MM-dd");
+        } catch (error) {
+            console.error("Date parsing error:", error);
+            return "";
+        }
+    };
 
     return (
         <div>
@@ -1062,8 +1086,8 @@ DataTableProps<TData, TValue>) {
                                                                                   berikan
                                                                                   alasan
                                                                                   penolakan
-                                                                                  invite!
-                                                                                  ini.
+                                                                                  Undangan
+                                                                                  Rapat.
                                                                               </AlertDialogDescription>
                                                                               <div className="mt-4">
                                                                                   <Textarea
@@ -1138,22 +1162,72 @@ DataTableProps<TData, TValue>) {
                                                     }
                                                 >
                                                     <AlertDialogTrigger
-                                                        //   onClick={() =>
-                                                        //       setFormData(
-                                                        //           {
-                                                        //               perihal:
-                                                        //                   row
-                                                        //                       .original
-                                                        //                       .invite!
-                                                        //                       .perihal,
-                                                        //               content:
-                                                        //                   row
-                                                        //                       .original
-                                                        //                       .invite!
-                                                        //                       .content,
-                                                        //           }
-                                                        //       )
-                                                        //   }
+                                                        onClick={() =>
+                                                            // setFormData({
+                                                            //     perihal:
+                                                            //         row.original
+                                                            //             .invite!
+                                                            //             .perihal,
+                                                            //     content:
+                                                            //         row.original
+                                                            //             .invite!
+                                                            //             .content,
+                                                            // })
+                                                            setFormData({
+                                                                request_name:
+                                                                    // row.original
+                                                                    //     .request_name!
+                                                                    //     . ||
+                                                                    "",
+                                                                perihal:
+                                                                    row.original
+                                                                        .invite!
+                                                                        .perihal ||
+                                                                    "",
+                                                                content:
+                                                                    row.original
+                                                                        .invite!
+                                                                        .content ||
+                                                                    "",
+                                                                official:
+                                                                    // row.original.invite!.official?.id?.toString() ||
+                                                                    "",
+                                                                to_division:
+                                                                    // row.original
+                                                                    //     .invite!
+                                                                    //     .to_division
+                                                                    //     ?.id ||
+                                                                    null,
+                                                                hari_tanggal:
+                                                                    row.original
+                                                                        .invite!
+                                                                        .hari_tanggal ||
+                                                                    "",
+                                                                waktu:
+                                                                    row.original
+                                                                        .invite!
+                                                                        .waktu ||
+                                                                    "",
+                                                                tempat:
+                                                                    row.original
+                                                                        .invite!
+                                                                        .tempat ||
+                                                                    "",
+                                                                agenda:
+                                                                    row.original
+                                                                        .invite!
+                                                                        .agenda ||
+                                                                    "",
+                                                                invited_users:
+                                                                    // row.original.invite!.invited_users?.map(
+                                                                    //     (
+                                                                    //         user
+                                                                    //     ) =>
+                                                                    //         user.id.toString()
+                                                                    // ) || [],
+                                                                    [],
+                                                            })
+                                                        }
                                                         // onClick={() =>
                                                         //     setFormData({
                                                         //         official: "",
@@ -1195,68 +1269,143 @@ DataTableProps<TData, TValue>) {
                                                     <AlertDialogContent className="w-[300rem]">
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle className="font-medium">
-                                                                Edit Memo{" "}
-                                                                {
-                                                                    row.original
-                                                                        .invite!
-                                                                        .invitation_number
-                                                                }
+                                                                Buat Undangan
+                                                                Rapat Baru
                                                             </AlertDialogTitle>
-                                                            <div className="">
-                                                                <label
-                                                                    htmlFor="perihal"
-                                                                    className="block mb-2"
-                                                                >
-                                                                    Perihal
-                                                                </label>
-                                                                <input
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    type="text"
-                                                                    name="perihal"
-                                                                    id=""
-                                                                    className="w-full p-2 border rounded-lg"
-                                                                    value={
-                                                                        formData.perihal
-                                                                    }
-                                                                />
-                                                                <label
-                                                                    htmlFor="content"
-                                                                    className="block mb-2"
-                                                                >
-                                                                    Isi
-                                                                </label>
-                                                                <textarea
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    rows={10}
-                                                                    name="content"
-                                                                    id=""
-                                                                    className="w-full p-2 border rounded-lg"
-                                                                    value={
-                                                                        formData.content
-                                                                    }
-                                                                />
-                                                            </div>
+                                                            <ScrollArea className="h-[500px] w-full pr-4">
+                                                                <div className="">
+                                                                    <label
+                                                                        htmlFor="perihal"
+                                                                        className="block mb-2"
+                                                                    >
+                                                                        Perihal
+                                                                    </label>
+                                                                    <input
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        type="text"
+                                                                        name="perihal"
+                                                                        id=""
+                                                                        value={
+                                                                            formData.perihal
+                                                                        }
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    />
+                                                                    <label
+                                                                        htmlFor="content"
+                                                                        className="block mb-2"
+                                                                    >
+                                                                        Isi
+                                                                    </label>
+                                                                    <textarea
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        rows={
+                                                                            10
+                                                                        }
+                                                                        name="content"
+                                                                        id=""
+                                                                        value={
+                                                                            formData.content
+                                                                        }
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    />
+                                                                    <label
+                                                                        htmlFor="hari_tanggal"
+                                                                        className="block mb-2"
+                                                                    >
+                                                                        Hari /
+                                                                        tanggal
+                                                                    </label>
+                                                                    <input
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        type="date"
+                                                                        name="hari_tanggal"
+                                                                        id=""
+                                                                        // value={format(
+                                                                        //     parseISO(
+                                                                        //         formData.hari_tanggal
+                                                                        //     ),
+                                                                        //     "yyyy-MM-dd"
+                                                                        // )}
+                                                                        value={safeFormatDate(
+                                                                            formData.hari_tanggal
+                                                                        )}
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    />
+                                                                    <label
+                                                                        htmlFor="waktu"
+                                                                        className="block mb-2"
+                                                                    >
+                                                                        Waktu
+                                                                    </label>
+                                                                    <input
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        type="text"
+                                                                        name="waktu"
+                                                                        id=""
+                                                                        value={
+                                                                            formData.waktu
+                                                                        }
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    />
+                                                                    <label
+                                                                        htmlFor="tempat"
+                                                                        className="block mb-2"
+                                                                    >
+                                                                        Tempat
+                                                                    </label>
+                                                                    <input
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        type="text"
+                                                                        name="tempat"
+                                                                        id=""
+                                                                        value={
+                                                                            formData.tempat
+                                                                        }
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    />
+                                                                    <label
+                                                                        htmlFor="agenda"
+                                                                        className="block mb-2"
+                                                                    >
+                                                                        Agenda
+                                                                    </label>
+                                                                    <input
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        type="text"
+                                                                        name="agenda"
+                                                                        id=""
+                                                                        value={
+                                                                            formData.agenda
+                                                                        }
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    />
+                                                                </div>
+                                                            </ScrollArea>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
                                                             <AlertDialogCancel>
                                                                 Kembali
                                                             </AlertDialogCancel>
                                                             <AlertDialogAction
-                                                                onClick={() =>
-                                                                    handleUpdate(
-                                                                        row
-                                                                            .original
-                                                                            .id
-                                                                    )
-                                                                }
                                                                 className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                // onClick={
+                                                                //     handleSubmit
+                                                                // }
                                                             >
-                                                                Simpan Perubahan
-                                                                Memo
+                                                                Ubah Undangan
+                                                                Rapat
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
