@@ -340,7 +340,17 @@ class MemoService
         // $nomorBulanan = sprintf("%03d/%s/%s", $newMonthlyCounter, $newMonth, $newYear);
         // $nomorTahunan = sprintf("%03d/%s", $newYearlyCounter, $newYear);
 
-        $memoNumber = "$newYearlyCounter.$newMonthlyCounter/REKA$official->official_code/GEN/{$user->division->division_code}/{$this->convertToRoman($currentMonth)}/$currentYear";
+        // $memoNumber = "$newYearlyCounter.$newMonthlyCounter/REKA$official->official_code/GEN/{$user->division->division_code}/{$this->convertToRoman($currentMonth)}/$currentYear";
+
+        $memoNumber = sprintf(
+            "%02d.%02d/REKA%s/GEN/%s/%s/%s",
+            $newYearlyCounter,
+            $newMonthlyCounter,
+            $official->official_code,
+            $user->division->division_code,
+            $this->convertToRoman($currentMonth),
+            $currentYear
+        );
 
         // dd($newMonthlyCounter, $newYearlyCounter);
         return [
