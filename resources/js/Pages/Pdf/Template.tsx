@@ -41,6 +41,43 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
 });
+const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+
+    const days = [
+        "Minggu",
+        "Senin",
+        "Selasa",
+        "Rabu",
+        "Kamis",
+        "Jumat",
+        "Sabtu",
+    ];
+    const months = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+    ];
+
+    const day = days[date.getDay()];
+    const dateNum = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${dateNum} ${month} ${year}`;
+};
 
 export default function Template({ data }: { data: any }) {
     return (
@@ -62,7 +99,9 @@ export default function Template({ data }: { data: any }) {
                         <Text>Tanggal </Text>
                         <Text>:</Text>
                     </View>
-                    <Text style={{ fontSize: 11 }}>{data.created_at}</Text>
+                    <Text style={{ fontSize: 11 }}>
+                        {formatDate(data.created_at)}
+                    </Text>
                 </View>
                 <View
                     style={{
