@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string("waktu");
             $table->string("tempat");
             $table->string("agenda");
+            $table->string("rejection_reason")->nullable();
             $table->foreignId("letter_id");
             $table->foreignId("from_division");
             $table->foreignId("to_division");

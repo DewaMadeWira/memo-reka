@@ -96,7 +96,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
     division: Division[];
     handleApprove: (id: number) => void;
     // handleReject: (id: number) => void;
-    handleReject: (id: number, rejectionReason?: string) => void;
+    handleReject: (id: number, rejectionReason: string) => void;
     handleUpdate: (id: number) => void;
     handleUpload: (id: number) => void;
 
@@ -627,7 +627,8 @@ DataTableProps<TData, TValue>) {
                                                                               <AlertDialogTitle>
                                                                                   Alasan
                                                                                   Penolakan
-                                                                                  Undangan Rapat
+                                                                                  Undangan
+                                                                                  Rapat
                                                                               </AlertDialogTitle>
                                                                               <AlertDialogDescription>
                                                                                   <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -659,7 +660,7 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogDescription>
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600">
+                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
                                                                                   Tutup
                                                                               </AlertDialogCancel>
                                                                           </AlertDialogFooter>
@@ -713,7 +714,8 @@ DataTableProps<TData, TValue>) {
                                                                                       >
                                                                                           <p>
                                                                                               Tolak
-                                                                                              Undangan Rapat
+                                                                                              Undangan
+                                                                                              Rapat
                                                                                           </p>
                                                                                       </TooltipContent>
                                                                                   </Tooltip>
@@ -793,7 +795,8 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                               >
                                                                                   Tolak
-                                                                                  Undangan Rapat
+                                                                                  Undangan
+                                                                                  Rapat
                                                                               </AlertDialogAction>
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
@@ -843,7 +846,8 @@ DataTableProps<TData, TValue>) {
                                                                                       >
                                                                                           <p>
                                                                                               Setujui
-                                                                                              Undangan Rapat
+                                                                                              Undangan
+                                                                                              Rapat
                                                                                           </p>
                                                                                       </TooltipContent>
                                                                                   </Tooltip>
@@ -1017,7 +1021,7 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogDescription>
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600">
+                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
                                                                                   Tutup
                                                                               </AlertDialogCancel>
                                                                           </AlertDialogFooter>
@@ -1070,7 +1074,8 @@ DataTableProps<TData, TValue>) {
                                                                                       >
                                                                                           <p>
                                                                                               Tolak
-                                                                                              Undangan Rapat
+                                                                                              Undangan
+                                                                                              Rapat
                                                                                           </p>
                                                                                       </TooltipContent>
                                                                                   </Tooltip>
@@ -1131,7 +1136,8 @@ DataTableProps<TData, TValue>) {
                                                                                       // ) {
                                                                                       handleReject(
                                                                                           row
-                                                                                              .original.invite!
+                                                                                              .original
+                                                                                              .invite!
                                                                                               .id,
                                                                                           rejectionReason
                                                                                       );
@@ -1150,7 +1156,8 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                               >
                                                                                   Tolak
-                                                                                  Undangan Rapat
+                                                                                  Undangan
+                                                                                  Rapat
                                                                               </AlertDialogAction>
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>

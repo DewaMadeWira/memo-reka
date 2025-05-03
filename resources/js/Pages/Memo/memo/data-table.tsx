@@ -625,7 +625,7 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogDescription>
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600">
+                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
                                                                                   Tutup
                                                                               </AlertDialogCancel>
                                                                           </AlertDialogFooter>
@@ -981,7 +981,7 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogDescription>
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600">
+                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
                                                                                   Tutup
                                                                               </AlertDialogCancel>
                                                                           </AlertDialogFooter>

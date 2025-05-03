@@ -169,7 +169,7 @@ class RequestController extends Controller
                 $invite = $this->invitationService->approve($id);
                 return to_route('undangan-rapat.index');
             case 'invitation.reject':
-                $invite = $this->invitationService->reject($id);
+                $invite = $this->invitationService->reject($id, $request);
                 return to_route('undangan-rapat.index');
 
             default:

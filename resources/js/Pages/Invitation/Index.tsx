@@ -60,8 +60,10 @@ export default function Index({
     function handleApprove(id: number) {
         router.put("/request/" + id + "?intent=invitation.approve");
     }
-    function handleReject(id: number) {
-        router.put("/request/" + id + "?intent=invitation.reject");
+    function handleReject(id: number, rejectionReason: string) {
+        router.put("/request/" + id + "?intent=invitation.reject", {
+            rejection_reason: rejectionReason,
+        });
     }
     function handleUpdate(id: number) {
         console.log(formData);

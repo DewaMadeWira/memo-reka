@@ -8,6 +8,7 @@ use App\Models\MemoLetter;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -230,6 +231,11 @@ class InvitationService
         //     "letter_type_id" => $invite->letter_id,
         //     "invitation_id" => $invite->id,
         // ]);
+        $stages = RequestStages::where('letter_id', $invite->letter_id)->get();
+        $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
+        $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
+        $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
+
         $request = RequestLetter::create([
             "request_name" => $request->request_name,
             "user_id" => $user->id,
@@ -281,30 +287,37 @@ class InvitationService
     }
     public function approve($id)
     {
-        $request = RequestLetter::with('invite', 'invite.letter.request_stages')->where('invitation_id', $id)->first();
-        $nextStage = $request->invite->letter->request_stages->where('id', $request->stages_id)->first();
-        if ($nextStage->to_stage_id == null) {
+        $request = RequestLetter::with('invite')->where('invitation_id', $id)->first();
+        $nextStageId = json_decode($request->to_stages, true);
+        // return response()->json($nextStageId);
+
+        $nextStageId = $nextStageId[$request->stages_id] ?? null;
+        if ($nextStageId == null) {
             return to_route('undangan-rapat.index');
         }
+        InvitationLetter::where('id', $id)->update([
+            'rejection_reason' => NULL
+        ]);
         $request->update([
-            "stages_id" => $nextStage->to_stage_id,
+            "stages_id" => $nextStageId,
         ]);
         $request->save();
     }
-    public function reject($id)
+    public function reject($id, Request $request)
     {
-        $request = RequestLetter::with('invite', 'invite.letter.request_stages')->where('invitation_id', $id)->first();
-        $nextStage = $request->invite->letter->request_stages->where('id', $request->stages_id)->first();
-        // dd($nextStage->to_stage_id);
-        // return $nextStage->to_stage_id;
-        if ($nextStage->rejected_id == null) {
+        $request_letter = RequestLetter::with('invite')->where('invitation_id', $id)->first();
+        $nextStageId = json_decode($request_letter->rejected_stages, true);
+        $nextStageId = $nextStageId[$request_letter->stages_id] ?? null;
+        if ($nextStageId == null) {
             return to_route('undangan-rapat.index');
         }
-
-        $request->update([
-            // "stages_id" => $request->stages->to_stage_id,
-            "stages_id" => $nextStage->rejected_id,
+        InvitationLetter::where('id', $id)->update([
+            'rejection_reason' => 'Undangan rapat ditolak oleh ' . Auth::user()->name . ' karena ' . "\n\n" . $request->rejection_reason
         ]);
-        $request->save();
+
+        $request_letter->update([
+            "stages_id" => $nextStageId,
+        ]);
+        $request_letter->save();
     }
 }
