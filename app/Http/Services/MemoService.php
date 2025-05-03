@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Models\LetterNumberCounter;
 use App\Models\MemoLetter;
 use App\Models\Official;
 use App\Models\RequestLetter;
@@ -214,11 +215,17 @@ class MemoService
             'from_division' => $user->division->id,
             'to_division' => $request->to_division,
         ]);
-        $generatedMemoData = $this->generateNomorSurat($user, $official);
-        $memo->update([
-            "memo_number" => $generatedMemoData["memo_number"],
+        // $generatedMemoData = $this->generateNomorSurat($user, $official);
+        $generatedMemoData = $this->generateNomorSuratDivision($user, $official);
+        $letter_number = LetterNumberCounter::where('division_id', $user->division->id)->where('letter_type_id', 1)->first();
+        $letter_number->update([
             "monthly_counter" => $generatedMemoData["monthly_counter"],
             "yearly_counter" => $generatedMemoData["yearly_counter"],
+        ]);
+        $memo->update([
+            "memo_number" => $generatedMemoData["memo_number"],
+            // "monthly_counter" => $generatedMemoData["monthly_counter"],
+            // "yearly_counter" => $generatedMemoData["yearly_counter"],
         ]);
         $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
         $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
@@ -276,6 +283,76 @@ class MemoService
         error_log(json_encode($result));
         // dd($result);
         return $result;
+    }
+    public function generateNomorSuratDivision($user, $official)
+    {
+        $number = LetterNumberCounter::with(['division'])->where('division_id', $user->division->id)->where('letter_type_id', 1)->first();
+
+        $currentYear = date("Y");
+        $currentMonth = date("m");
+
+        if (empty($number)) {
+            // $newYearlyCounter = 1;
+            // $newMonthlyCounter = 1;
+            $number = new LetterNumberCounter();
+            $number->division_id = $user->division->id;
+            $number->letter_type_id = 1;
+            $number->monthly_counter = 1;
+            $number->yearly_counter = 1;
+            $number->save();
+            $newYearlyCounter = 1;
+            $newMonthlyCounter = 1;
+        } else {
+            $lastYear = $number->updated_at->format('Y');
+            $lastYearlyCounter = $number->yearly_counter;
+            $lastMonth = $number->updated_at->format('m');
+            $lastMonthlyCounter = $number->monthly_counter;
+            if ($lastYear != $currentYear) {
+                // $newYear = $currentYear;
+
+                error_log($lastYear);
+                error_log("called not same year");
+                $newYearlyCounter = 1;
+            } else {
+                // $newYear = $lastYear;
+
+                error_log($lastYear);
+                error_log("called same year");
+                $newYearlyCounter = $lastYearlyCounter + 1;
+
+                // dd($newYearlyCounter, $lastYearlyCounter);
+            }
+
+
+            // if ($lastMonth != $currentMonth) {
+            if ($lastMonth != $currentMonth || $lastYear != $currentYear) {
+                // dd("not empty", $currentMonth, $lastMonth, $currentYear, $lastYear);
+                error_log($lastMonth);
+
+                error_log("called not same month weird");
+                $newMonth = $currentMonth;
+                $newMonthlyCounter = 1;
+            } else {
+                error_log($lastMonth);
+                error_log("called same month");
+                $newMonth = $lastMonth;
+                $newMonthlyCounter = $lastMonthlyCounter + 1;
+            }
+        }
+        $memoNumber = sprintf(
+            "%02d.%02d/REKA%s/GEN/%s/%s/%s",
+            $newYearlyCounter,
+            $newMonthlyCounter,
+            $official->official_code,
+            $user->division->division_code,
+            $this->convertToRoman($currentMonth),
+            $currentYear
+        );
+        return [
+            'memo_number' => $memoNumber,
+            'yearly_counter' => $newYearlyCounter,
+            'monthly_counter' => $newMonthlyCounter
+        ];
     }
     public function generateNomorSurat($user, $official)
     {
