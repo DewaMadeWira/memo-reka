@@ -22,13 +22,13 @@ class InvitationService
     }
     public function index($intent)
     {
+        $user = Auth::user();
+        $user = User::with('role')->with('division')->where("id", $user->id)->first();
+        $division = $this->authService->userDivision();
 
         switch ($intent) {
             case '':
                 // $invite = $this->index('all');
-                $user = Auth::user();
-                $user = User::with('role')->with('division')->where("id", $user->id)->first();
-                $division = $this->authService->userDivision();
 
                 // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
                 //     $q->where('from_division', $user->division->id);
@@ -78,9 +78,6 @@ class InvitationService
 
             case 'invitation.internal':
                 // $invite = $this->index('all');
-                $user = Auth::user();
-                $user = User::with('role')->with('division')->where("id", $user->id)->first();
-                $division = $this->authService->userDivision();
 
                 // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
                 //     $q->where('from_division', $user->division->id);
@@ -127,10 +124,7 @@ class InvitationService
                 });
                 return $invite;
 
-            case 'invitation.external':
-                $user = Auth::user();
-                $user = User::with('role')->with('division')->where("id", $user->id)->first();
-                $division = $this->authService->userDivision();
+            case 'invitation.eksternal':
 
                 // $invite = RequestLetter::with('user', 'stages', 'stages.status', 'invite')->whereHas('invite', function ($q) use ($user) {
                 //     $q->where('from_division', $user->division->id);

@@ -75,7 +75,7 @@ const items = [
             },
             {
                 title: "Undangan Rapat Diterima",
-                url: "/undangan-rapat?intent=invitation.external",
+                url: "/undangan-rapat?intent=invitation.eksternal",
             },
         ],
     },

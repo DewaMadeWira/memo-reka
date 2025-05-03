@@ -31,7 +31,7 @@ class InvitationLetter extends Model
     }
     public function to_division(): BelongsTo
     {
-        return $this->belongsTo(Division::class, 'from_division', 'id');
+        return $this->belongsTo(Division::class, 'to_division', 'id');
     }
     public function letter(): BelongsTo
     {
