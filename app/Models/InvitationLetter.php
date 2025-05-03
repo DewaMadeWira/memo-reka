@@ -12,6 +12,8 @@ class InvitationLetter extends Model
     protected $fillable = [
         // 'invitation_name',
         'invitation_number',
+        'monthly_counter',
+        'yearly_counter',
         'letter_id',
         'from_division',
         'to_division',

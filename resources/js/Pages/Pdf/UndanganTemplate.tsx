@@ -105,7 +105,9 @@ export default function UndanganTemplate({ data }: { data: any }) {
                         <Text>Nomor</Text>
                         <Text>:</Text>
                     </View>
-                    <Text style={{ fontSize: 11 }}>{data.memo_number}</Text>
+                    <Text style={{ fontSize: 11 }}>
+                        {data.invitation_number}
+                    </Text>
                 </View>
                 <View
                     style={{
@@ -289,7 +291,7 @@ export default function UndanganTemplate({ data }: { data: any }) {
                                     width: "20%",
                                 }}
                             >
-                                <Text>Tempat</Text>
+                                <Text>Agenda</Text>
                                 <Text>:</Text>
                             </View>
                             <Text style={{ fontSize: 11 }}>{data.agenda}</Text>

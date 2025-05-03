@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Models\InvitationLetter;
 use App\Models\MeetingAttendees;
 use App\Models\MemoLetter;
+use App\Models\Official;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
 use App\Models\User;
@@ -183,7 +184,7 @@ class InvitationService
 
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
-
+        $official = Official::where("id", $request->official)->first();
         $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
             $q->where('role_name', "admin");
         })->first();
@@ -212,6 +213,12 @@ class InvitationService
                 'user_id' => $userId,
             ]);
         }
+        $generatedInvitationData = $this->generateNomorSurat($user, $official);
+        $invite->update([
+            "invitation_number" => $generatedInvitationData["invitation_number"],
+            "monthly_counter" => $generatedInvitationData["monthly_counter"],
+            "yearly_counter" => $generatedInvitationData["yearly_counter"],
+        ]);
 
         // $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
 
@@ -284,6 +291,101 @@ class InvitationService
         error_log(json_encode($result));
         // dd($result);
         return $result;
+    }
+    public function generateNomorSurat($user, $official)
+    {
+
+        // dd($user);
+
+        $invite = RequestLetter::with(['user', 'stages' => function ($query) {
+            $query->withTrashed();
+        }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory'])->whereHas('invite', function ($q) use ($user) {
+            $q->where('from_division', $user->division->id);
+        })->latest()->first();
+
+        // dd($memo);
+
+        $currentYear = date("Y");
+        $currentMonth = date("m");
+
+        if (empty($invite)) {
+            $newYearlyCounter = 1;
+            $newMonthlyCounter = 1;
+        } else {
+
+            $lastYear = $invite->created_at->format('Y');
+            $lastYearlyCounter = $invite->invite->yearly_counter;
+            $lastMonth = $invite->created_at->format('m');
+            $lastMonthlyCounter = $invite->invite->monthly_counter;
+
+            // dd($lastMonthlyCounter);
+            if ($lastYear != $currentYear) {
+                // $newYear = $currentYear;
+
+                error_log($lastYear);
+                error_log("called not same year");
+                $newYearlyCounter = 1;
+            } else {
+                // $newYear = $lastYear;
+
+                error_log($lastYear);
+                error_log("called same year");
+                $newYearlyCounter = $lastYearlyCounter + 1;
+
+                // dd($newYearlyCounter, $lastYearlyCounter);
+            }
+
+
+            // if ($lastMonth != $currentMonth) {
+            if ($lastMonth != $currentMonth || $lastYear != $currentYear) {
+                // dd("not empty", $currentMonth, $lastMonth, $currentYear, $lastYear);
+                error_log($lastMonth);
+
+                error_log("called not same month weird");
+                $newMonth = $currentMonth;
+                $newMonthlyCounter = 1;
+            } else {
+                error_log($lastMonth);
+                error_log("called same month");
+                $newMonth = $lastMonth;
+                $newMonthlyCounter = $lastMonthlyCounter + 1;
+            }
+        }
+
+        // $nomorBulanan = sprintf("%03d/%s/%s", $newMonthlyCounter, $newMonth, $newYear);
+        // $nomorTahunan = sprintf("%03d/%s", $newYearlyCounter, $newYear);
+
+        $inviteNumber = "$newYearlyCounter.$newMonthlyCounter/REKA$official->official_code/GEN/{$user->division->division_code}/{$this->convertToRoman($currentMonth)}/$currentYear";
+
+        // dd($newMonthlyCounter, $newYearlyCounter);
+        return [
+            // 'nomor_bulanan' => $nomorBulanan,
+            // 'nomor_tahunan' => $nomorTahunan,
+            // 'year' => $newYear,
+            // 'month' => $newMonth,
+            'invitation_number' => $inviteNumber,
+            'yearly_counter' => $newYearlyCounter,
+            'monthly_counter' => $newMonthlyCounter
+        ];
+    }
+    private function convertToRoman($number)
+    {
+        $map = [
+            '01' => 'I',
+            '02' => 'II',
+            '03' => 'III',
+            '04' => 'IV',
+            '05' => 'V',
+            '06' => 'VI',
+            '07' => 'VII',
+            '08' => 'VIII',
+            '09' => 'IX',
+            '10' => 'X',
+            '11' => 'XI',
+            '12' => 'XII'
+        ];
+
+        return $map[$number] ?? $number;
     }
     public function approve($id)
     {

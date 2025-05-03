@@ -42,7 +42,7 @@ export const columns: ColumnDef<RequestLetter>[] = [
         },
     },
     {
-        accessorKey: "invitation_number",
+        accessorKey: "invite.invitation_number",
         header: "Nomor Undangan",
     },
     {
