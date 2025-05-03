@@ -627,7 +627,7 @@ DataTableProps<TData, TValue>) {
                                                                               <AlertDialogTitle>
                                                                                   Alasan
                                                                                   Penolakan
-                                                                                  Memo
+                                                                                  Undangan Rapat
                                                                               </AlertDialogTitle>
                                                                               <AlertDialogDescription>
                                                                                   <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -713,7 +713,7 @@ DataTableProps<TData, TValue>) {
                                                                                       >
                                                                                           <p>
                                                                                               Tolak
-                                                                                              Memo
+                                                                                              Undangan Rapat
                                                                                           </p>
                                                                                       </TooltipContent>
                                                                                   </Tooltip>
@@ -793,7 +793,7 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                               >
                                                                                   Tolak
-                                                                                  Memo
+                                                                                  Undangan Rapat
                                                                               </AlertDialogAction>
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
@@ -843,7 +843,7 @@ DataTableProps<TData, TValue>) {
                                                                                       >
                                                                                           <p>
                                                                                               Setujui
-                                                                                              Memo
+                                                                                              Undangan Rapat
                                                                                           </p>
                                                                                       </TooltipContent>
                                                                                   </Tooltip>
@@ -869,7 +869,8 @@ DataTableProps<TData, TValue>) {
                                                                                       .is_fixable ==
                                                                                   0 ? (
                                                                                       <>
-                                                                                          Memo
+                                                                                          Undangan
+                                                                                          Rapat
                                                                                           akan
                                                                                           dikirimkan
                                                                                           ke
@@ -892,7 +893,7 @@ DataTableProps<TData, TValue>) {
                                                                                   ) : (
                                                                                       `
                                                                                       
-                                                                                  Memo
+                                                                                  Undangan Rapat
                                                                                   akan
                                                                                   dikirimkan
                                                                                   ke
@@ -926,7 +927,8 @@ DataTableProps<TData, TValue>) {
                                                                                   className="bg-blue-500 font-normal hover:bg-blue-600"
                                                                               >
                                                                                   Kirim
-                                                                                  Memo
+                                                                                  Undangan
+                                                                                  Rapat
                                                                                   ke
                                                                                   Manajer
                                                                               </AlertDialogAction>
@@ -982,7 +984,8 @@ DataTableProps<TData, TValue>) {
                                                                               <AlertDialogTitle>
                                                                                   Alasan
                                                                                   Penolakan
-                                                                                  Memo
+                                                                                  Undangan
+                                                                                  Rapat
                                                                               </AlertDialogTitle>
                                                                               <AlertDialogDescription>
                                                                                   <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -1067,7 +1070,7 @@ DataTableProps<TData, TValue>) {
                                                                                       >
                                                                                           <p>
                                                                                               Tolak
-                                                                                              Memo
+                                                                                              Undangan Rapat
                                                                                           </p>
                                                                                       </TooltipContent>
                                                                                   </Tooltip>
@@ -1147,7 +1150,7 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                               >
                                                                                   Tolak
-                                                                                  Memo
+                                                                                  Undangan Rapat
                                                                               </AlertDialogAction>
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
