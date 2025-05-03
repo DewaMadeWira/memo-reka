@@ -28,6 +28,7 @@ import { columns } from "./invitation/columns";
 import { User } from "@/types/UserType";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import { Button } from "@/Components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export interface UserWithDivision extends User {
     division: Division;
@@ -46,6 +47,7 @@ export default function Index({
     all_user: UserWithDivision[];
 }) {
     const { user } = usePage().props.auth as { user: User };
+    const { toast } = useToast();
     console.log(user);
     console.log(all_user);
     console.log(request);
@@ -60,6 +62,27 @@ export default function Index({
     }
     function handleReject(id: number) {
         router.put("/request/" + id + "?intent=invitation.reject");
+    }
+    function handleUpdate(id: number) {
+        console.log(formData);
+        router.put("/undangan-rapat/" + id, formData, {
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Undangan Rapat berhasil diubah",
+                });
+                router.reload();
+            },
+        });
     }
     const [formData, setFormData] = useState({
         request_name: "",
@@ -479,9 +502,10 @@ export default function Index({
                         // filePreview={filePreview}
                         // fileData={fileData}
                         // handleUpload={handleFileUpload}
-                        handleUpdate={() => {
-                            return null;
-                        }}
+                        // handleUpdate={() => {
+                        //     return null;
+                        // }}
+                        handleUpdate={handleUpdate}
                         handleUpload={function (id: number): void {
                             throw new Error("Function not implemented.");
                         }}

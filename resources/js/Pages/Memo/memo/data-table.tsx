@@ -432,7 +432,7 @@ DataTableProps<TData, TValue>) {
                                                 <>
                                                     {row.original.stages
                                                         .is_external == 1
-                                                        ? row.original.memo
+                                                        ? row.original.memo!
                                                               .to_division.id ==
                                                               user.division_id && (
                                                               <>
@@ -467,7 +467,7 @@ DataTableProps<TData, TValue>) {
                                                                                       handleApprove(
                                                                                           row
                                                                                               .original
-                                                                                              .memo
+                                                                                              .memo!
                                                                                               .id
                                                                                       )
                                                                                   }
@@ -491,7 +491,7 @@ DataTableProps<TData, TValue>) {
                                                                                                     1 &&
                                                                                                 row
                                                                                                     .original
-                                                                                                    .memo
+                                                                                                    .memo!
                                                                                                     .file_path ==
                                                                                                     null
                                                                                                     ? "opacity-50 cursor-not-allowed"
@@ -506,7 +506,7 @@ DataTableProps<TData, TValue>) {
                                                                                           1 &&
                                                                                       row
                                                                                           .original
-                                                                                          .memo
+                                                                                          .memo!
                                                                                           .file_path ==
                                                                                           null
                                                                                   }
@@ -527,7 +527,7 @@ DataTableProps<TData, TValue>) {
                                                                                   1 &&
                                                                               row
                                                                                   .original
-                                                                                  .memo
+                                                                                  .memo!
                                                                                   .file_path ==
                                                                                   null ? (
                                                                                   <p>
@@ -550,7 +550,7 @@ DataTableProps<TData, TValue>) {
                                                                               className={
                                                                                   row
                                                                                       .original
-                                                                                      .memo
+                                                                                      .memo!
                                                                                       .rejection_reason
                                                                                       ? `${actionButtonClass} bg-yellow-500`
                                                                                       : "hidden"
@@ -617,7 +617,7 @@ DataTableProps<TData, TValue>) {
                                                                                       <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
                                                                                           {row
                                                                                               .original
-                                                                                              .memo
+                                                                                              .memo!
                                                                                               .rejection_reason ||
                                                                                               "Tidak ada alasan yang diberikan"}
                                                                                       </p>
@@ -741,6 +741,7 @@ DataTableProps<TData, TValue>) {
                                                                                       handleReject(
                                                                                           row
                                                                                               .original
+                                                                                              .memo!
                                                                                               .id,
                                                                                           rejectionReason
                                                                                       );
@@ -766,7 +767,7 @@ DataTableProps<TData, TValue>) {
                                                                   </AlertDialog>
                                                               </>
                                                           )
-                                                        : row.original.memo
+                                                        : row.original.memo!
                                                               .from_division
                                                               .id ==
                                                               user.division_id && (
@@ -845,7 +846,7 @@ DataTableProps<TData, TValue>) {
                                                                                               {
                                                                                                   row
                                                                                                       .original
-                                                                                                      .memo
+                                                                                                      .memo!
                                                                                                       .to_division
                                                                                                       .division_name
                                                                                               }
@@ -885,7 +886,7 @@ DataTableProps<TData, TValue>) {
                                                                                       handleApprove(
                                                                                           row
                                                                                               .original
-                                                                                              .memo
+                                                                                              .memo!
                                                                                               .id
                                                                                       );
                                                                                   }}
@@ -905,7 +906,7 @@ DataTableProps<TData, TValue>) {
                                                                               className={
                                                                                   row
                                                                                       .original
-                                                                                      .memo
+                                                                                      .memo!
                                                                                       .rejection_reason
                                                                                       ? `${actionButtonClass} bg-yellow-500`
                                                                                       : "hidden"
@@ -972,7 +973,7 @@ DataTableProps<TData, TValue>) {
                                                                                       <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
                                                                                           {row
                                                                                               .original
-                                                                                              .memo
+                                                                                              .memo!
                                                                                               .rejection_reason ||
                                                                                               "Tidak ada alasan yang diberikan"}
                                                                                       </p>
@@ -1095,6 +1096,7 @@ DataTableProps<TData, TValue>) {
                                                                                       handleReject(
                                                                                           row
                                                                                               .original
+                                                                                              .memo!
                                                                                               .id,
                                                                                           rejectionReason
                                                                                       );
@@ -1153,11 +1155,11 @@ DataTableProps<TData, TValue>) {
                                                                     null,
                                                                 perihal:
                                                                     row.original
-                                                                        .memo
+                                                                        .memo!
                                                                         .perihal,
                                                                 content:
                                                                     row.original
-                                                                        .memo
+                                                                        .memo!
                                                                         .content,
                                                             })
                                                         }
@@ -1188,7 +1190,7 @@ DataTableProps<TData, TValue>) {
                                                                 Edit Memo{" "}
                                                                 {
                                                                     row.original
-                                                                        .memo
+                                                                        .memo!
                                                                         .memo_number
                                                                 }
                                                             </AlertDialogTitle>
@@ -1240,6 +1242,7 @@ DataTableProps<TData, TValue>) {
                                                                     handleUpdate(
                                                                         row
                                                                             .original
+                                                                            .memo!
                                                                             .id
                                                                     )
                                                                 }
@@ -1322,7 +1325,7 @@ DataTableProps<TData, TValue>) {
                                                 </AlertDialog>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger>
-                                                        {row.original.memo
+                                                        {row.original.memo!
                                                             .file_path !=
                                                         null ? (
                                                             <button
@@ -1347,7 +1350,7 @@ DataTableProps<TData, TValue>) {
                                                                         .requires_file_upload !=
                                                                         1 ||
                                                                     row.original
-                                                                        .memo
+                                                                        .memo!
                                                                         .to_division
                                                                         .id !=
                                                                         user.division_id
@@ -1385,7 +1388,7 @@ DataTableProps<TData, TValue>) {
                                                             <></>
                                                         )}
                                                     </AlertDialogTrigger>
-                                                    {row.original.memo
+                                                    {row.original.memo!
                                                         .file_path != null ? (
                                                         <AlertDialogContent className="w-full max-w-7xl">
                                                             <AlertDialogHeader className="">
@@ -1406,7 +1409,12 @@ DataTableProps<TData, TValue>) {
                                                                         {/* Actual image with zoom functionality */}
                                                                         <div className="w-full h-full flex items-center justify-center overflow-auto">
                                                                             <img
-                                                                                src={`memo-file/${row.original.memo.file_path}`}
+                                                                                src={`memo-file/${
+                                                                                    row
+                                                                                        .original
+                                                                                        .memo!
+                                                                                        .file_path
+                                                                                }`}
                                                                                 className="max-w-full max-h-full object-contain transition-transform duration-200 hover:scale-105"
                                                                                 alt="Document preview"
                                                                                 onLoad={(
@@ -1452,8 +1460,8 @@ DataTableProps<TData, TValue>) {
                                                                     {/* Image controls */}
                                                                     <div className="flex items-center justify-between mt-4">
                                                                         <div className="text-sm text-gray-500">
-                                                                            {row.original.memo.file_path
-                                                                                ?.split(
+                                                                            {row.original
+                                                                                .memo!.file_path?.split(
                                                                                     "/"
                                                                                 )
                                                                                 .pop()}
@@ -1463,7 +1471,12 @@ DataTableProps<TData, TValue>) {
                                                                                 className="px-3 py-1 bg-gray-200 rounded-md text-sm"
                                                                                 onClick={() =>
                                                                                     window.open(
-                                                                                        `memo-file/${row.original.memo.file_path}`,
+                                                                                        `memo-file/${
+                                                                                            row
+                                                                                                .original
+                                                                                                .memo!
+                                                                                                .file_path
+                                                                                        }`,
                                                                                         "_blank"
                                                                                     )
                                                                                 }
@@ -1544,7 +1557,7 @@ DataTableProps<TData, TValue>) {
                                                                                                 memo_id:
                                                                                                     row
                                                                                                         .original
-                                                                                                        .memo
+                                                                                                        .memo!
                                                                                                         .id,
                                                                                                 fileName:
                                                                                                     file.name,
@@ -1600,6 +1613,7 @@ DataTableProps<TData, TValue>) {
                                                                         handleUpload(
                                                                             row
                                                                                 .original
+                                                                                .memo!
                                                                                 .id
                                                                         )
                                                                     }

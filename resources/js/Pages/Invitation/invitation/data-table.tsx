@@ -1128,7 +1128,7 @@ DataTableProps<TData, TValue>) {
                                                                                       // ) {
                                                                                       handleReject(
                                                                                           row
-                                                                                              .original
+                                                                                              .original.invite!
                                                                                               .id,
                                                                                           rejectionReason
                                                                                       );
@@ -1400,9 +1400,20 @@ DataTableProps<TData, TValue>) {
                                                             </AlertDialogCancel>
                                                             <AlertDialogAction
                                                                 className="bg-blue-500 font-normal hover:bg-blue-600"
-                                                                // onClick={
-                                                                //     handleSubmit
-                                                                // }
+                                                                onClick={() =>
+                                                                    // alert(
+                                                                    //     row
+                                                                    //         .original
+                                                                    //         .invite!
+                                                                    //         .id
+                                                                    // )
+                                                                    handleUpdate(
+                                                                        row
+                                                                            .original
+                                                                            .invite!
+                                                                            .id
+                                                                    )
+                                                                }
                                                             >
                                                                 Ubah Undangan
                                                                 Rapat
