@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\InvitationLetter;
+use App\Models\LetterNumberCounter;
 use App\Models\MeetingAttendees;
 use App\Models\MemoLetter;
 use App\Models\Official;
@@ -213,11 +214,14 @@ class InvitationService
                 'user_id' => $userId,
             ]);
         }
-        $generatedInvitationData = $this->generateNomorSurat($user, $official);
+        $generatedInviteData = $this->generateNomorSuratDivision($user, $official);
+        $letter_number = LetterNumberCounter::where('division_id', $user->division->id)->where('letter_type_id', 2)->first();
+        $letter_number->update([
+            "monthly_counter" => $generatedInviteData["monthly_counter"],
+            "yearly_counter" => $generatedInviteData["yearly_counter"],
+        ]);
         $invite->update([
-            "invitation_number" => $generatedInvitationData["invitation_number"],
-            "monthly_counter" => $generatedInvitationData["monthly_counter"],
-            "yearly_counter" => $generatedInvitationData["yearly_counter"],
+            "invitation_number" => $generatedInviteData["invitation_number"],
         ]);
 
         // $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
@@ -291,6 +295,76 @@ class InvitationService
         error_log(json_encode($result));
         // dd($result);
         return $result;
+    }
+    public function generateNomorSuratDivision($user, $official)
+    {
+        $number = LetterNumberCounter::with(['division'])->where('division_id', $user->division->id)->where('letter_type_id', 2)->first();
+
+        $currentYear = date("Y");
+        $currentMonth = date("m");
+
+        if (empty($number)) {
+            // $newYearlyCounter = 1;
+            // $newMonthlyCounter = 1;
+            $number = new LetterNumberCounter();
+            $number->division_id = $user->division->id;
+            $number->letter_type_id = 2;
+            $number->monthly_counter = 1;
+            $number->yearly_counter = 1;
+            $number->save();
+            $newYearlyCounter = 1;
+            $newMonthlyCounter = 1;
+        } else {
+            $lastYear = $number->updated_at->format('Y');
+            $lastYearlyCounter = $number->yearly_counter;
+            $lastMonth = $number->updated_at->format('m');
+            $lastMonthlyCounter = $number->monthly_counter;
+            if ($lastYear != $currentYear) {
+                // $newYear = $currentYear;
+
+                error_log($lastYear);
+                error_log("called not same year");
+                $newYearlyCounter = 1;
+            } else {
+                // $newYear = $lastYear;
+
+                error_log($lastYear);
+                error_log("called same year");
+                $newYearlyCounter = $lastYearlyCounter + 1;
+
+                // dd($newYearlyCounter, $lastYearlyCounter);
+            }
+
+
+            // if ($lastMonth != $currentMonth) {
+            if ($lastMonth != $currentMonth || $lastYear != $currentYear) {
+                // dd("not empty", $currentMonth, $lastMonth, $currentYear, $lastYear);
+                error_log($lastMonth);
+
+                error_log("called not same month weird");
+                $newMonth = $currentMonth;
+                $newMonthlyCounter = 1;
+            } else {
+                error_log($lastMonth);
+                error_log("called same month");
+                $newMonth = $lastMonth;
+                $newMonthlyCounter = $lastMonthlyCounter + 1;
+            }
+        }
+        $invitationNumber = sprintf(
+            "%02d.%02d/REKA%s/GEN/%s/%s/%s",
+            $newYearlyCounter,
+            $newMonthlyCounter,
+            $official->official_code,
+            $user->division->division_code,
+            $this->convertToRoman($currentMonth),
+            $currentYear
+        );
+        return [
+            'invitation_number' => $invitationNumber,
+            'yearly_counter' => $newYearlyCounter,
+            'monthly_counter' => $newMonthlyCounter
+        ];
     }
     public function generateNomorSurat($user, $official)
     {
