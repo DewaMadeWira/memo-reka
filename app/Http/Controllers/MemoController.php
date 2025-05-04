@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\MemoService;
 use App\Models\Division;
 use App\Models\MemoLetter;
+use App\Models\Notification;
 use App\Models\Official;
 use App\Models\RequestLetter;
 use App\Models\User;
@@ -89,12 +90,17 @@ class MemoController extends Controller
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
         // return $user;
+        $notifications = Notification::where('user_id', $user->id)
+            ->where('is_read', false)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return Inertia::render('Memo/Index', [
             'userData' => $user,
             'request' => $data,
             'division' => $division,
             'official' => $official,
+            'notifications' => $notifications,
         ]);
     }
 

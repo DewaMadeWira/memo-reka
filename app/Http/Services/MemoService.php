@@ -2,8 +2,10 @@
 
 namespace App\Http\Services;
 
+use App\Models\Division;
 use App\Models\LetterNumberCounter;
 use App\Models\MemoLetter;
+use App\Models\Notification;
 use App\Models\Official;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
@@ -235,7 +237,7 @@ class MemoService
         // dd($nextStageMap);
         // dd($progressStageMap);
 
-        $request = RequestLetter::create([
+        $requestLetter = RequestLetter::create([
             "request_name" => $request->request_name,
             "user_id" => $user->id,
             // "status_id" => $stages->letter->request_stages[0]->status_id,
@@ -245,6 +247,14 @@ class MemoService
             "to_stages" => $nextStageMap->toJson(),
             "rejected_stages" => $rejectedStageMap->toJson(),
             "progress_stages" => json_encode($progressStageMap),
+        ]);
+        $toDivision = Division::where('id', $request->to_division)->first();
+        $toDivisionName = $toDivision->division_code;
+        Notification::create([
+            'user_id' => $manager->id,
+            'title' => 'Persetujuan Dibutuhkan !',
+            'message' => "Pegawai meminta persetujuan baru untuk memo " . $request->perihal . " yang akan dikirimkan ke divisi " . $toDivisionName,
+            'related_request_id' => $requestLetter->id,
         ]);
     }
     public function extract_progress_stage($to_stages)

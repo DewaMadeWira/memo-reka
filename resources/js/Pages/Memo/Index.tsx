@@ -53,12 +53,14 @@ export default function Index({
     division,
     userData,
     official,
+    notifications,
 }: // stages,
 {
     request: any;
     division: any;
     userData: any;
     official: Official[];
+    notifications: any;
     // stages: any;
 }) {
     const { toast } = useToast();
@@ -183,7 +185,7 @@ export default function Index({
     console.log(official);
 
     return (
-        <SidebarAuthenticated>
+        <SidebarAuthenticated notifications={notifications}>
             <Head title="Memo" />
             <div className="w-full p-10 bg-white">
                 <Breadcrumb className="mb-6">

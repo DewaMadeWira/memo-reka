@@ -5,8 +5,10 @@ import Authenticated from "./AuthenticatedLayout";
 
 export default function SidebarAuthenticated({
     children,
+    notifications,
 }: {
     children: React.ReactNode;
+    notifications: any;
 }) {
     return (
         <SidebarProvider>
@@ -15,7 +17,9 @@ export default function SidebarAuthenticated({
             {/* <SidebarTrigger /> */}
             <div className="w-full bg-white">
                 {/* <SidebarTrigger /> */}
-                <Authenticated>{children}</Authenticated>
+                <Authenticated notifications={notifications}>
+                    {children}
+                </Authenticated>
             </div>
             {/* </main> */}
         </SidebarProvider>

@@ -5,27 +5,40 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { SidebarTrigger } from "@/Components/ui/sidebar";
 import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
+// Import shadcn components
+import { Input } from "@/Components/ui/input";
+import { ScrollArea } from "@/Components/ui/scroll-area";
+import { Bell } from "lucide-react";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/Components/ui/alert-dialog";
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
+import { Button } from "@/Components/ui/button";
 
 export default function Authenticated({
     header,
     children,
-}: PropsWithChildren<{ header?: ReactNode }>) {
+    notifications,
+}: PropsWithChildren<{ header?: ReactNode; notifications: any }>) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
+    // Filter notifications based on search query
+    const filteredNotifications = notifications.filter(
+        (notification: any) =>
+            notification.title
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) ||
+            notification.message
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())
+    );
+
+    console.log(notifications);
     return (
         <div className="min-h-screen bg-white">
             <nav className="border-b border-gray-100 bg-white">
@@ -53,6 +66,99 @@ export default function Authenticated({
                         </div> */}
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
+                            {/* Notification Icon and Dropdown using shadcn */}
+                            <div className="relative ms-3 mr-4">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="relative"
+                                        >
+                                            <Bell className="h-5 w-5" />
+                                            {notifications.length > 0 && (
+                                                <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                                                    {notifications.length}
+                                                </span>
+                                            )}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        align="end"
+                                        className="w-80"
+                                    >
+                                        <div className="flex flex-col">
+                                            <div className="px-4 py-2 border-b border-gray-200">
+                                                <h3 className="text-sm font-medium text-gray-900">
+                                                    Notifications
+                                                </h3>
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Search notifications..."
+                                                    className="mt-2 w-full"
+                                                    value={searchQuery}
+                                                    onChange={(e) =>
+                                                        setSearchQuery(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+
+                                            <ScrollArea className="h-64">
+                                                {filteredNotifications.length ===
+                                                0 ? (
+                                                    <div className="py-4 px-4 text-sm text-gray-500 text-center">
+                                                        No notifications found
+                                                    </div>
+                                                ) : (
+                                                    filteredNotifications.map(
+                                                        (notification: any) => (
+                                                            <div
+                                                                key={
+                                                                    notification.id
+                                                                }
+                                                                className="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                                                            >
+                                                                <p className="text-sm font-medium text-gray-900">
+                                                                    {
+                                                                        notification.title
+                                                                    }
+                                                                </p>
+                                                                <p className="text-sm text-gray-500 whitespace-normal break-words">
+                                                                    {
+                                                                        notification.message
+                                                                    }
+                                                                </p>
+                                                                <p className="text-xs text-gray-400 mt-1">
+                                                                    {new Date(
+                                                                        notification.created_at
+                                                                    ).toLocaleString()}
+                                                                </p>
+                                                            </div>
+                                                        )
+                                                    )
+                                                )}
+                                            </ScrollArea>
+
+                                            {/* {filteredNotifications.length >
+                                                0 && (
+                                                <div className="px-4 py-2 border-t border-gray-200">
+                                                    <Link
+                                                        // href={route(
+                                                        //     "notifications.index"
+                                                        // )}
+                                                        className="text-sm text-indigo-600 hover:text-indigo-900"
+                                                    >
+                                                        View all notifications
+                                                    </Link>
+                                                </div>
+                                            )} */}
+                                        </div>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+
                             <div className="relative ms-3">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -86,24 +192,6 @@ export default function Authenticated({
                                             Profile
                                         </Dropdown.Link>
 
-                                        {/* <Dropdown.Link
-                                            as="button"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                if (
-                                                    confirm(
-                                                        "Apakah anda yakin? Anda akan melakukan Logout dari website."
-                                                    )
-                                                ) {
-                                                    router.post(
-                                                        route("logout")
-                                                    );
-                                                }
-                                            }}
-                                        >
-                                            Logout
-                                        </Dropdown.Link> */}
-
                                         <Dropdown.Link
                                             method="post"
                                             as="button"
@@ -111,50 +199,6 @@ export default function Authenticated({
                                         >
                                             Logout
                                         </Dropdown.Link>
-
-                                        {/* <Dropdown.Link
-                                            href=""
-                                            // href={route("logout")}
-                                            // method="post"
-                                            // as="button"
-                                        > */}
-                                        {/* <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <button className="text-sm p-2 px-4 text-gray-900 hover:bg-gray-100 w-full text-start">
-                                                    Logout
-                                                </button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>
-                                                        Apakah anda yakin ?
-                                                    </AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        Anda akan melakukan
-                                                        Logout dari website.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>
-                                                        Kembali
-                                                    </AlertDialogCancel>
-                                                    <AlertDialogAction asChild>
-                                                        <Link
-                                                            href={route(
-                                                                "logout"
-                                                            )}
-                                                            method="post"
-                                                            as="button"
-                                                            className="inline-flex h-10 items-center justify-center rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground ring-offset-background transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                                                        >
-                                                            Logout
-                                                        </Link>
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog> */}
-                                        {/* Log Out */}
-                                        {/* </Dropdown.Link> */}
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>
