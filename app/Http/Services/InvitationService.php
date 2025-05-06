@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Jobs\SendMemoNotification;
 use App\Models\InvitationLetter;
 use App\Models\LetterNumberCounter;
 use App\Models\MeetingAttendees;
@@ -487,6 +488,16 @@ class InvitationService
             "stages_id" => $nextStageId,
         ]);
         $request->save();
+        $invitedUser = MeetingAttendees::where('invitation_letter_id', $id)->get();
+        // dd($request->invite->invitation_number);
+        foreach ($invitedUser as $user) {
+            SendMemoNotification::dispatch(
+                $user->user_id,
+                'Undangan Rapat',
+                "Anda telah diundang ke undangan rapat dengan nomor '{$request->invite->invitation_number}' . Periksa undangan tersebut.",
+                $request->id
+            );
+        }
     }
     public function reject($id, Request $request)
     {
