@@ -173,6 +173,7 @@ class MemoController extends Controller
     public function edit(string $id)
     {
         //
+        $notification =  Notification::where("id", $id)->update(["is_read" => false]);
     }
 
     /**
@@ -181,45 +182,61 @@ class MemoController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        try {
+        $intent = $request->get("intent");
+        // dd($intent);
 
-            $validated = $request->validate([
-                'perihal' => 'required|string|max:255',
-                'content' => 'required|string|max:255',
-            ]);
+        switch ($intent) {
+            case '':
+                try {
 
-            // dd($this->generateNomorSurat($user, $official)->memo_number);
-            $memo = MemoLetter::where("id", $id)->update([
-                // 'memo_number' => '1234/MemoNumber/Test',
-                'perihal' => $request->perihal,
-                'content' => $request->content,
-            ]);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return redirect()->back()
-                ->withErrors(['message' => 'Memo tidak ditemukan.'])
-                ->withInput();
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // if (isset($e->validator->failed()['division_name']['Unique'])) {
-            //     return redirect()->back()
-            //         ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])
-            //         ->withInput();
-            // }
-            if (isset($e->validator->failed()['perihal']['Required'])) {
-                return redirect()->back()
-                    ->withErrors(['message' => 'Perihal tidak boleh kosong'])
-                    ->withInput();
-            }
-            if (isset($e->validator->failed()['content']['Required'])) {
-                return redirect()->back()
-                    ->withErrors(['message' => 'Isi tidak boleh kosong'])
-                    ->withInput();
-            }
-            return redirect()->back()
-                ->withErrors(['message' => 'Terjadi kesalahan saat mengubah Memo.'])
-                ->withInput();
+                    $validated = $request->validate([
+                        'perihal' => 'required|string|max:255',
+                        'content' => 'required|string|max:255',
+                    ]);
 
-            // Re-throw other validation errors to be handled by the framework
-            throw $e;
+                    // dd($this->generateNomorSurat($user, $official)->memo_number);
+                    $memo = MemoLetter::where("id", $id)->update([
+                        // 'memo_number' => '1234/MemoNumber/Test',
+                        'perihal' => $request->perihal,
+                        'content' => $request->content,
+                    ]);
+                } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                    return redirect()->back()
+                        ->withErrors(['message' => 'Memo tidak ditemukan.'])
+                        ->withInput();
+                } catch (\Illuminate\Validation\ValidationException $e) {
+                    // if (isset($e->validator->failed()['division_name']['Unique'])) {
+                    //     return redirect()->back()
+                    //         ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])
+                    //         ->withInput();
+                    // }
+                    if (isset($e->validator->failed()['perihal']['Required'])) {
+                        return redirect()->back()
+                            ->withErrors(['message' => 'Perihal tidak boleh kosong'])
+                            ->withInput();
+                    }
+                    if (isset($e->validator->failed()['content']['Required'])) {
+                        return redirect()->back()
+                            ->withErrors(['message' => 'Isi tidak boleh kosong'])
+                            ->withInput();
+                    }
+                    return redirect()->back()
+                        ->withErrors(['message' => 'Terjadi kesalahan saat mengubah Memo.'])
+                        ->withInput();
+
+                    // Re-throw other validation errors to be handled by the framework
+                    throw $e;
+                }
+                break;
+            case 'memo.notification':
+                // dd("called");
+                $notification = Notification::where("id", $id)->update([
+                    'is_read' => true,
+                ]);
+                // return redirect()->back()->with('success', 'Notifikasi telah dibaca.');
+                break;
+            default:
+                return response()->json(['error' => 'Invalid intent'], 400);
         }
     }
 

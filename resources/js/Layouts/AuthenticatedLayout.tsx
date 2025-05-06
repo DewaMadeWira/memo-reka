@@ -3,7 +3,7 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { SidebarTrigger } from "@/Components/ui/sidebar";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
 // Import shadcn components
 import { Input } from "@/Components/ui/input";
@@ -26,6 +26,10 @@ export default function Authenticated({
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+
+    function handleMarkAsRead(id: number) {
+        router.put("/memo/" + id + "?intent=memo.notification");
+    }
 
     // Filter notifications based on search query
     const filteredNotifications = notifications.filter(
@@ -90,11 +94,11 @@ export default function Authenticated({
                                         <div className="flex flex-col">
                                             <div className="px-4 py-2 border-b border-gray-200">
                                                 <h3 className="text-sm font-medium text-gray-900">
-                                                    Notifications
+                                                    Notifikasi
                                                 </h3>
                                                 <Input
                                                     type="text"
-                                                    placeholder="Search notifications..."
+                                                    placeholder="Cari notifikasi..."
                                                     className="mt-2 w-full"
                                                     value={searchQuery}
                                                     onChange={(e) =>
@@ -109,7 +113,8 @@ export default function Authenticated({
                                                 {filteredNotifications.length ===
                                                 0 ? (
                                                     <div className="py-4 px-4 text-sm text-gray-500 text-center">
-                                                        No notifications found
+                                                        Notifikasi tidak
+                                                        ditemukan.
                                                     </div>
                                                 ) : (
                                                     filteredNotifications.map(
@@ -135,6 +140,18 @@ export default function Authenticated({
                                                                         notification.created_at
                                                                     ).toLocaleString()}
                                                                 </p>
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="mt-2 text-xs"
+                                                                    onClick={() =>
+                                                                        handleMarkAsRead(
+                                                                            notification.id
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Sudah Dibaca
+                                                                </Button>
                                                             </div>
                                                         )
                                                     )
