@@ -471,7 +471,7 @@ class MemoService
     }
     public function approve($id)
     {
-        $request = RequestLetter::with('memo')->where('memo_id', $id)->first();
+        $request = RequestLetter::with(['memo', 'user'])->where('memo_id', $id)->first();
         $nextStageId = json_decode($request->to_stages, true);
         // return response()->json($nextStageId);
 
@@ -488,6 +488,27 @@ class MemoService
             "stages_id" => $nextStageId,
         ]);
         $request->save();
+
+        // NOTIFICATION
+        $fromDivisionId = $request->memo->from_division;
+        $toDivisionId = $request->memo->to_division;
+
+        $fromDivisionUsers = User::where('division_id', $fromDivisionId)->get();
+        $toDivisionUsers = User::where('division_id', $toDivisionId)->get();
+
+        $allInvolvedUsers = $fromDivisionUsers->merge($toDivisionUsers);
+
+        $currentStage = RequestStages::find($nextStageId);
+        $stageName = $currentStage ? $currentStage->stage_name : 'next stage';
+
+        foreach ($allInvolvedUsers as $user) {
+            Notification::create([
+                'user_id' => $user->id,
+                'title' => 'Memo Updated!',
+                'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan masuk ke tahap {$stageName}. silahkan cek memo tersebut.",
+                'related_request_id' => $request->id,
+            ]);
+        }
     }
     public function reject($id, Request $request)
     {
@@ -507,5 +528,27 @@ class MemoService
             "stages_id" => $nextStageId
         ]);
         $request_letter->save();
+
+        // NOTIFICATION
+        $fromDivisionId = $request_letter->memo->from_division;
+        $toDivisionId = $request_letter->memo->to_division;
+
+        $fromDivisionUsers = User::where('division_id', $fromDivisionId)->get();
+        $toDivisionUsers = User::where('division_id', $toDivisionId)->get();
+
+        $allInvolvedUsers = $fromDivisionUsers->merge($toDivisionUsers);
+
+        $currentStage = RequestStages::find($nextStageId);
+        $stageName = $currentStage ? $currentStage->stage_name : 'next stage';
+
+        $userReject = Auth::user()->name;
+        foreach ($allInvolvedUsers as $user) {
+            Notification::create([
+                'user_id' => $user->id,
+                'title' => 'Memo Updated!',
+                'message' => "Memo '{$request_letter->memo->memo_number}' telah ditolak oleh '{$userReject}' dan masuk ke tahap {$stageName}. silahkan cek memo tersebut.",
+                'related_request_id' => $request_letter->id,
+            ]);
+        }
     }
 }
