@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
@@ -46,6 +47,12 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return $this->role_id === $role;
+    }
+    public function unreadNotifications(): HasMany
+    {
+        return $this->hasMany(Notification::class)
+            ->where('is_read', false)
+            ->orderBy('created_at', 'desc');
     }
 
     /**

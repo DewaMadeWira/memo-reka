@@ -19,10 +19,12 @@ import { Button } from "@/Components/ui/button";
 export default function Authenticated({
     header,
     children,
-    notifications,
-}: PropsWithChildren<{ header?: ReactNode; notifications: any }>) {
-    const user = usePage().props.auth.user;
+}: // notifications,
+PropsWithChildren<{ header?: ReactNode }>) {
+    // const user = usePage().props.auth.user;
 
+    const { auth, notifications } = usePage().props as any;
+    const user = auth.user;
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
     const [searchQuery, setSearchQuery] = useState("");
