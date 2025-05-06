@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Jobs\SendMemoNotification;
 use App\Models\Division;
 use App\Models\LetterNumberCounter;
 use App\Models\MemoLetter;
@@ -523,61 +524,116 @@ class MemoService
             })
             ->get();
 
-        // Determine who to notify based on the NEXT stage (which is now the current stage)
         if (!$isNextStageExternal) {
             // Internal stage - notify internal users
             foreach ($internalUsers as $user) {
-                Notification::create([
-                    'user_id' => $user->id,
-                    'title' => 'Memo Updated!',
-                    'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan masuk ke tahap {$nextStageName}.",
-                    'related_request_id' => $request->id,
-                ]);
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    'Memo Updated!',
+                    "Memo '{$request->memo->memo_number}' berhasil disetujui dan masuk ke tahap {$nextStageName}.",
+                    $request->id
+                );
             }
             foreach ($internalManagers as $user) {
-                Notification::create([
-                    'user_id' => $user->id,
-                    'title' => 'Memo Perlu Persetujuan!',
-                    'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan memerlukan persetujuan selanjutnya.",
-                    'related_request_id' => $request->id,
-                ]);
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    'Memo Perlu Persetujuan!',
+                    "Memo '{$request->memo->memo_number}' berhasil disetujui dan memerlukan persetujuan selanjutnya.",
+                    $request->id
+                );
             }
         } else {
             // External stage - notify external users who need to take action
             foreach ($externalUsers as $user) {
-                Notification::create([
-                    'user_id' => $user->id,
-                    'title' => 'Memo Baru Diterima!',
-                    'message' => "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan perhatian.",
-                    'related_request_id' => $request->id,
-                ]);
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    'Memo Baru Diterima!',
+                    "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan perhatian.",
+                    $request->id
+                );
             }
             foreach ($externalManagers as $user) {
-                Notification::create([
-                    'user_id' => $user->id,
-                    'title' => 'Memo Perlu Persetujuan!',
-                    'message' => "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan persetujuan.",
-                    'related_request_id' => $request->id,
-                ]);
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    'Memo Perlu Persetujuan!',
+                    "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan persetujuan.",
+                    $request->id
+                );
             }
 
             // Also notify internal users so they know the memo has moved to external stage
             foreach ($internalUsers as $user) {
-                Notification::create([
-                    'user_id' => $user->id,
-                    'title' => 'Memo Berhasil Dikirim!',
-                    'message' => "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
-                    'related_request_id' => $request->id,
-                ]);
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    'Memo Berhasil Dikirim!',
+                    "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
+                    $request->id
+                );
             }
             foreach ($internalManagers as $user) {
-                Notification::create([
-                    'user_id' => $user->id,
-                    'title' => 'Memo Berhasil Dikirim!',
-                    'message' => "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
-                    'related_request_id' => $request->id,
-                ]);
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    'Memo Berhasil Dikirim!',
+                    "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
+                    $request->id
+                );
             }
+
+            // Determine who to notify based on the NEXT stage (which is now the current stage)
+            // if (!$isNextStageExternal) {
+            //     // Internal stage - notify internal users
+            //     foreach ($internalUsers as $user) {
+            //         Notification::create([
+            //             'user_id' => $user->id,
+            //             'title' => 'Memo Updated!',
+            //             'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan masuk ke tahap {$nextStageName}.",
+            //             'related_request_id' => $request->id,
+            //         ]);
+            //     }
+            //     foreach ($internalManagers as $user) {
+            //         Notification::create([
+            //             'user_id' => $user->id,
+            //             'title' => 'Memo Perlu Persetujuan!',
+            //             'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan memerlukan persetujuan selanjutnya.",
+            //             'related_request_id' => $request->id,
+            //         ]);
+            //     }
+            // } else {
+            //     // External stage - notify external users who need to take action
+            //     foreach ($externalUsers as $user) {
+            //         Notification::create([
+            //             'user_id' => $user->id,
+            //             'title' => 'Memo Baru Diterima!',
+            //             'message' => "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan perhatian.",
+            //             'related_request_id' => $request->id,
+            //         ]);
+            //     }
+            //     foreach ($externalManagers as $user) {
+            //         Notification::create([
+            //             'user_id' => $user->id,
+            //             'title' => 'Memo Perlu Persetujuan!',
+            //             'message' => "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan persetujuan.",
+            //             'related_request_id' => $request->id,
+            //         ]);
+            //     }
+
+            //     // Also notify internal users so they know the memo has moved to external stage
+            //     foreach ($internalUsers as $user) {
+            //         Notification::create([
+            //             'user_id' => $user->id,
+            //             'title' => 'Memo Berhasil Dikirim!',
+            //             'message' => "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
+            //             'related_request_id' => $request->id,
+            //         ]);
+            //     }
+            //     foreach ($internalManagers as $user) {
+            //         Notification::create([
+            //             'user_id' => $user->id,
+            //             'title' => 'Memo Berhasil Dikirim!',
+            //             'message' => "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
+            //             'related_request_id' => $request->id,
+            //         ]);
+            //     }
         }
 
 
