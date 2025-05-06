@@ -469,46 +469,158 @@ class MemoService
 
         return $map[$number] ?? $number;
     }
+
     public function approve($id)
     {
-        $request = RequestLetter::with(['memo', 'user'])->where('memo_id', $id)->first();
-        $nextStageId = json_decode($request->to_stages, true);
-        // return response()->json($nextStageId);
+        $request = RequestLetter::with(['memo', 'user', 'memo.from_division', 'memo.to_division', 'stages'])->where('memo_id', $id)->first();
 
+        $nextStageId = json_decode($request->to_stages, true);
         $nextStageId = $nextStageId[$request->stages_id] ?? null;
+
         if ($nextStageId == null) {
             return to_route('memo.index');
         }
+
         MemoLetter::where('id', $id)->update([
             'rejection_reason' => NULL
         ]);
-        // return response()->json($nextStageId);
+
+        // Get the next stage information BEFORE updating the request
+        $nextStage = RequestStages::find($nextStageId);
+        $isNextStageExternal = $nextStage ? $nextStage->is_external : false;
+        $currentStageName = $request->stages->stage_name;
+        $nextStageName = $nextStage ? $nextStage->stage_name : 'final stage';
+
+        // Update the request with new stage ID
         $request->update([
-            // "stages_id" => $request->stages->to_stage_id,
             "stages_id" => $nextStageId,
         ]);
         $request->save();
+        $request->refresh(); // Refresh the model to get updated relationships
 
-        // NOTIFICATION
-        $fromDivisionId = $request->memo->from_division;
-        $toDivisionId = $request->memo->to_division;
+        // Get user groups who need notifications
+        $internalUsers = User::where('division_id', $request->memo->from_division)
+            ->whereHas('role', function ($query) {
+                $query->where('role_name', '!=', 'admin');
+            })
+            ->get();
 
-        $fromDivisionUsers = User::where('division_id', $fromDivisionId)->get();
-        $toDivisionUsers = User::where('division_id', $toDivisionId)->get();
+        $internalManagers = User::where('division_id', $request->memo->from_division)
+            ->whereHas('role', function ($query) {
+                $query->where('role_name', 'admin');
+            })
+            ->get();
 
-        $allInvolvedUsers = $fromDivisionUsers->merge($toDivisionUsers);
+        $externalUsers = User::where('division_id', $request->memo->to_division)
+            ->whereHas('role', function ($query) {
+                $query->where('role_name', '!=', 'admin');
+            })
+            ->get();
 
-        $currentStage = RequestStages::find($nextStageId);
-        $stageName = $currentStage ? $currentStage->stage_name : 'next stage';
+        $externalManagers = User::where('division_id', $request->memo->to_division)
+            ->whereHas('role', function ($query) {
+                $query->where('role_name', 'admin');
+            })
+            ->get();
 
-        foreach ($allInvolvedUsers as $user) {
-            Notification::create([
-                'user_id' => $user->id,
-                'title' => 'Memo Updated!',
-                'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan masuk ke tahap {$stageName}. silahkan cek memo tersebut.",
-                'related_request_id' => $request->id,
-            ]);
+        // Determine who to notify based on the NEXT stage (which is now the current stage)
+        if (!$isNextStageExternal) {
+            // Internal stage - notify internal users
+            foreach ($internalUsers as $user) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'title' => 'Memo Updated!',
+                    'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan masuk ke tahap {$nextStageName}.",
+                    'related_request_id' => $request->id,
+                ]);
+            }
+            foreach ($internalManagers as $user) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'title' => 'Memo Perlu Persetujuan!',
+                    'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan memerlukan persetujuan selanjutnya.",
+                    'related_request_id' => $request->id,
+                ]);
+            }
+        } else {
+            // External stage - notify external users who need to take action
+            foreach ($externalUsers as $user) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'title' => 'Memo Baru Diterima!',
+                    'message' => "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan perhatian.",
+                    'related_request_id' => $request->id,
+                ]);
+            }
+            foreach ($externalManagers as $user) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'title' => 'Memo Perlu Persetujuan!',
+                    'message' => "Memo '{$request->memo->memo_number}' telah dikirim ke divisi Anda dan memerlukan persetujuan.",
+                    'related_request_id' => $request->id,
+                ]);
+            }
+
+            // Also notify internal users so they know the memo has moved to external stage
+            foreach ($internalUsers as $user) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'title' => 'Memo Berhasil Dikirim!',
+                    'message' => "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
+                    'related_request_id' => $request->id,
+                ]);
+            }
+            foreach ($internalManagers as $user) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'title' => 'Memo Berhasil Dikirim!',
+                    'message' => "Memo '{$request->memo->memo_number}' telah berhasil dikirim ke divisi tujuan.",
+                    'related_request_id' => $request->id,
+                ]);
+            }
         }
+
+
+
+
+        // $request = RequestLetter::with(['memo', 'user'])->where('memo_id', $id)->first();
+        // $nextStageId = json_decode($request->to_stages, true);
+        // // return response()->json($nextStageId);
+
+        // $nextStageId = $nextStageId[$request->stages_id] ?? null;
+        // if ($nextStageId == null) {
+        //     return to_route('memo.index');
+        // }
+        // MemoLetter::where('id', $id)->update([
+        //     'rejection_reason' => NULL
+        // ]);
+        // // return response()->json($nextStageId);
+        // $request->update([
+        //     // "stages_id" => $request->stages->to_stage_id,
+        //     "stages_id" => $nextStageId,
+        // ]);
+        // $request->save();
+
+        // // NOTIFICATION
+        // $fromDivisionId = $request->memo->from_division;
+        // $toDivisionId = $request->memo->to_division;
+
+        // $fromDivisionUsers = User::where('division_id', $fromDivisionId)->get();
+        // $toDivisionUsers = User::where('division_id', $toDivisionId)->get();
+
+        // $allInvolvedUsers = $fromDivisionUsers->merge($toDivisionUsers);
+
+        // $currentStage = RequestStages::find($nextStageId);
+        // $stageName = $currentStage ? $currentStage->stage_name : 'next stage';
+
+        // foreach ($allInvolvedUsers as $user) {
+        //     Notification::create([
+        //         'user_id' => $user->id,
+        //         'title' => 'Memo Updated!',
+        //         'message' => "Memo '{$request->memo->memo_number}' berhasil disetujui dan masuk ke tahap {$stageName}. silahkan cek memo tersebut.",
+        //         'related_request_id' => $request->id,
+        //     ]);
+        // }
     }
     public function reject($id, Request $request)
     {

@@ -17,9 +17,7 @@ export default function SidebarAuthenticated({
             {/* <SidebarTrigger /> */}
             <div className="w-full bg-white">
                 {/* <SidebarTrigger /> */}
-                <Authenticated notifications={notifications}>
-                    {children}
-                </Authenticated>
+                <Authenticated>{children}</Authenticated>
             </div>
             {/* </main> */}
         </SidebarProvider>
