@@ -19,7 +19,10 @@ class LetterTypeSeeder extends Seeder
             'letter_name' => "Memo",
         ]);
         DB::table('letter_types')->insert([
-            'letter_name' => "Invitation Letter",
+            'letter_name' => "Undagnan Rapat",
+        ]);
+        DB::table('letter_types')->insert([
+            'letter_name' => "Risalah Rapat",
         ]);
     }
 }

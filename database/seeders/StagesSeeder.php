@@ -225,6 +225,41 @@ class StagesSeeder extends Seeder
             'status_id' => 5,
             'rejected_id' => NULL,
         ]);
+        DB::table('request_stages')->insert([
+            'id' => 15,
+            'stage_name' => "Pengunggahan Risalah Rapat",
+            'sequence' => 1,
+            'description' => "Pengunggahan Risalah Rapat yang sudah dibuat oleh pengundang rapat.",
+            'letter_id' => 3,
+            'approver_id' => 1,
+            'to_stage_id' => 16,
+            'status_id' => 5,
+            'rejected_id' => 17,
+            'requires_file_upload' => true,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 16,
+            'stage_name' => "Risalah Rapat disetujui",
+            'sequence' => 1,
+            'description' => "Risalah Rapat disetujui oleh Manajer Internal.",
+            'letter_id' => 3,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 17,
+            'stage_name' => "Risalah Rapat ditolak",
+            'sequence' => 1,
+            'description' => "Risalah Rapat ditolak oleh Manajer Internal.",
+            'letter_id' => 3,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 5,
+            'rejected_id' => NULL,
+            'is_fixable' => true,
+        ]);
         Schema::enableForeignKeyConstraints();
     }
 }
