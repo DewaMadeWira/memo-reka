@@ -226,7 +226,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => NULL,
         ]);
         DB::table('request_stages')->insert([
-            'id' => 15,
+            'id' => 16,
             'stage_name' => "Pengunggahan Risalah Rapat",
             'sequence' => 1,
             'description' => "Pengunggahan Risalah Rapat yang sudah dibuat oleh pengundang rapat.",
@@ -238,7 +238,7 @@ class StagesSeeder extends Seeder
             'requires_file_upload' => true,
         ]);
         DB::table('request_stages')->insert([
-            'id' => 16,
+            'id' => 17,
             'stage_name' => "Risalah Rapat disetujui",
             'sequence' => 1,
             'description' => "Risalah Rapat disetujui oleh Manajer Internal.",
@@ -249,7 +249,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => NULL,
         ]);
         DB::table('request_stages')->insert([
-            'id' => 17,
+            'id' => 18,
             'stage_name' => "Risalah Rapat ditolak",
             'sequence' => 1,
             'description' => "Risalah Rapat ditolak oleh Manajer Internal.",
