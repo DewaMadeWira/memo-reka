@@ -49,4 +49,8 @@ class MemoLetter extends Model
     {
         return $this->belongsTo(MemoLetter::class, 'previous_memo', 'id');
     }
+    public function images(): HasMany
+    {
+        return $this->hasMany(MemoImage::class, 'memo_letter_id');
+    }
 }

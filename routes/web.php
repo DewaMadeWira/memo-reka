@@ -12,6 +12,7 @@ use App\Http\Controllers\ServeImageController;
 use App\Http\Controllers\StagesController;
 use App\Http\Controllers\UserManagementController;
 use App\Models\InvitationLetter;
+use App\Models\MemoImage;
 use App\Models\MemoLetter;
 use Faker\Core\File;
 use Illuminate\Foundation\Application;
@@ -51,19 +52,59 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin/manajemen-tipe-surat', LetterTypeManagement::class);
     });
     Route::post('upload-bukti', function (Request $request) {
-        $file = $request['file'];
-        $memo_id = $request['memo_id'];
-        // dd($memo_id);
-        $ext = $file->getClientOriginalExtension();
-        $filename = rand(100000000, 999999999) . '.' . $ext;
-        Storage::disk('local')->put('private/bukti-memo/' . $filename, FacadesFile::get($file));
-        // $data['file'] = $filename;
-        MemoLetter::where('id', $memo_id)->update([
-            'file_path' => $filename,
-        ]);
-        // dd($file);
-        // return  $filePath = 'private/bukti-memo/' . $filename;
+        // Set timeout to a larger value for big uploads
+        set_time_limit(300); // 5 minutes
+
+        try {
+            // Validate the request
+            $request->validate([
+                'images' => 'required|array',
+                'images.*' => 'required|file|max:10240', // 10MB per file limit
+                'memo_id' => 'required|exists:memo_letters,id',
+            ]);
+
+            $memo_id = $request['memo_id'];
+            $memo = MemoLetter::findOrFail($memo_id);
+
+            $uploadedFiles = [];
+
+            // Process each uploaded file
+            foreach ($request->file('images') as $file) {
+                // Generate a unique filename
+                $ext = $file->getClientOriginalExtension();
+                $filename = rand(100000000, 999999999) . '.' . $ext;
+
+                // Store the file
+                Storage::disk('local')->put('private/bukti-memo/' . $filename, FacadesFile::get($file));
+
+                MemoImage::create([
+                    'memo_letter_id' => $memo_id,
+                    'file_path' => $filename,
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize()
+                ]);
+
+                $uploadedFiles[] = $filename;
+            }
+
+            // return response()->json([
+            //     'message' => 'Files uploaded successfully',
+            //     'files' => $uploadedFiles
+            // ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Log::error('File upload error: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Upload failed: ' . $e->getMessage()
+            ], 500);
+        }
     });
+
 
     Route::resource('memo', MemoController::class);
     Route::resource('undangan-rapat', InvitationController::class);

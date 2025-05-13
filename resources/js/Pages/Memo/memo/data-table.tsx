@@ -77,7 +77,11 @@ import {
     X,
 } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
-
+export interface FileUploadData {
+    files: File[];
+    memo_id: number;
+    fileNames: string[];
+}
 interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
@@ -118,20 +122,25 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
         >
     ) => void;
-    setFilePreview: React.Dispatch<React.SetStateAction<string | null>>;
-    setFileData: React.Dispatch<
-        React.SetStateAction<{
-            file: File | null;
-            memo_id: number;
-            fileName: string;
-        } | null>
-    >;
-    filePreview: string | null;
-    fileData: {
-        file: File | null;
-        memo_id: number;
-        fileName: string;
-    } | null;
+    // setFilePreview: React.Dispatch<React.SetStateAction<string | null>>;
+    // setFileData: React.Dispatch<
+    //     React.SetStateAction<{
+    //         file: File | null;
+    //         memo_id: number;
+    //         fileName: string;
+    //     } | null>
+    // >;
+    // filePreview: string | null;
+    // fileData: {
+    //     file: File | null;
+    //     memo_id: number;
+    //     fileName: string;
+    // } | null;
+    filePreview: string[];
+    setFilePreview: React.Dispatch<React.SetStateAction<string[]>>;
+    fileData: FileUploadData | null;
+    setFileData: React.Dispatch<React.SetStateAction<FileUploadData | null>>;
+    handleFileSelection: (files: FileList | null, memo_id: number) => void;
 }
 
 export function DataTable<TData extends RequestLetter, TValue>({
@@ -149,6 +158,7 @@ export function DataTable<TData extends RequestLetter, TValue>({
     setFormData,
     handleChange,
     handleUpdate,
+    handleFileSelection,
 }: // request_file_upload,
 // handleDelete,
 // role,
@@ -1531,88 +1541,259 @@ DataTableProps<TData, TValue>) {
                                                                 </AlertDialogTitle>
                                                                 <div className="">
                                                                     <div className="">
-                                                                        <div className="mb-4">
+                                                                        {/* File Upload Section */}
+                                                                        <div className="mt-4">
                                                                             <label
-                                                                                htmlFor="fileUpload"
-                                                                                className="block text-sm font-medium mb-2"
+                                                                                htmlFor="file-upload"
+                                                                                className="block text-sm font-medium text-gray-700"
                                                                             >
                                                                                 Upload
-                                                                                File
-                                                                                (Hanya
-                                                                                gambar
-                                                                                )
+                                                                                Bukti
+                                                                                (Multiple
+                                                                                Files)
                                                                             </label>
                                                                             <input
                                                                                 type="file"
-                                                                                id="fileUpload"
-                                                                                name="fileUpload"
-                                                                                accept="image/*"
-                                                                                className="block w-full text-sm text-gray-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-md file:border-0
-                file:text-sm file:font-semibold
-                file:bg-blue-50 file:text-blue-700
-                hover:file:bg-blue-100"
+                                                                                id="file-upload"
+                                                                                multiple
+                                                                                className="mt-1 block w-full text-sm text-gray-500
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-md file:border-0
+            file:text-sm file:font-semibold
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100"
                                                                                 onChange={(
                                                                                     e
-                                                                                ) => {
-                                                                                    const file =
+                                                                                ) =>
+                                                                                    handleFileSelection(
                                                                                         e
                                                                                             .target
-                                                                                            .files?.[0];
-                                                                                    if (
-                                                                                        file
-                                                                                    ) {
-                                                                                        const reader =
-                                                                                            new FileReader();
-                                                                                        reader.onload =
-                                                                                            (
-                                                                                                event
-                                                                                            ) => {
-                                                                                                setFilePreview(
-                                                                                                    event
-                                                                                                        .target
-                                                                                                        ?.result as string
-                                                                                                );
-                                                                                            };
-                                                                                        reader.readAsDataURL(
-                                                                                            file
-                                                                                        );
-                                                                                        setFileData(
-                                                                                            {
-                                                                                                file: file,
-                                                                                                memo_id:
-                                                                                                    row
-                                                                                                        .original
-                                                                                                        .memo!
-                                                                                                        .id,
-                                                                                                fileName:
-                                                                                                    file.name,
-                                                                                            }
-                                                                                        );
-                                                                                    }
-                                                                                }}
+                                                                                            .files,
+                                                                                        row
+                                                                                            .original
+                                                                                            .memo!
+                                                                                            .id
+                                                                                    )
+                                                                                }
                                                                             />
-                                                                        </div>
 
-                                                                        {filePreview && (
+                                                                            {/* Preview area */}
+                                                                            {filePreview.length >
+                                                                                0 && (
+                                                                                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                                                    {filePreview.map(
+                                                                                        (
+                                                                                            preview,
+                                                                                            index
+                                                                                        ) => (
+                                                                                            <div
+                                                                                                key={
+                                                                                                    index
+                                                                                                }
+                                                                                                className="relative"
+                                                                                            >
+                                                                                                {preview ? (
+                                                                                                    <img
+                                                                                                        src={
+                                                                                                            preview
+                                                                                                        }
+                                                                                                        alt={`Preview ${
+                                                                                                            index +
+                                                                                                            1
+                                                                                                        }`}
+                                                                                                        className="h-24 w-full object-cover rounded-md"
+                                                                                                    />
+                                                                                                ) : (
+                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                        <span className="text-gray-500">
+                                                                                                            Non-image
+                                                                                                            file
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                                )}
+                                                                                                <button
+                                                                                                    type="button"
+                                                                                                    className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1"
+                                                                                                    onClick={() => {
+                                                                                                        // Remove this file from preview and fileData
+                                                                                                        if (
+                                                                                                            fileData
+                                                                                                        ) {
+                                                                                                            const newFiles =
+                                                                                                                [
+                                                                                                                    ...fileData.files,
+                                                                                                                ];
+                                                                                                            const newFileNames =
+                                                                                                                [
+                                                                                                                    ...fileData.fileNames,
+                                                                                                                ];
+                                                                                                            const newPreviews =
+                                                                                                                [
+                                                                                                                    ...filePreview,
+                                                                                                                ];
+
+                                                                                                            newFiles.splice(
+                                                                                                                index,
+                                                                                                                1
+                                                                                                            );
+                                                                                                            newFileNames.splice(
+                                                                                                                index,
+                                                                                                                1
+                                                                                                            );
+                                                                                                            newPreviews.splice(
+                                                                                                                index,
+                                                                                                                1
+                                                                                                            );
+
+                                                                                                            if (
+                                                                                                                newFiles.length ===
+                                                                                                                0
+                                                                                                            ) {
+                                                                                                                setFileData(
+                                                                                                                    null
+                                                                                                                );
+                                                                                                                setFilePreview(
+                                                                                                                    []
+                                                                                                                );
+                                                                                                            } else {
+                                                                                                                setFileData(
+                                                                                                                    {
+                                                                                                                        ...fileData,
+                                                                                                                        files: newFiles,
+                                                                                                                        fileNames:
+                                                                                                                            newFileNames,
+                                                                                                                    }
+                                                                                                                );
+                                                                                                                setFilePreview(
+                                                                                                                    newPreviews
+                                                                                                                );
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <svg
+                                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                                        className="h-4 w-4"
+                                                                                                        fill="none"
+                                                                                                        viewBox="0 0 24 24"
+                                                                                                        stroke="currentColor"
+                                                                                                    >
+                                                                                                        <path
+                                                                                                            strokeLinecap="round"
+                                                                                                            strokeLinejoin="round"
+                                                                                                            strokeWidth={
+                                                                                                                2
+                                                                                                            }
+                                                                                                            d="M6 18L18 6M6 6l12 12"
+                                                                                                        />
+                                                                                                    </svg>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        )
+                                                                                    )}
+                                                                                </div>
+                                                                            )}
+
+                                                                            {/* File names display */}
+                                                                            {fileData &&
+                                                                                fileData.fileNames &&
+                                                                                fileData
+                                                                                    .fileNames
+                                                                                    .length >
+                                                                                    0 && (
+                                                                                    <div className="mt-2">
+                                                                                        <p className="text-sm font-medium text-gray-700">
+                                                                                            Selected
+                                                                                            files:
+                                                                                        </p>
+                                                                                        <ul className="mt-1 text-sm text-gray-500 list-disc list-inside">
+                                                                                            {fileData!.fileNames.map(
+                                                                                                (
+                                                                                                    name,
+                                                                                                    index
+                                                                                                ) => (
+                                                                                                    <li
+                                                                                                        key={
+                                                                                                            index
+                                                                                                        }
+                                                                                                    >
+                                                                                                        {
+                                                                                                            name
+                                                                                                        }
+                                                                                                    </li>
+                                                                                                )
+                                                                                            )}
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                )}
+
+                                                                            {/* Upload button */}
+                                                                            {/* {fileData &&
+                                                                                fileData.files &&
+                                                                                fileData
+                                                                                    .files
+                                                                                    .length >
+                                                                                    0 && (
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                                                                        onClick={() =>
+                                                                                            handleUpload
+                                                                                        }
+                                                                                    >
+                                                                                        Upload
+                                                                                        Files
+                                                                                    </button>
+                                                                                )} */}
+                                                                        </div>
+                                                                        {filePreview.length >
+                                                                            0 && (
                                                                             <div className="mt-4 mb-4">
                                                                                 <h4 className="text-sm font-medium mb-2">
                                                                                     Preview:
                                                                                 </h4>
-                                                                                <div className="border rounded-md p-2 max-w-md">
-                                                                                    <img
-                                                                                        src={
-                                                                                            filePreview
-                                                                                        }
-                                                                                        alt="File Preview"
-                                                                                        className="max-h-48 max-w-full mx-auto"
-                                                                                    />
-                                                                                    <p className="text-xs text-center mt-2 text-gray-500">
-                                                                                        {
-                                                                                            fileData?.fileName
-                                                                                        }
-                                                                                    </p>
+                                                                                <div className="grid grid-cols-2 gap-4">
+                                                                                    {filePreview.map(
+                                                                                        (
+                                                                                            preview,
+                                                                                            index
+                                                                                        ) => (
+                                                                                            <div
+                                                                                                key={
+                                                                                                    index
+                                                                                                }
+                                                                                                className="border rounded-md p-2"
+                                                                                            >
+                                                                                                {preview ? (
+                                                                                                    <img
+                                                                                                        src={
+                                                                                                            preview
+                                                                                                        }
+                                                                                                        alt={`File Preview ${
+                                                                                                            index +
+                                                                                                            1
+                                                                                                        }`}
+                                                                                                        className="max-h-48 max-w-full mx-auto"
+                                                                                                    />
+                                                                                                ) : (
+                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                        <span className="text-gray-500">
+                                                                                                            Non-image
+                                                                                                            file
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                                )}
+                                                                                                <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                                    {
+                                                                                                        fileData
+                                                                                                            ?.fileNames[
+                                                                                                            index
+                                                                                                        ]
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        )
+                                                                                    )}
                                                                                 </div>
                                                                             </div>
                                                                         )}
@@ -1644,9 +1825,10 @@ DataTableProps<TData, TValue>) {
                                                                                 .id
                                                                         )
                                                                     }
-                                                                    disabled={
-                                                                        !fileData?.file
-                                                                    }
+                                                                    // disabled={
+                                                                    //     !fileData!
+                                                                    //         .files
+                                                                    // }
                                                                 >
                                                                     Upload
                                                                 </AlertDialogAction>

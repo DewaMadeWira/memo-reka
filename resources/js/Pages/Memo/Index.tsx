@@ -79,53 +79,153 @@ export default function Index({
         to_division: null,
         previous_memo: null,
     });
-    const [filePreview, setFilePreview] = useState<string | null>(null);
     const [fileData, setFileData] = useState<{
-        file: File | null;
+        files: File[];
         memo_id: number;
-        fileName: string;
+        fileNames: string[];
     } | null>(null);
+
+    const [filePreview, setFilePreview] = useState<string[]>([]);
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB per file
+    const MAX_TOTAL_SIZE = 50 * 1024 * 1024; // 50MB total
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
     const handleFileUpload = () => {
-        if (!fileData?.file) return;
+        if (!fileData?.files || fileData.files.length === 0) return;
+
+        // Validate file sizes
+        let totalSize = 0;
+        const oversizedFiles: string[] = [];
+
+        fileData.files.forEach((file) => {
+            totalSize += file.size;
+            if (file.size > MAX_FILE_SIZE) {
+                oversizedFiles.push(
+                    `${file.name} (${(file.size / (1024 * 1024)).toFixed(
+                        2
+                    )} MB)`
+                );
+            }
+        });
+
+        // Check if any files are too large
+        if (oversizedFiles.length > 0) {
+            toast({
+                title: "Files too large!",
+                description: `The following files exceed the 10MB limit: ${oversizedFiles.join(
+                    ", "
+                )}`,
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Check if total size is too large
+        if (totalSize > MAX_TOTAL_SIZE) {
+            toast({
+                title: "Total file size too large!",
+                description: `Total size (${(totalSize / (1024 * 1024)).toFixed(
+                    2
+                )} MB) exceeds the 50MB limit.`,
+                variant: "destructive",
+            });
+            return;
+        }
 
         const formData = new FormData();
-        formData.append("file", fileData.file);
+
+        // Append each file to the FormData
+        fileData.files.forEach((file) => {
+            formData.append("images[]", file);
+        });
+
         formData.append("memo_id", fileData.memo_id.toString());
-        router.post("/upload-bukti", fileData, {
+
+        setIsUploading(true);
+        setUploadProgress(0);
+
+        router.post("/upload-bukti", formData, {
+            onBefore: () => setIsUploading(true),
+            onProgress: (progress) => {
+                if (progress!.percentage) {
+                    setUploadProgress(progress!.percentage);
+                }
+            },
             onError: (errors) => {
-                toast({
-                    title: "Terjadi Kesalahan !",
-                    description: errors.message,
-                    variant: "destructive",
-                });
+                setIsUploading(false);
+
+                // Handle specific error types
+                if (
+                    errors.message.includes("413") ||
+                    errors.message.includes("Request Entity Too Large")
+                ) {
+                    toast({
+                        title: "Files too large for server!",
+                        description:
+                            "The server rejected your upload because the total size is too large. Please reduce file sizes or contact your administrator.",
+                        variant: "destructive",
+                    });
+                } else {
+                    toast({
+                        title: "Upload failed!",
+                        description: errors.message,
+                        variant: "destructive",
+                    });
+                }
                 console.log(errors);
             },
             onSuccess: () => {
+                setIsUploading(false);
                 toast({
                     className: "bg-green-500 text-white",
-                    title: "Berhasil !",
+                    title: "Berhasil!",
                     description: "File berhasil diupload",
                 });
+                // Clear previews and file data after successful upload
+                setFilePreview([]);
+                setFileData(null);
             },
+            onFinish: () => setIsUploading(false),
+        });
+    };
+    const handleFileSelection = (files: FileList | null, memo_id: number) => {
+        if (!files || files.length === 0) return;
+
+        const fileArray: File[] = Array.from(files);
+        const fileNames: string[] = fileArray.map((file) => file.name);
+
+        // Create previews for images
+        const newPreviews: string[] = [];
+
+        fileArray.forEach((file) => {
+            if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (e.target?.result) {
+                        newPreviews.push(e.target.result as string);
+                        // Update state only after all previews are generated
+                        if (newPreviews.length === fileArray.length) {
+                            setFilePreview(newPreviews);
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // For non-image files, use a placeholder or icon
+                newPreviews.push("");
+                if (newPreviews.length === fileArray.length) {
+                    setFilePreview(newPreviews);
+                }
+            }
         });
 
-        // Here you would typically make an API call to upload the file
-        // Example:
-        // axios.post('/api/upload-memo-file', formData, {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data',
-        //     },
-        // }).then(response => {
-        //     // Handle success
-        //     setFilePreview(null);
-        //     setFileData(null);
-        // }).catch(error => {
-        //     // Handle error
-        // });
-
-        // For now, just logging
-        console.log("Uploading file:", fileData);
+        setFileData({
+            files: fileArray,
+            memo_id,
+            fileNames,
+        });
     };
+
     const { user } = usePage().props.auth as { user: User };
     console.log(user);
     console.log(request);
@@ -472,6 +572,7 @@ export default function Index({
                         filePreview={filePreview}
                         fileData={fileData}
                         handleUpload={handleFileUpload}
+                        handleFileSelection={handleFileSelection}
                         handleUpdate={handleUpdate}
                     />
                 </div>
