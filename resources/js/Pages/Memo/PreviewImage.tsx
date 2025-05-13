@@ -43,7 +43,7 @@ export function ImagePreview({
     };
 
     return (
-        <AlertDialogContent className="w-full max-w-7xl">
+        <AlertDialogContent className="w-full max-w-7xl ">
             <AlertDialogHeader className="">
                 <AlertDialogTitle>
                     Preview File{imagesCount > 1 ? "s" : ""}

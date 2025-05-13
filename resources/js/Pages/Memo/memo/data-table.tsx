@@ -78,6 +78,7 @@ import {
 } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
 import { ImagePreview } from "../PreviewImage";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 export interface FileUploadData {
     files: File[];
     memo_id: number;
@@ -1454,7 +1455,7 @@ DataTableProps<TData, TValue>) {
                                                     </AlertDialogTrigger>
                                                     {row.original.memo!.images
                                                         .length > 0 ? (
-                                                        <AlertDialogContent className="w-full max-w-7xl">
+                                                        <AlertDialogContent className="w-full max-w-7xl ">
                                                             <AlertDialogHeader className="">
                                                                 <AlertDialogTitle>
                                                                     Preview File
@@ -1702,118 +1703,118 @@ DataTableProps<TData, TValue>) {
                                                                             {/* Preview area */}
                                                                             {filePreview.length >
                                                                                 0 && (
-                                                                                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                                                    {filePreview.map(
-                                                                                        (
-                                                                                            preview,
-                                                                                            index
-                                                                                        ) => (
-                                                                                            <div
-                                                                                                key={
-                                                                                                    index
-                                                                                                }
-                                                                                                className="relative"
-                                                                                            >
-                                                                                                {preview ? (
-                                                                                                    <img
-                                                                                                        src={
-                                                                                                            preview
-                                                                                                        }
-                                                                                                        alt={`Preview ${
-                                                                                                            index +
-                                                                                                            1
-                                                                                                        }`}
-                                                                                                        className="h-24 w-full object-cover rounded-md"
-                                                                                                    />
-                                                                                                ) : (
-                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
-                                                                                                        <span className="text-gray-500">
-                                                                                                            Non-image
-                                                                                                            file
-                                                                                                        </span>
-                                                                                                    </div>
-                                                                                                )}
-                                                                                                <button
-                                                                                                    type="button"
-                                                                                                    className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1"
-                                                                                                    onClick={() => {
-                                                                                                        // Remove this file from preview and fileData
-                                                                                                        if (
-                                                                                                            fileData
-                                                                                                        ) {
-                                                                                                            const newFiles =
-                                                                                                                [
-                                                                                                                    ...fileData.files,
-                                                                                                                ];
-                                                                                                            const newFileNames =
-                                                                                                                [
-                                                                                                                    ...fileData.fileNames,
-                                                                                                                ];
-                                                                                                            const newPreviews =
-                                                                                                                [
-                                                                                                                    ...filePreview,
-                                                                                                                ];
-
-                                                                                                            newFiles.splice(
-                                                                                                                index,
-                                                                                                                1
-                                                                                                            );
-                                                                                                            newFileNames.splice(
-                                                                                                                index,
-                                                                                                                1
-                                                                                                            );
-                                                                                                            newPreviews.splice(
-                                                                                                                index,
-                                                                                                                1
-                                                                                                            );
-
-                                                                                                            if (
-                                                                                                                newFiles.length ===
-                                                                                                                0
-                                                                                                            ) {
-                                                                                                                setFileData(
-                                                                                                                    null
-                                                                                                                );
-                                                                                                                setFilePreview(
-                                                                                                                    []
-                                                                                                                );
-                                                                                                            } else {
-                                                                                                                setFileData(
-                                                                                                                    {
-                                                                                                                        ...fileData,
-                                                                                                                        files: newFiles,
-                                                                                                                        fileNames:
-                                                                                                                            newFileNames,
-                                                                                                                    }
-                                                                                                                );
-                                                                                                                setFilePreview(
-                                                                                                                    newPreviews
-                                                                                                                );
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }}
+                                                                                <ScrollArea className="">
+                                                                                    <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                                                        {filePreview.map(
+                                                                                            (
+                                                                                                preview,
+                                                                                                index
+                                                                                            ) => (
+                                                                                                <div
+                                                                                                    key={
+                                                                                                        index
+                                                                                                    }
+                                                                                                    className="relative "
                                                                                                 >
-                                                                                                    <svg
-                                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                                        className="h-4 w-4"
-                                                                                                        fill="none"
-                                                                                                        viewBox="0 0 24 24"
-                                                                                                        stroke="currentColor"
-                                                                                                    >
-                                                                                                        <path
-                                                                                                            strokeLinecap="round"
-                                                                                                            strokeLinejoin="round"
-                                                                                                            strokeWidth={
-                                                                                                                2
+                                                                                                    {preview ? (
+                                                                                                        <img
+                                                                                                            src={
+                                                                                                                preview
                                                                                                             }
-                                                                                                            d="M6 18L18 6M6 6l12 12"
+                                                                                                            alt={`Preview ${
+                                                                                                                index +
+                                                                                                                1
+                                                                                                            }`}
+                                                                                                            className="h-24 w-full object-cover rounded-md"
                                                                                                         />
-                                                                                                    </svg>
-                                                                                                </button>
-                                                                                            </div>
-                                                                                        )
-                                                                                    )}
-                                                                                </div>
+                                                                                                    ) : (
+                                                                                                        <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                            <span className="text-gray-500">
+                                                                                                                Non-image
+                                                                                                                file
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                    <button
+                                                                                                        type="button"
+                                                                                                        className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1"
+                                                                                                        onClick={() => {
+                                                                                                            // Remove this file from preview and fileData
+                                                                                                            if (
+                                                                                                                fileData
+                                                                                                            ) {
+                                                                                                                const newFiles =
+                                                                                                                    [
+                                                                                                                        ...fileData.files,
+                                                                                                                    ];
+                                                                                                                const newFileNames =
+                                                                                                                    [
+                                                                                                                        ...fileData.fileNames,
+                                                                                                                    ];
+                                                                                                                const newPreviews =
+                                                                                                                    [
+                                                                                                                        ...filePreview,
+                                                                                                                    ];
+                                                                                                                newFiles.splice(
+                                                                                                                    index,
+                                                                                                                    1
+                                                                                                                );
+                                                                                                                newFileNames.splice(
+                                                                                                                    index,
+                                                                                                                    1
+                                                                                                                );
+                                                                                                                newPreviews.splice(
+                                                                                                                    index,
+                                                                                                                    1
+                                                                                                                );
+                                                                                                                if (
+                                                                                                                    newFiles.length ===
+                                                                                                                    0
+                                                                                                                ) {
+                                                                                                                    setFileData(
+                                                                                                                        null
+                                                                                                                    );
+                                                                                                                    setFilePreview(
+                                                                                                                        []
+                                                                                                                    );
+                                                                                                                } else {
+                                                                                                                    setFileData(
+                                                                                                                        {
+                                                                                                                            ...fileData,
+                                                                                                                            files: newFiles,
+                                                                                                                            fileNames:
+                                                                                                                                newFileNames,
+                                                                                                                        }
+                                                                                                                    );
+                                                                                                                    setFilePreview(
+                                                                                                                        newPreviews
+                                                                                                                    );
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        <svg
+                                                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                                                            className="h-4 w-4"
+                                                                                                            fill="none"
+                                                                                                            viewBox="0 0 24 24"
+                                                                                                            stroke="currentColor"
+                                                                                                        >
+                                                                                                            <path
+                                                                                                                strokeLinecap="round"
+                                                                                                                strokeLinejoin="round"
+                                                                                                                strokeWidth={
+                                                                                                                    2
+                                                                                                                }
+                                                                                                                d="M6 18L18 6M6 6l12 12"
+                                                                                                            />
+                                                                                                        </svg>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            )
+                                                                                        )}
+                                                                                    </div>
+                                                                                </ScrollArea>
                                                                             )}
 
                                                                             {/* File names display */}
@@ -1874,49 +1875,51 @@ DataTableProps<TData, TValue>) {
                                                                                 <h4 className="text-sm font-medium mb-2">
                                                                                     Preview:
                                                                                 </h4>
-                                                                                <div className="grid grid-cols-2 gap-4">
-                                                                                    {filePreview.map(
-                                                                                        (
-                                                                                            preview,
-                                                                                            index
-                                                                                        ) => (
-                                                                                            <div
-                                                                                                key={
-                                                                                                    index
-                                                                                                }
-                                                                                                className="border rounded-md p-2"
-                                                                                            >
-                                                                                                {preview ? (
-                                                                                                    <img
-                                                                                                        src={
-                                                                                                            preview
-                                                                                                        }
-                                                                                                        alt={`File Preview ${
-                                                                                                            index +
-                                                                                                            1
-                                                                                                        }`}
-                                                                                                        className="max-h-48 max-w-full mx-auto"
-                                                                                                    />
-                                                                                                ) : (
-                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
-                                                                                                        <span className="text-gray-500">
-                                                                                                            Non-image
-                                                                                                            file
-                                                                                                        </span>
-                                                                                                    </div>
-                                                                                                )}
-                                                                                                <p className="text-xs text-center mt-2 text-gray-500">
-                                                                                                    {
-                                                                                                        fileData
-                                                                                                            ?.fileNames[
-                                                                                                            index
-                                                                                                        ]
+                                                                                <ScrollArea className="h-36">
+                                                                                    <div className="grid grid-cols-2 gap-4 ">
+                                                                                        {filePreview.map(
+                                                                                            (
+                                                                                                preview,
+                                                                                                index
+                                                                                            ) => (
+                                                                                                <div
+                                                                                                    key={
+                                                                                                        index
                                                                                                     }
-                                                                                                </p>
-                                                                                            </div>
-                                                                                        )
-                                                                                    )}
-                                                                                </div>
+                                                                                                    className="border rounded-md p-2"
+                                                                                                >
+                                                                                                    {preview ? (
+                                                                                                        <img
+                                                                                                            src={
+                                                                                                                preview
+                                                                                                            }
+                                                                                                            alt={`File Preview ${
+                                                                                                                index +
+                                                                                                                1
+                                                                                                            }`}
+                                                                                                            className="max-h-48 max-w-full mx-auto"
+                                                                                                        />
+                                                                                                    ) : (
+                                                                                                        <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                            <span className="text-gray-500">
+                                                                                                                Non-image
+                                                                                                                file
+                                                                                                            </span>
+                                                                                                        </div>
+                                                                                                    )}
+                                                                                                    <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                                        {
+                                                                                                            fileData
+                                                                                                                ?.fileNames[
+                                                                                                                index
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                            )
+                                                                                        )}
+                                                                                    </div>
+                                                                                </ScrollArea>
                                                                             </div>
                                                                         )}
                                                                     </div>
