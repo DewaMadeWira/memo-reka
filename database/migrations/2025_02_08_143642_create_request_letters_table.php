@@ -21,12 +21,14 @@ return new class extends Migration
             $table->foreignId("letter_type_id");
             $table->foreignId("memo_id")->nullable();
             $table->foreignId("invitation_id")->nullable();
+            $table->foreignId("summary_id")->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             // $table->foreign('status_id')->references('id')->on('request_statuses');
             $table->foreign('stages_id')->references('id')->on('request_stages');
             $table->foreign('memo_id')->references('id')->on('memo_letters');
             $table->foreign('letter_type_id')->references('id')->on('letter_types');
+            $table->foreign('summary_id')->references('id')->on('summary_letters');
             $table->json('to_stages');
             $table->json('rejected_stages');
             $table->json('progress_stages');

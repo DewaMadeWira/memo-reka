@@ -13,7 +13,7 @@ class SummaryLetter extends Model
         'invitation_id',
         'file_path',
     ];
-    public function invitation(): BelongsTo
+    public function invite(): BelongsTo
     {
         return $this->belongsTo(InvitationLetter::class, 'invitation_id', 'id');
     }

@@ -291,7 +291,7 @@ export default function Index({
     console.log(official);
 
     return (
-        <SidebarAuthenticated notifications={notifications}>
+        <SidebarAuthenticated>
             <Head title="Memo" />
             <div className="w-full p-10 bg-white">
                 <Breadcrumb className="mb-6">

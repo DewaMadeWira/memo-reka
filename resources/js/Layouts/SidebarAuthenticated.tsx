@@ -5,10 +5,10 @@ import Authenticated from "./AuthenticatedLayout";
 
 export default function SidebarAuthenticated({
     children,
-    notifications,
+    // notifications,
 }: {
     children: React.ReactNode;
-    notifications: any;
+    // notifications: any;
 }) {
     return (
         <SidebarProvider>

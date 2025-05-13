@@ -10,10 +10,12 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\ServeImageController;
 use App\Http\Controllers\StagesController;
+use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\UserManagementController;
 use App\Models\InvitationLetter;
 use App\Models\MemoImage;
 use App\Models\MemoLetter;
+use App\Models\SummaryLetter;
 use Faker\Core\File;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -108,6 +110,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('memo', MemoController::class);
     Route::resource('undangan-rapat', InvitationController::class);
+    Route::resource('risalah-rapat', SummaryController::class);
     Route::get('/memo-file/{filename}', [ServeImageController::class, 'show'])->name('memo.file');
 });
 

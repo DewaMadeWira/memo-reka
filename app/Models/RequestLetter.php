@@ -19,6 +19,7 @@ class RequestLetter extends Model
         'memo_id',
         'invitation_id',
         'letter_type_id',
+        'summary_id',
         'to_stages',
         'rejected_stages',
         'progress_stages',
@@ -54,5 +55,9 @@ class RequestLetter extends Model
     public function invite(): BelongsTo
     {
         return $this->belongsTo(InvitationLetter::class, 'invitation_id', 'id');
+    }
+    public function summary(): BelongsTo
+    {
+        return $this->belongsTo(SummaryLetter::class, 'summary_id', 'id');
     }
 }
