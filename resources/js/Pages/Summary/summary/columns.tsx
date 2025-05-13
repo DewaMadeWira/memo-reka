@@ -49,7 +49,7 @@ export const columns: ColumnDef<RequestLetter>[] = [
         header: "Nomor Undangan Rapat",
     },
     {
-        accessorKey: "invite.to_division.division_name",
+        accessorKey: "summary.invite.to_division.division_name",
         header: "Divisi Tujuan",
     },
     {

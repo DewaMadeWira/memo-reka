@@ -11,12 +11,15 @@ use App\Models\Notification;
 use App\Models\Official;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
+use App\Models\SummaryLetter;
 use App\Models\User;
 use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File as FacadesFile;
 
 class SummaryService
 {
@@ -43,7 +46,7 @@ class SummaryService
                 // return to_route('memo.index');
                 $summary = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'invite'])->whereHas('invite', function ($q) use ($division) {
+                }, 'stages.status', 'summary', 'summary.invite', 'summary.invite.to_division', 'summary.invite.from_division'])->whereHas('summary.invite', function ($q) use ($division) {
                     $q->where('from_division', $division)
                         ->orWhere('to_division', $division);;
                 })->get();
@@ -203,60 +206,60 @@ class SummaryService
         // $user = $this->authService->index();
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
-        $official = Official::where("id", $request->official)->first();
         $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
             $q->where('role_name', "admin");
         })->first();
 
+        $file = $request->file("file");
+        $ext = $file->getClientOriginalExtension();
+        $filename = rand(100000000, 999999999) . '.' . $ext;
+        Storage::disk('local')->put('private/risalah-rapat/' . $filename, FacadesFile::get($file));
+
         // dd($this->generateNomorSurat($user, $official)->memo_number);
-        $memo = MemoLetter::create([
+        $summary = SummaryLetter::create([
             // 'memo_number' => '1234/MemoNumber/Test',
-            'perihal' => $request->perihal,
-            'content' => $request->content,
-            'signatory' => $manager->id,
-            'official_id' => $request->official,
-            'letter_id' => 1,
-            'from_division' => $user->division->id,
-            'to_division' => $request->to_division,
-            'previous_memo' => $request->previous_memo,
+            'invitation_id' => $request->invitation_id,
+            'file_path' => $filename
         ]);
+        $summary = SummaryLetter::with('invite')->findOrFail($summary->invitation_id);
         // $generatedMemoData = $this->generateNomorSurat($user, $official);
-        $generatedMemoData = $this->generateNomorSuratDivision($user, $official);
-        $letter_number = LetterNumberCounter::where('division_id', $user->division->id)->where('letter_type_id', 1)->first();
-        $letter_number->update([
-            "monthly_counter" => $generatedMemoData["monthly_counter"],
-            "yearly_counter" => $generatedMemoData["yearly_counter"],
-        ]);
-        $memo->update([
-            "memo_number" => $generatedMemoData["memo_number"],
-            // "monthly_counter" => $generatedMemoData["monthly_counter"],
-            // "yearly_counter" => $generatedMemoData["yearly_counter"],
-        ]);
-        $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
+        // $letter_number = LetterNumberCounter::where('division_id', $user->division->id)->where('letter_type_id', 1)->first();
+        // $letter_number->update([
+        //     "monthly_counter" => $generatedMemoData["monthly_counter"],
+        //     "yearly_counter" => $generatedMemoData["yearly_counter"],
+        // ]);
+        // $memo->update([
+        //     "memo_number" => $generatedMemoData["memo_number"],
+        //     // "monthly_counter" => $generatedMemoData["monthly_counter"],
+        //     // "yearly_counter" => $generatedMemoData["yearly_counter"],
+        // ]);
+        $stages = RequestStages::where('letter_id', 3)->get();
         $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
         $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
         $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
 
         // dd($nextStageMap);
         // dd($progressStageMap);
+        // dd($stages);
 
         $requestLetter = RequestLetter::create([
             "request_name" => $request->request_name,
             "user_id" => $user->id,
             // "status_id" => $stages->letter->request_stages[0]->status_id,
             "stages_id" => $stages->where('sequence', 1)->first()->id,
-            "letter_type_id" => $memo->letter_id,
-            "memo_id" => $memo->id,
+            "letter_type_id" => 3,
+            "summary_id" => $summary->id,
             "to_stages" => $nextStageMap->toJson(),
             "rejected_stages" => $rejectedStageMap->toJson(),
             "progress_stages" => json_encode($progressStageMap),
         ]);
-        $toDivision = Division::where('id', $request->to_division)->first();
+        // dd($summary);
+        $toDivision = Division::where('id', $summary->invite->to_division)->first();
         $toDivisionName = $toDivision->division_code;
         Notification::create([
             'user_id' => $manager->id,
             'title' => 'Persetujuan Dibutuhkan !',
-            'message' => "Pegawai meminta persetujuan baru untuk memo " . $request->perihal . " yang akan dikirimkan ke divisi " . $toDivisionName,
+            'message' => "Pegawai meminta persetujuan baru untuk Undangan Rapat " . $request->perihal . " yang akan dikirimkan ke divisi " . $toDivisionName,
             'related_request_id' => $requestLetter->id,
         ]);
     }

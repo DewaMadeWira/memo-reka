@@ -2,12 +2,14 @@ import { Division } from "./DivisionType";
 import { Invitation } from "./InvitationType";
 import { Memo } from "./MemoType";
 import { Stages } from "./StagesType";
+import { Summary } from "./SummaryType";
 import { User } from "./UserType";
 
 export type RequestLetter = {
     id: number;
     memo?: Memo;
     invite?: Invitation;
+    summary?: Summary;
     request_name: string;
     user_id: number;
     stages_id: number;

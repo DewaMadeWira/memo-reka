@@ -29,6 +29,7 @@ import { User } from "@/types/UserType";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import { Button } from "@/Components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Invitation } from "@/types/InvitationType";
 
 export interface UserWithDivision extends User {
     division: Division;
@@ -39,20 +40,65 @@ export default function Index({
     division,
     userData,
     all_user,
+    invite,
 }: {
     request: any;
     official: Official[];
     division: Division[];
     userData: any;
     all_user: UserWithDivision[];
+    invite: Invitation[];
 }) {
     const { user } = usePage().props.auth as { user: User };
     const { toast } = useToast();
     console.log(user);
     console.log(all_user);
     console.log(request);
-    const handleSubmit = () => {
-        router.post("/request?intent=invitation.create", formData);
+    const [formData, setFormData] = useState({
+        invitation_id: null as number | null,
+        file: null as File | null,
+        request_name: "",
+    });
+    const handleSummaryFileChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        if (e.target.files && e.target.files[0]) {
+            setFormData({
+                ...formData,
+                file: e.target.files[0],
+            });
+        }
+    };
+
+    const handleSummarySubmit = (invitationId: number) => {
+        // const formData = new FormData();
+        // formData.append("invitation_id", invitationId.toString());
+        console.log(formData);
+
+        router.post("/request?intent=summary.create", formData, {
+            forceFormData: true,
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan!",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil!",
+                    description: "Risalah Rapat berhasil diunggah",
+                });
+                setFormData({
+                    invitation_id: null,
+                    file: null,
+                    request_name: "",
+                });
+                router.reload();
+            },
+        });
     };
     // const handleApprove = ({ id }: { id: number }) => {
     //     router.post("/invite-approve/" + id);
@@ -86,18 +132,6 @@ export default function Index({
             },
         });
     }
-    const [formData, setFormData] = useState({
-        request_name: "",
-        perihal: "",
-        content: "",
-        official: "",
-        hari_tanggal: "",
-        waktu: "",
-        tempat: "",
-        agenda: "",
-        to_division: null,
-        invited_users: [] as string[],
-    });
 
     const [searchQuery, setSearchQuery] = useState("");
     const [visibleUsers, setVisibleUsers] = useState(2);
@@ -159,307 +193,111 @@ export default function Index({
                         </h1>
                     </div>
                     <AlertDialog>
-                        <AlertDialogTrigger
-                            className={`bg-blue-500 p-2 mt-2 text-white text-sm font-medium rounded-lg ${
-                                user.role_id == 1 ? "hidden" : ""
-                            }`}
-                        >
-                            Buat Undangan Rapat
+                        <AlertDialogTrigger className="bg-blue-500 p-2 mt-2 text-white text-sm font-medium rounded-lg">
+                            Unggah Risalah Rapat
                         </AlertDialogTrigger>
-                        {/* <AlertDialogContent className="w-[300rem]">
+                        <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="font-medium">
-                                    Buat Undangan Rapat Baru
+                                    Unggah Risalah Rapat
                                 </AlertDialogTitle>
-                                <ScrollArea className="h-[500px] w-full pr-4">
-                                    <div className="">
-                                        <label
-                                            htmlFor="perihal"
-                                            className="block mb-2"
-                                        >
-                                            Nama Permintaan Persetujuan
-                                        </label>
-                                        <input
-                                            onChange={handleChange}
-                                            type="text"
-                                            name="request_name"
-                                            id=""
-                                            className="w-full p-2 border rounded-lg"
-                                        />
-                                        <label
-                                            htmlFor="perihal"
-                                            className="block mb-2"
-                                        >
-                                            Perihal
-                                        </label>
-                                        <input
-                                            onChange={handleChange}
-                                            type="text"
-                                            name="perihal"
-                                            id=""
-                                            className="w-full p-2 border rounded-lg"
-                                        />
-                                        <label
-                                            htmlFor="content"
-                                            className="block mb-2"
-                                        >
-                                            Isi
-                                        </label>
-                                        <textarea
-                                            onChange={handleChange}
-                                            rows={10}
-                                            name="content"
-                                            id=""
-                                            className="w-full p-2 border rounded-lg"
-                                        />
-                                        <label
-                                            htmlFor="hari_tanggal"
-                                            className="block mb-2"
-                                        >
-                                            Hari / tanggal
-                                        </label>
-                                        <input
-                                            onChange={handleChange}
-                                            type="date"
-                                            name="hari_tanggal"
-                                            id=""
-                                            className="w-full p-2 border rounded-lg"
-                                        />
-                                        <label
-                                            htmlFor="waktu"
-                                            className="block mb-2"
-                                        >
-                                            Waktu
-                                        </label>
-                                        <input
-                                            onChange={handleChange}
-                                            type="text"
-                                            name="waktu"
-                                            id=""
-                                            className="w-full p-2 border rounded-lg"
-                                        />
-                                        <label
-                                            htmlFor="tempat"
-                                            className="block mb-2"
-                                        >
-                                            Tempat
-                                        </label>
-                                        <input
-                                            onChange={handleChange}
-                                            type="text"
-                                            name="tempat"
-                                            id=""
-                                            className="w-full p-2 border rounded-lg"
-                                        />
-                                        <label
-                                            htmlFor="agenda"
-                                            className="block mb-2"
-                                        >
-                                            Agenda
-                                        </label>
-                                        <input
-                                            onChange={handleChange}
-                                            type="text"
-                                            name="agenda"
-                                            id=""
-                                            className="w-full p-2 border rounded-lg"
-                                        />
-                                        <label
-                                            htmlFor="official"
-                                            className="block mb-2"
-                                        >
-                                            Pejabat
-                                        </label>
-                                        <select
-                                            name="official"
-                                            id=""
-                                            onChange={handleChange}
-                                            className="w-full p-2 border rounded-lg"
-                                        >
-                                            <option value="">
-                                                Pilih Pejabat
+                                <AlertDialogDescription>
+                                    Pilih undangan rapat dan unggah file risalah
+                                    rapat
+                                </AlertDialogDescription>
+
+                                <div className="mt-4">
+                                    <label
+                                        htmlFor="perihal"
+                                        className="block mb-2"
+                                    >
+                                        Nama Permintaan Persetujuan
+                                    </label>
+                                    <input
+                                        onChange={handleChange}
+                                        type="text"
+                                        name="request_name"
+                                        id=""
+                                        className="w-full p-2 border rounded-lg"
+                                    />
+                                    <label
+                                        htmlFor="invitation_id"
+                                        className="block mb-2"
+                                    >
+                                        Undangan Rapat
+                                    </label>
+                                    <select
+                                        id="invitation_id"
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                invitation_id: parseInt(
+                                                    e.target.value
+                                                ),
+                                            })
+                                        }
+                                        value={formData.invitation_id || ""}
+                                    >
+                                        <option value="">
+                                            Pilih Undangan Rapat
+                                        </option>
+                                        {invite.map((req: any) => (
+                                            <option
+                                                key={req.id}
+                                                value={req.invite.id}
+                                            >
+                                                {req.request_name}
                                             </option>
-                                            {official.map((offi) => (
-                                                <option value={offi.id}>
-                                                    {offi.official_name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <label
-                                            htmlFor="to_division"
-                                            className="block mb-2"
-                                        >
-                                            Divisi Tujuan
-                                        </label>
-                                        <select
-                                            name="to_division"
-                                            id=""
-                                            onChange={handleChange}
-                                            className="w-full p-2 border rounded-lg"
-                                        >
-                                            <option value="">
-                                                Pilih Divisi
-                                            </option>
-                                            {division.map((divi: any) => (
-                                                <option value={divi.id}>
-                                                    {divi.division_name}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        ))}
+                                    </select>
 
-                                        <label className="block mb-2 mt-4 font-medium">
-                                            Undang Peserta
-                                        </label>
+                                    <label
+                                        htmlFor="file"
+                                        className="block mb-2 mt-4"
+                                    >
+                                        File Risalah Rapat
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="file"
+                                        className="w-full p-2 border rounded-lg"
+                                        onChange={handleSummaryFileChange}
+                                    />
 
-                                        <div className="border rounded-lg p-3 max-h-48 overflow-y-auto">
-                                            <div className="mb-2">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Search users..."
-                                                    value={searchQuery}
-                                                    onChange={(e) =>
-                                                        setSearchQuery(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full mb-2"
-                                                />
-                                            </div>
-
-                                            {filteredUsers
-                                                .slice(0, visibleUsers)
-                                                .map((user) => {
-                                                    const isSelected =
-                                                        formData.invited_users.includes(
-                                                            user.id.toString()
-                                                        );
-
-                                                    return (
-                                                        <div
-                                                            key={user.id}
-                                                            className={`flex w-[70%] justify-between mb-2 p-1 ${
-                                                                isSelected
-                                                                    ? "bg-blue-50 rounded border border-blue-200"
-                                                                    : ""
-                                                            }`}
-                                                        >
-                                                            <label
-                                                                htmlFor={`user-${user.id}`}
-                                                                className={`text-sm ${
-                                                                    isSelected
-                                                                        ? "font-medium"
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                {user.name}{" "}
-                                                                <span className="text-gray-500">
-                                                                    (
-                                                                    {
-                                                                        user
-                                                                            .division
-                                                                            .division_code
-                                                                    }
-                                                                    )
-                                                                </span>
-                                                            </label>
-                                                            <input
-                                                                type="checkbox"
-                                                                id={`user-${user.id}`}
-                                                                value={user.id}
-                                                                checked={
-                                                                    isSelected
-                                                                }
-                                                                className="ml-2 h-4 w-4"
-                                                                onChange={(
-                                                                    e
-                                                                ) => {
-                                                                    const userId =
-                                                                        e.target
-                                                                            .value;
-                                                                    const isChecked =
-                                                                        e.target
-                                                                            .checked;
-
-                                                                    setFormData(
-                                                                        (
-                                                                            prevData
-                                                                        ) => {
-                                                                            const currentUsers =
-                                                                                prevData.invited_users ||
-                                                                                [];
-
-                                                                            if (
-                                                                                isChecked
-                                                                            ) {
-                                                                                return {
-                                                                                    ...prevData,
-                                                                                    invited_users:
-                                                                                        [
-                                                                                            ...currentUsers,
-                                                                                            userId,
-                                                                                        ],
-                                                                                };
-                                                                            } else {
-                                                                                return {
-                                                                                    ...prevData,
-                                                                                    invited_users:
-                                                                                        currentUsers.filter(
-                                                                                            (
-                                                                                                id
-                                                                                            ) =>
-                                                                                                id !==
-                                                                                                userId
-                                                                                        ),
-                                                                                };
-                                                                            }
-                                                                        }
-                                                                    );
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    );
-                                                })}
-
-                                            {filteredUsers.length >
-                                                visibleUsers && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className="w-full mt-2"
-                                                    onClick={() =>
-                                                        setVisibleUsers(
-                                                            (prev) => prev + 5
-                                                        )
-                                                    }
-                                                >
-                                                    Show More
-                                                </Button>
-                                            )}
-
-                                            {formData.invited_users.length >
-                                                0 && (
-                                                <div className="mt-2 text-sm text-blue-600 font-medium">
-                                                    {
-                                                        formData.invited_users
-                                                            .length
-                                                    }{" "}
-                                                    user(s) selected
-                                                </div>
-                                            )}
+                                    {formData.file && (
+                                        <div className="mt-2 text-sm text-green-600">
+                                            File selected: {formData.file.name}
                                         </div>
-                                    </div>
-                                </ScrollArea>
+                                    )}
+                                </div>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Kembali</AlertDialogCancel>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
                                 <AlertDialogAction
-                                    className="bg-blue-500 font-normal hover:bg-blue-600"
-                                    onClick={handleSubmit}
+                                    className="bg-green-500 font-normal hover:bg-green-600"
+                                    onClick={() => {
+                                        if (
+                                            formData.invitation_id &&
+                                            formData.file
+                                        ) {
+                                            handleSummarySubmit(
+                                                formData.invitation_id
+                                            );
+                                        } else {
+                                            toast({
+                                                title: "Peringatan",
+                                                description:
+                                                    "Harap pilih undangan dan file risalah rapat",
+                                                variant: "destructive",
+                                            });
+                                        }
+                                    }}
                                 >
-                                    Buat Undangan Rapat
+                                    Unggah Risalah
                                 </AlertDialogAction>
                             </AlertDialogFooter>
-                        </AlertDialogContent> */}
+                        </AlertDialogContent>
                     </AlertDialog>
                 </div>
                 {/* <div className="flex gap-3">

@@ -826,7 +826,8 @@ DataTableProps<TData, TValue>) {
                                                                   </AlertDialog>
                                                               </>
                                                           )
-                                                        : row.original.invite!
+                                                        : row.original.summary!
+                                                              .invite!
                                                               .from_division
                                                               .id ==
                                                               user.division_id && (
@@ -906,7 +907,7 @@ DataTableProps<TData, TValue>) {
                                                                                           <span className="font-bold">
                                                                                               {
                                                                                                   row
-                                                                                                      .original
+                                                                                                      .original.summary!
                                                                                                       .invite!
                                                                                                       .to_division
                                                                                                       .division_name
@@ -962,7 +963,7 @@ DataTableProps<TData, TValue>) {
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
                                                                   </AlertDialog>
-                                                                  <AlertDialog>
+                                                                  {/* <AlertDialog>
                                                                       <AlertDialogTrigger>
                                                                           <button
                                                                               className={
@@ -1049,7 +1050,7 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogCancel>
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
-                                                                  </AlertDialog>
+                                                                  </AlertDialog> */}
                                                                   <AlertDialog>
                                                                       <AlertDialogTrigger>
                                                                           <button

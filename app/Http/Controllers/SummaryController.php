@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\SummaryService;
 use App\Models\Division;
+use App\Models\RequestLetter;
 use App\Models\SummaryLetter;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,10 +31,21 @@ class SummaryController extends Controller
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
 
+        $invite = RequestLetter::with(['user', 'stages' => function ($query) {
+            $query->withTrashed();
+        }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division, $user) {
+            $q->where('from_division', $user->division->id)
+                ->orWhere('to_division', $user->division->id);
+        })->get();
+
+        // dd($invite);
+
+
         return Inertia::render('Summary/Index', [
             'userData' => $user,
             'request' => $data,
             'division' => $division,
+            'invite' => $invite,
         ]);
     }
 

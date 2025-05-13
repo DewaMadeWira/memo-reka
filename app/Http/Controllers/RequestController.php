@@ -9,6 +9,7 @@ use App\Models\RequestLetter;
 use App\Models\RequestStages;
 use App\Models\User;
 use App\Http\Services\MemoService;
+use App\Http\Services\SummaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -16,12 +17,13 @@ use Inertia\Inertia;
 
 class RequestController extends Controller
 {
-    protected $memoService, $invitationService;
+    protected $memoService, $invitationService, $summaryService;
     //
-    public function __construct(MemoService $memoService, InvitationService $invitationService)
+    public function __construct(MemoService $memoService, InvitationService $invitationService, SummaryService $summaryService)
     {
         $this->memoService = $memoService;
         $this->invitationService = $invitationService;
+        $this->summaryService = $summaryService;
     }
 
     public function index(Request $request)
@@ -68,7 +70,7 @@ class RequestController extends Controller
             'letter_id' => 1,
             'from_division' => 1,
             'to_division' => 2,
-            
+
         ]);
         $stages = MemoLetter::with('letter')->with('letter.request_stages')->get();
         // return $memo;
@@ -108,6 +110,11 @@ class RequestController extends Controller
                 // dd($request);
                 $invitation = $this->invitationService->create($request);
                 return $invitation;
+                // return to_route('undangan-rapat.index');
+            case 'summary.create':
+                // dd($request);
+                $summary = $this->summaryService->create($request);
+                return $summary;
                 // return to_route('undangan-rapat.index');
 
             default:

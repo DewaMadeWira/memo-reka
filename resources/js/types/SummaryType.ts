@@ -7,4 +7,5 @@ export type Summary = {
     invitation: Invitation;
     created_at: Date;
     updated_at: Date;
+    invite?: Invitation;
 };
