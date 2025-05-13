@@ -8,6 +8,8 @@ import {
     getPaginationRowModel,
     SortingState,
     getSortedRowModel,
+    ColumnFiltersState,
+    getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -19,6 +21,7 @@ import {
     TableRow,
 } from "@/Components/ui/table";
 
+import { Input } from "@/Components/ui/input";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -175,6 +178,7 @@ export function DataTable<TData extends RequestLetter, TValue>({
 DataTableProps<TData, TValue>) {
     // console.log(request_file_upload);
     const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
@@ -198,9 +202,12 @@ DataTableProps<TData, TValue>) {
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onPaginationChange: setPagination,
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting,
             pagination,
+            columnFilters,
         },
     });
 
@@ -232,6 +239,22 @@ DataTableProps<TData, TValue>) {
 
     return (
         <div>
+            <div className="flex items-center py-4">
+                <Input
+                    placeholder="Cari Surat ..."
+                    value={
+                        (table
+                            .getColumn("request_name")
+                            ?.getFilterValue() as string) ?? ""
+                    }
+                    onChange={(event) =>
+                        table
+                            .getColumn("request_name")
+                            ?.setFilterValue(event.target.value)
+                    }
+                    className="max-w-sm"
+                />
+            </div>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
