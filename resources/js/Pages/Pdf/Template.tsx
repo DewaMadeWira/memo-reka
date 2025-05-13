@@ -203,6 +203,13 @@ export default function Template({ data }: { data: any }) {
                         }}
                     >
                         <Text style={{ marginBottom: 10 }}>Dengan Hormat,</Text>
+                        {data.previous_memo && (
+                            <Text style={{ marginBottom: 10 }}>
+                                Merujuk Kepada Memo :{" "}
+                                {data.previous_memo.memo_number}
+                            </Text>
+                        )}
+
                         <Text>{data.content}</Text>
 
                         <Text style={{ marginVertical: 10 }}>

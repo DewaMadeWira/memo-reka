@@ -98,6 +98,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
         content: string;
         official: string;
         to_division: null;
+        previous_memo: null;
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
@@ -106,6 +107,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
             request_name: string;
             official: string;
             to_division: null;
+            previous_memo: null;
         }>
     >;
     handleChange: (
@@ -1161,6 +1163,8 @@ DataTableProps<TData, TValue>) {
                                                                     row.original
                                                                         .memo!
                                                                         .content,
+                                                                previous_memo:
+                                                                    null,
                                                             })
                                                         }
                                                         // onClick={() =>

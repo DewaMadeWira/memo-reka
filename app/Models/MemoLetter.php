@@ -23,6 +23,7 @@ class MemoLetter extends Model
         'to_division',
         'file_path',
         'rejection_reason',
+        'previous_memo',
     ];
     public function from_division(): BelongsTo
     {
@@ -43,5 +44,9 @@ class MemoLetter extends Model
     public function official_id(): BelongsTo
     {
         return $this->belongsTo(Official::class, 'official_id', 'id');
+    }
+    public function previous_memo(): BelongsTo
+    {
+        return $this->belongsTo(MemoLetter::class, 'previous_memo', 'id');
     }
 }

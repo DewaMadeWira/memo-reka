@@ -47,6 +47,8 @@ import { columns } from "./memo/columns";
 import { User } from "@/types/UserType";
 import { Official } from "@/types/OfficialType";
 import { useToast } from "@/hooks/use-toast";
+import { Memo } from "@/types/MemoType";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 
 export default function Index({
     request,
@@ -54,6 +56,7 @@ export default function Index({
     userData,
     official,
     notifications,
+    memo_division,
 }: // stages,
 {
     request: any;
@@ -61,11 +64,12 @@ export default function Index({
     userData: any;
     official: Official[];
     notifications: any;
+    memo_division: any;
     // stages: any;
 }) {
     const { toast } = useToast();
     console.log(userData);
-    console.log(request);
+    console.log(memo_division);
     // console.log(stages);
     const [formData, setFormData] = useState({
         request_name: "",
@@ -73,6 +77,7 @@ export default function Index({
         content: "",
         official: "",
         to_division: null,
+        previous_memo: null,
     });
     const [filePreview, setFilePreview] = useState<string | null>(null);
     const [fileData, setFileData] = useState<{
@@ -215,90 +220,204 @@ export default function Index({
                             Buat Memo
                         </AlertDialogTrigger>
                         <AlertDialogContent className="w-[300rem]">
-                            <AlertDialogHeader>
-                                <AlertDialogTitle className="font-medium">
-                                    Buat Memo Baru
-                                </AlertDialogTitle>
-                                <div className="">
-                                    <label
-                                        htmlFor="perihal"
-                                        className="block mb-2"
-                                    >
-                                        Nama Permintaan Persetujuan
-                                    </label>
-                                    <input
-                                        onChange={handleChange}
-                                        type="text"
-                                        name="request_name"
-                                        id=""
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-                                    <label
-                                        htmlFor="perihal"
-                                        className="block mb-2"
-                                    >
-                                        Perihal
-                                    </label>
-                                    <input
-                                        onChange={handleChange}
-                                        type="text"
-                                        name="perihal"
-                                        id=""
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-                                    <label
-                                        htmlFor="content"
-                                        className="block mb-2"
-                                    >
-                                        Isi
-                                    </label>
-                                    <textarea
-                                        onChange={handleChange}
-                                        rows={10}
-                                        name="content"
-                                        id=""
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-                                    <label
-                                        htmlFor="official"
-                                        className="block mb-2"
-                                    >
-                                        Pejabat
-                                    </label>
-                                    <select
-                                        name="official"
-                                        id=""
-                                        onChange={handleChange}
-                                        className="w-full p-2 border rounded-lg"
-                                    >
-                                        <option value="">Pilih Pejabat</option>
-                                        {official.map((offi) => (
-                                            <option value={offi.id}>
-                                                {offi.official_name}
+                            <ScrollArea className="h-96 ">
+                                <AlertDialogHeader className="mx-4">
+                                    <AlertDialogTitle className="font-medium">
+                                        Buat Memo Baru
+                                    </AlertDialogTitle>
+                                    <div className="">
+                                        <label
+                                            htmlFor="perihal"
+                                            className="block mb-2"
+                                        >
+                                            Nama Permintaan Persetujuan
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="request_name"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="previous_memo"
+                                            className="block mb-2"
+                                        >
+                                            Nomor Memo Perbaikan
+                                        </label>
+                                        <div className="flex gap-4 mb-4">
+                                            <label className="flex items-center gap-2">
+                                                <input
+                                                    type="radio"
+                                                    name="is_correction"
+                                                    value="no"
+                                                    defaultChecked
+                                                    onChange={() =>
+                                                        setFormData({
+                                                            ...formData,
+                                                            previous_memo: null,
+                                                        })
+                                                    }
+                                                />
+                                                <span>Tidak</span>
+                                            </label>
+                                            <label className="flex items-center gap-2">
+                                                <input
+                                                    type="radio"
+                                                    name="is_correction"
+                                                    value="yes"
+                                                    onChange={() => {
+                                                        // Set previous_memo to first memo id if available
+                                                        if (
+                                                            memo_division &&
+                                                            memo_division.length >
+                                                                0
+                                                        ) {
+                                                            setFormData({
+                                                                ...formData,
+                                                                previous_memo:
+                                                                    memo_division[0]
+                                                                        .memo
+                                                                        .id,
+                                                            });
+                                                        }
+                                                    }}
+                                                />
+                                                <span>Ya</span>
+                                            </label>
+                                        </div>
+
+                                        {formData.previous_memo !== null && (
+                                            <>
+                                                <label
+                                                    htmlFor="previous_memo"
+                                                    className="block mb-2"
+                                                >
+                                                    Nomor Memo Perbaikan
+                                                </label>
+                                                {memo_division &&
+                                                memo_division.length > 0 ? (
+                                                    <select
+                                                        name="previous_memo"
+                                                        id="previous_memo"
+                                                        className="w-full p-2 border rounded-lg"
+                                                        value={
+                                                            formData.previous_memo ||
+                                                            ""
+                                                        }
+                                                        onChange={handleChange}
+                                                    >
+                                                        {memo_division.map(
+                                                            (item: any) => (
+                                                                <option
+                                                                    key={
+                                                                        item.id
+                                                                    }
+                                                                    value={
+                                                                        item
+                                                                            .memo
+                                                                            .id
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        item
+                                                                            .memo
+                                                                            .memo_number
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
+                                                    </select>
+                                                ) : (
+                                                    <p className="text-gray-500 italic">
+                                                        Tidak ada memo tersedia
+                                                        untuk diperbaiki
+                                                    </p>
+                                                )}
+                                            </>
+                                        )}
+                                        {/* <select name="previous_memo" id="">
+                                        {memo_division.map((item: any) => (
+                                            <option
+                                                key={item.id}
+                                                value={item.memo.id}
+                                            >
+                                                {item.memo.memo_number}
                                             </option>
                                         ))}
-                                    </select>
-                                    <label
-                                        htmlFor="to_division"
-                                        className="block mb-2"
-                                    >
-                                        Divisi Tujuan
-                                    </label>
-                                    <select
-                                        name="to_division"
-                                        id=""
-                                        onChange={handleChange}
-                                        className="w-full p-2 border rounded-lg"
-                                    >
-                                        <option value="">Pilih Divisi</option>
-                                        {division.map((divi: any) => (
-                                            <option value={divi.id}>
-                                                {divi.division_name}
+                                    </select> */}
+                                        <label
+                                            htmlFor="perihal"
+                                            className="block mb-2"
+                                        >
+                                            Perihal
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="perihal"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="content"
+                                            className="block mb-2"
+                                        >
+                                            Isi
+                                        </label>
+                                        <textarea
+                                            onChange={handleChange}
+                                            rows={10}
+                                            name="content"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="official"
+                                            className="block mb-2"
+                                        >
+                                            Pejabat
+                                        </label>
+                                        <select
+                                            name="official"
+                                            id=""
+                                            onChange={handleChange}
+                                            className="w-full p-2 border rounded-lg"
+                                        >
+                                            <option value="">
+                                                Pilih Pejabat
                                             </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </AlertDialogHeader>
+                                            {official.map((offi) => (
+                                                <option value={offi.id}>
+                                                    {offi.official_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label
+                                            htmlFor="to_division"
+                                            className="block mb-2"
+                                        >
+                                            Divisi Tujuan
+                                        </label>
+                                        <select
+                                            name="to_division"
+                                            id=""
+                                            onChange={handleChange}
+                                            className="w-full p-2 border rounded-lg"
+                                        >
+                                            <option value="">
+                                                Pilih Divisi
+                                            </option>
+                                            {division.map((divi: any) => (
+                                                <option value={divi.id}>
+                                                    {divi.division_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </AlertDialogHeader>
+                            </ScrollArea>
+
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Kembali</AlertDialogCancel>
                                 <AlertDialogAction

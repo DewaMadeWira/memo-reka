@@ -21,12 +21,14 @@ return new class extends Migration
             $table->string("perihal");
             $table->text("content");
             $table->foreignId("letter_id");
+            $table->foreignId("previous_memo")->nullable();
             $table->foreignId("from_division");
             $table->foreignId("to_division");
             $table->foreignId("signatory");
             $table->foreignId("official_id");
             $table->string('file_path')->nullable();
             $table->timestamps();
+            $table->foreign('previous_memo')->references('id')->on('memo_letters');
             $table->foreign('signatory')->references('id')->on('users');
             $table->foreign('official_id')->references('id')->on('officials');
             $table->foreign('from_division')->references('id')->on('divisions');

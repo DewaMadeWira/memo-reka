@@ -95,12 +95,19 @@ class MemoController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $memo_division = RequestLetter::with(['user', 'stages' => function ($query) {
+            $query->withTrashed();
+        }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($user) {
+            $q->where('from_division', $user->division->id);
+        })->get();
+
         return Inertia::render('Memo/Index', [
             'userData' => $user,
             'request' => $data,
             'division' => $division,
             'official' => $official,
             'notifications' => $notifications,
+            'memo_division' => $memo_division,
         ]);
     }
 

@@ -67,7 +67,8 @@ class RequestController extends Controller
             'memo_number' => '1234',
             'letter_id' => 1,
             'from_division' => 1,
-            'to_division' => 2
+            'to_division' => 2,
+            
         ]);
         $stages = MemoLetter::with('letter')->with('letter.request_stages')->get();
         // return $memo;
