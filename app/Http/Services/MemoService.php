@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Jobs\SendMemoNotification;
 use App\Models\Division;
 use App\Models\LetterNumberCounter;
+use App\Models\MemoImage;
 use App\Models\MemoLetter;
 use App\Models\Notification;
 use App\Models\Official;
@@ -825,6 +826,11 @@ class MemoService
         if ($nextStageId == null) {
             return to_route('memo.index');
         }
+
+        // dd($request_letter->memo->id);
+        MemoImage::where('memo_letter_id', $request_letter->memo->id)->get()->each(function ($image) {
+            $image->delete();
+        });
 
         MemoLetter::where('id', $id)->update([
             'file_path' => NULL,
