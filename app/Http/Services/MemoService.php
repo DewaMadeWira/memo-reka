@@ -42,7 +42,7 @@ class MemoService
                 // return to_route('memo.index');
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo'])->whereHas('memo', function ($q) use ($division) {
+                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('from_division', $division)
                         ->orWhere('to_division', $division);;
                 })->get();
@@ -91,7 +91,7 @@ class MemoService
                 // })->get();
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo'])->whereHas('memo', function ($q) use ($division) {
+                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
 
@@ -120,7 +120,7 @@ class MemoService
             case 'memo.eksternal':
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo'])->whereHas('memo', function ($q) use ($division) {
+                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('to_division', $division);
                 })->get();
 

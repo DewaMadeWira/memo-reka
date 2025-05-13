@@ -13,4 +13,5 @@ export type Memo = {
     updated_at?: string;
     file_path?: string;
     rejection_reason?: string;
+    images: [];
 };
