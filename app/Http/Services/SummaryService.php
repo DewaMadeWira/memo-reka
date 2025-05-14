@@ -44,12 +44,17 @@ class SummaryService
             case '':
                 // $memo = $this->memoService->approve($id);
                 // return to_route('memo.index');
+                $summary = SummaryLetter::get();
+                // $summary = RequestLetter::with('summary')->get();
+                dd($summary);
+
                 $summary = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
                 }, 'stages.status', 'summary', 'summary.invite', 'summary.invite.to_division', 'summary.invite.from_division'])->whereHas('summary.invite', function ($q) use ($division) {
                     $q->where('from_division', $division)
                         ->orWhere('to_division', $division);;
                 })->get();
+
 
                 $summary->each(function ($requestLetter) {
                     // Handle different possible types of progress_stages
@@ -219,7 +224,7 @@ class SummaryService
         $file = $request->file("file");
         $ext = $file->getClientOriginalExtension();
         $filename = rand(100000000, 999999999) . '.' . $ext;
-        Storage::disk('local')->put('private/risalah-rapat/' . $filename, FacadesFile::get($file));
+        Storage::disk('local')->put('risalah-rapat/' . $filename, FacadesFile::get($file));
 
         // dd($this->generateNomorSurat($user, $official)->memo_number);
         $summary = SummaryLetter::create([

@@ -1672,8 +1672,6 @@ DataTableProps<TData, TValue>) {
                                                                             >
                                                                                 Upload
                                                                                 Bukti
-                                                                                (Multiple
-                                                                                Files)
                                                                             </label>
                                                                             <input
                                                                                 type="file"

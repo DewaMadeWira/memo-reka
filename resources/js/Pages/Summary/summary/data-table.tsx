@@ -907,7 +907,8 @@ DataTableProps<TData, TValue>) {
                                                                                           <span className="font-bold">
                                                                                               {
                                                                                                   row
-                                                                                                      .original.summary!
+                                                                                                      .original
+                                                                                                      .summary!
                                                                                                       .invite!
                                                                                                       .to_division
                                                                                                       .division_name
@@ -1455,16 +1456,9 @@ DataTableProps<TData, TValue>) {
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
                                                 </AlertDialog>
-                                                <AlertDialog>
+                                                {/* <AlertDialog>
                                                     <AlertDialogTrigger>
                                                         <button
-                                                            // onClick={() =>
-                                                            //     handleApprove(
-                                                            //         row.original.invite!.id
-                                                            //     )
-                                                            // }
-                                                            //                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
-                                                            // `}
                                                             className={
                                                                 actionButtonClass
                                                             }
@@ -1494,8 +1488,7 @@ DataTableProps<TData, TValue>) {
                                                                     </TooltipContent>
                                                                 </Tooltip>
                                                             </TooltipProvider>
-                                                            {/* Lihat PDF */}
-                                                        </button>{" "}
+                                                        </button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent className="w-full max-w-7xl">
                                                         <AlertDialogHeader className="">
@@ -1518,15 +1511,12 @@ DataTableProps<TData, TValue>) {
                                                             <AlertDialogCancel className="bg-blue-500 text-white">
                                                                 Kembali
                                                             </AlertDialogCancel>
-                                                            {/* <AlertDialogAction>
-                                                                Continue
-                                                            </AlertDialogAction> */}
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
-                                                </AlertDialog>
-                                                {/* <AlertDialog>
+                                                </AlertDialog> */}
+                                                <AlertDialog>
                                                     <AlertDialogTrigger>
-                                                        {row.original.invite!
+                                                        {row.original.summary!
                                                             .file_path !=
                                                         null ? (
                                                             <button
@@ -1588,12 +1578,18 @@ DataTableProps<TData, TValue>) {
                                                             <></>
                                                         )}
                                                     </AlertDialogTrigger>
-                                                    {row.original.invite!
+                                                    {row.original.summary!
                                                         .file_path != null ? (
                                                         <AlertDialogContent className="w-full max-w-7xl">
                                                             <AlertDialogHeader className="">
                                                                 <AlertDialogTitle>
                                                                     Preview File
+                                                                    {
+                                                                        row
+                                                                            .original
+                                                                            .summary!
+                                                                            .file_path
+                                                                    }
                                                                 </AlertDialogTitle>
                                                                 <div className="flex flex-col w-full">
                                                                     <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
@@ -1605,11 +1601,19 @@ DataTableProps<TData, TValue>) {
                                                                         </div>
 
                                                                         <div className="w-full h-full flex items-center justify-center overflow-auto">
-                                                                            <img
-                                                                                src={`invite!-file/${
+                                                                            <p>
+                                                                                {
                                                                                     row
                                                                                         .original
-                                                                                        .invite!
+                                                                                        .summary!
+                                                                                        .file_path
+                                                                                }
+                                                                            </p>
+                                                                            {/* <img
+                                                                                src={`invite-file/${
+                                                                                    row
+                                                                                        .original
+                                                                                        .summary!
                                                                                         .file_path
                                                                                 }`}
                                                                                 className="max-w-full max-h-full object-contain transition-transform duration-200 hover:scale-105"
@@ -1649,14 +1653,14 @@ DataTableProps<TData, TValue>) {
                                                                                         );
                                                                                     }
                                                                                 }}
-                                                                            />
+                                                                            /> */}
                                                                         </div>
                                                                     </div>
 
                                                                     <div className="flex items-center justify-between mt-4">
                                                                         <div className="text-sm text-gray-500">
                                                                             {row.original
-                                                                                .invite!.file_path?.split(
+                                                                                .summary!.file_path?.split(
                                                                                     "/"
                                                                                 )
                                                                                 .pop()}
@@ -1669,7 +1673,7 @@ DataTableProps<TData, TValue>) {
                                                                                         `invite!-file/${
                                                                                             row
                                                                                                 .original
-                                                                                                .invite!
+                                                                                                .summary!
                                                                                                 .file_path
                                                                                         }`,
                                                                                         "_blank"
@@ -1785,7 +1789,6 @@ DataTableProps<TData, TValue>) {
                                                                             </div>
                                                                         )}
                                                                     </div>
-
                                                                 </div>
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
@@ -1810,7 +1813,7 @@ DataTableProps<TData, TValue>) {
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     )}
-                                                </AlertDialog> */}
+                                                </AlertDialog>
                                             </div>
                                             {/* <AlertDialog>
                                                 <AlertDialogTrigger
