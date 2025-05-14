@@ -84,8 +84,18 @@ const items = [
         url: "#",
         icon: Search,
         subItems: [
-            { title: "Makan", url: "/risalah-rapat/makan" },
-            { title: "Siang", url: "/risalah-rapat/siang" },
+            {
+                title: "Risalah Rapat ",
+                url: "/risalah-rapat",
+            },
+            {
+                title: "Risalah Rapat Dikirim",
+                url: "/risalah-rapat?intent=risalah.internal",
+            },
+            {
+                title: "Risalah Rapat Diterima",
+                url: "/risalah-rapat?intent=invitation.eksternal",
+            },
         ],
     },
     {
