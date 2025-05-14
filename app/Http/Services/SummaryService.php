@@ -87,22 +87,28 @@ class SummaryService
 
 
                 return $summary;
-            case 'memo.internal':
+            case 'risalah-rapat.internal':
                 // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division', 'memo.to_division', 'memo.signatory')->whereHas('stages', function ($q) {
                 //     $q->where('stage_name', "Memo Internal");
                 // })->whereHas('memo', function ($q) use ($division) {
                 //     $q->where('from_division', $division);
                 // })->get();
-                $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+                $summary = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
+                }, 'stages.status', 'summary', 'summary.invite', 'summary.invite.to_division', 'summary.invite.from_division'])->whereHas('summary.invite', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
+                // dd($summary);
+                // $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+                //     $query->withTrashed();
+                // }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
+                //     $q->where('from_division', $division);
+                // })->get();
 
                 // dd($memo);
 
 
-                $memo->each(function ($requestLetter) {
+                $summary->each(function ($requestLetter) {
                     $progressStages = [];
 
                     if (isset($requestLetter->progress_stages)) {
@@ -120,18 +126,18 @@ class SummaryService
                 });
                 // error_log($memo);
 
-                return $memo;
-            case 'memo.eksternal':
-                $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+                return $summary;
+            case 'risalah-rapat.eksternal':
+                $summary = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
+                }, 'stages.status', 'summary', 'summary.invite', 'summary.invite.to_division', 'summary.invite.from_division'])->whereHas('summary.invite', function ($q) use ($division) {
                     $q->where('to_division', $division);
                 })->get();
 
                 // dd($memo);
 
 
-                $memo->each(function ($requestLetter) {
+                $summary->each(function ($requestLetter) {
                     $progressStages = [];
 
                     if (isset($requestLetter->progress_stages)) {
@@ -148,7 +154,7 @@ class SummaryService
                     $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
                 });
 
-                return $memo;
+                return $summary;
 
             case "number":
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
