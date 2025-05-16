@@ -234,7 +234,7 @@ class SummaryService
         ]);
         $summary = SummaryLetter::with('invite')->findOrFail($summary->id);
 
-        dd($summary);
+        // dd($summary);
         $stages = RequestStages::where('letter_id', 3)->get();
         $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
         $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
