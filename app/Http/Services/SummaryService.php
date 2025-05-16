@@ -46,7 +46,7 @@ class SummaryService
                 // return to_route('memo.index');
                 $summary = SummaryLetter::get();
                 // $summary = RequestLetter::with('summary')->get();
-                dd($summary);
+                // dd($summary);
 
                 $summary = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
@@ -232,18 +232,9 @@ class SummaryService
             'invitation_id' => $request->invitation_id,
             'file_path' => $filename
         ]);
-        $summary = SummaryLetter::with('invite')->findOrFail($summary->invitation_id);
-        // $generatedMemoData = $this->generateNomorSurat($user, $official);
-        // $letter_number = LetterNumberCounter::where('division_id', $user->division->id)->where('letter_type_id', 1)->first();
-        // $letter_number->update([
-        //     "monthly_counter" => $generatedMemoData["monthly_counter"],
-        //     "yearly_counter" => $generatedMemoData["yearly_counter"],
-        // ]);
-        // $memo->update([
-        //     "memo_number" => $generatedMemoData["memo_number"],
-        //     // "monthly_counter" => $generatedMemoData["monthly_counter"],
-        //     // "yearly_counter" => $generatedMemoData["yearly_counter"],
-        // ]);
+        $summary = SummaryLetter::with('invite')->findOrFail($summary->id);
+
+        dd($summary);
         $stages = RequestStages::where('letter_id', 3)->get();
         $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
         $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
@@ -265,6 +256,7 @@ class SummaryService
             "progress_stages" => json_encode($progressStageMap),
         ]);
         // dd($summary);
+        // $summaryInvite = SummaryLetter::with('invite')
         $toDivision = Division::where('id', $summary->invite->to_division)->first();
         $toDivisionName = $toDivision->division_code;
         Notification::create([
