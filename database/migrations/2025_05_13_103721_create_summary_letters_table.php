@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId("invitation_id");
             $table->foreign('invitation_id')->references('id')->on('invitation_letters');
-            $table->string("file_path");
+            $table->string("file_path")->nullable( );
+            $table->string("rejection_reason")->nullable();
             $table->timestamps();
         });
     }

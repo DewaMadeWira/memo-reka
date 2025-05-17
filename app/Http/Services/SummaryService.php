@@ -708,9 +708,9 @@ class SummaryService
             return to_route('risalah-rapat.index');
         }
 
-        // SummaryLetter::where('id', $id)->update([
-        //     'rejection_reason' => NULL
-        // ]);
+        SummaryLetter::where('id', $id)->update([
+            'rejection_reason' => NULL
+        ]);
 
         // Get the next stage information BEFORE updating the request
         $nextStage = RequestStages::find($nextStageId);
@@ -857,19 +857,15 @@ class SummaryService
     // }
     public function reject($id, Request $request)
     {
-        $request_letter = RequestLetter::with('memo')->where('memo_id', $id)->first();
+        $request_letter = RequestLetter::with('summary')->where('summary_id', $id)->first();
         $nextStageId = json_decode($request_letter->rejected_stages, true);
         $nextStageId = $nextStageId[$request_letter->stages_id] ?? null;
         if ($nextStageId == null) {
-            return to_route('memo.index');
+            return to_route('risalah-rapat.index');
         }
 
-        // dd($request_letter->memo->id);
-        MemoImage::where('memo_letter_id', $request_letter->memo->id)->get()->each(function ($image) {
-            $image->delete();
-        });
 
-        MemoLetter::where('id', $id)->update([
+        SummaryLetter::where('id', $id)->update([
             'file_path' => NULL,
             'rejection_reason' => 'Memo ditolak oleh ' . Auth::user()->name . ' karena ' . "\n\n" . $request->rejection_reason
         ]);
@@ -880,25 +876,25 @@ class SummaryService
         $request_letter->save();
 
         // NOTIFICATION
-        $fromDivisionId = $request_letter->memo->from_division;
-        $toDivisionId = $request_letter->memo->to_division;
+        // $fromDivisionId = $request_letter->memo->from_division;
+        // $toDivisionId = $request_letter->memo->to_division;
 
-        $fromDivisionUsers = User::where('division_id', $fromDivisionId)->get();
-        $toDivisionUsers = User::where('division_id', $toDivisionId)->get();
+        // $fromDivisionUsers = User::where('division_id', $fromDivisionId)->get();
+        // $toDivisionUsers = User::where('division_id', $toDivisionId)->get();
 
-        $allInvolvedUsers = $fromDivisionUsers->merge($toDivisionUsers);
+        // $allInvolvedUsers = $fromDivisionUsers->merge($toDivisionUsers);
 
-        $currentStage = RequestStages::find($nextStageId);
-        $stageName = $currentStage ? $currentStage->stage_name : 'next stage';
+        // $currentStage = RequestStages::find($nextStageId);
+        // $stageName = $currentStage ? $currentStage->stage_name : 'next stage';
 
-        $userReject = Auth::user()->name;
-        foreach ($allInvolvedUsers as $user) {
-            Notification::create([
-                'user_id' => $user->id,
-                'title' => 'Memo Updated!',
-                'message' => "Memo '{$request_letter->memo->memo_number}' telah ditolak oleh '{$userReject}' dan masuk ke tahap {$stageName}. silahkan cek memo tersebut.",
-                'related_request_id' => $request_letter->id,
-            ]);
-        }
+        // $userReject = Auth::user()->name;
+        // foreach ($allInvolvedUsers as $user) {
+        //     Notification::create([
+        //         'user_id' => $user->id,
+        //         'title' => 'Memo Updated!',
+        //         'message' => "Memo '{$request_letter->memo->memo_number}' telah ditolak oleh '{$userReject}' dan masuk ke tahap {$stageName}. silahkan cek memo tersebut.",
+        //         'related_request_id' => $request_letter->id,
+        //     ]);
+        // }
     }
 }

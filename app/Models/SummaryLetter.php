@@ -12,6 +12,7 @@ class SummaryLetter extends Model
     protected $fillable = [
         'invitation_id',
         'file_path',
+        'rejection_reason',
     ];
     public function invite(): BelongsTo
     {

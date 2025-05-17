@@ -780,9 +780,9 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogCancel>
                                                                               <AlertDialogAction
                                                                                   onClick={() => {
-                                                                                      // if (
-                                                                                      //     memoToReject
-                                                                                      // ) {
+                                                                                      alert(
+                                                                                          "mema"
+                                                                                      );
                                                                                       handleReject(
                                                                                           row
                                                                                               .original
@@ -804,7 +804,7 @@ DataTableProps<TData, TValue>) {
                                                                                   }
                                                                               >
                                                                                   Tolak
-                                                                                  Undangan
+                                                                                  Risalah
                                                                                   Rapat
                                                                               </AlertDialogAction>
                                                                           </AlertDialogFooter>
@@ -1111,7 +1111,7 @@ DataTableProps<TData, TValue>) {
                                                                                   berikan
                                                                                   alasan
                                                                                   penolakan
-                                                                                  Undangan
+                                                                                  Risalah
                                                                                   Rapat.
                                                                               </AlertDialogDescription>
                                                                               <div className="mt-4">
@@ -1148,13 +1148,10 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogCancel>
                                                                               <AlertDialogAction
                                                                                   onClick={() => {
-                                                                                      // if (
-                                                                                      //     memoToReject
-                                                                                      // ) {
                                                                                       handleReject(
                                                                                           row
                                                                                               .original
-                                                                                              .invite!
+                                                                                              .summary!
                                                                                               .id,
                                                                                           rejectionReason
                                                                                       );
