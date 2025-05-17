@@ -179,6 +179,13 @@ class RequestController extends Controller
             case 'invitation.reject':
                 $invite = $this->invitationService->reject($id, $request);
                 return to_route('undangan-rapat.index');
+            case 'summary.approve':
+                // dd('mamamia');
+                $summary = $this->summaryService->approve($id);
+                return to_route('risalah-rapat.index');
+            case 'summary.reject':
+                $summary = $this->summaryService->reject($id, $request);
+                return to_route('risalah-rapat.index');
 
             default:
                 return response()->json(['error' => 'Invalid letter type'], 400);

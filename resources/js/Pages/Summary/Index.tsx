@@ -104,10 +104,10 @@ export default function Index({
     //     router.post("/invite-approve/" + id);
     // };
     function handleApprove(id: number) {
-        router.put("/request/" + id + "?intent=invitation.approve");
+        router.put("/request/" + id + "?intent=summary.approve");
     }
     function handleReject(id: number, rejectionReason: string) {
-        router.put("/request/" + id + "?intent=invitation.reject", {
+        router.put("/request/" + id + "?intent=summary.reject", {
             rejection_reason: rejectionReason,
         });
     }
@@ -300,32 +300,6 @@ export default function Index({
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>
-                {/* <div className="flex gap-3">
-                    <a
-                        href={`/Undangan Rapat`}
-                        // onClick={() => router.re}
-                        className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
-                                        `}
-                    >
-                        All Memo
-                    </a>
-                    <a
-                        href={`/memo?intent=memo.internal`}
-                        // onClick={() => router.re}
-                        className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
-                                        `}
-                    >
-                        Memo Internal
-                    </a>
-                    <a
-                        href={`/memo?intent=memo.eksternal`}
-                        // onClick={() => router.re}
-                        className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
-                                        `}
-                    >
-                        Memo Eksternal
-                    </a>
-                </div> */}
 
                 <div className="mt-8">
                     <DataTable

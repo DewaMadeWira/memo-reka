@@ -697,24 +697,27 @@ class SummaryService
 
     public function approve($id)
     {
-        $request = RequestLetter::with(['memo', 'user', 'memo.from_division', 'memo.to_division', 'stages'])->where('memo_id', $id)->first();
+        // dd("mamamia");
+        $request = RequestLetter::with(['summary', 'user', 'stages'])->where('summary_id', $id)->first();
+
 
         $nextStageId = json_decode($request->to_stages, true);
         $nextStageId = $nextStageId[$request->stages_id] ?? null;
 
         if ($nextStageId == null) {
-            return to_route('memo.index');
+            return to_route('risalah-rapat.index');
         }
 
-        MemoLetter::where('id', $id)->update([
-            'rejection_reason' => NULL
-        ]);
+        // SummaryLetter::where('id', $id)->update([
+        //     'rejection_reason' => NULL
+        // ]);
 
         // Get the next stage information BEFORE updating the request
         $nextStage = RequestStages::find($nextStageId);
         $isNextStageExternal = $nextStage ? $nextStage->is_external : false;
         $currentStageName = $request->stages->stage_name;
         $nextStageName = $nextStage ? $nextStage->stage_name : 'final stage';
+
 
         // Update the request with new stage ID
         $request->update([
@@ -724,32 +727,32 @@ class SummaryService
         $request->refresh(); // Refresh the model to get updated relationships
 
         // Get user groups who need notifications
-        $internalUsers = User::where('division_id', $request->memo->from_division)
-            ->where('role_id', '!=', 1) // Non-managers
-            ->get();
+        // $internalUsers = User::where('division_id', $request->memo->from_division)
+        //     ->where('role_id', '!=', 1) // Non-managers
+        //     ->get();
 
-        $internalManagers = User::where('division_id', $request->memo->from_division)
-            ->where('role_id', 1) // Managers
-            ->get();
+        // $internalManagers = User::where('division_id', $request->memo->from_division)
+        //     ->where('role_id', 1) // Managers
+        //     ->get();
 
-        $externalUsers = User::where('division_id', $request->memo->to_division)
-            ->where('role_id', '!=', 1) // Non-managers
-            ->get();
+        // $externalUsers = User::where('division_id', $request->memo->to_division)
+        //     ->where('role_id', '!=', 1) // Non-managers
+        //     ->get();
 
-        $externalManagers = User::where('division_id', $request->memo->to_division)
-            ->where('role_id', 1) // Managers
-            ->get();
+        // $externalManagers = User::where('division_id', $request->memo->to_division)
+        //     ->where('role_id', 1) // Managers
+        //     ->get();
 
 
-        $this->sendMemoNotifications(
-            $request,
-            $nextStage->stage_name,
-            $isNextStageExternal,
-            $internalUsers,
-            $internalManagers,
-            $externalUsers,
-            $externalManagers
-        );
+        // $this->sendMemoNotifications(
+        //     $request,
+        //     $nextStage->stage_name,
+        //     $isNextStageExternal,
+        //     $internalUsers,
+        //     $internalManagers,
+        //     $externalUsers,
+        //     $externalManagers
+        // );
     }
 
 

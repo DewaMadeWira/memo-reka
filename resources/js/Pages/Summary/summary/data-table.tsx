@@ -105,29 +105,15 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
 
     // request_file_upload: number;
     formData: {
+        invitation_id: number | null;
+        file: File | null;
         request_name: string;
-        perihal: string;
-        content: string;
-        official: string;
-        to_division: null;
-        hari_tanggal: string;
-        waktu: string;
-        tempat: string;
-        agenda: string;
-        invited_users: string[];
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
-            perihal: string;
-            content: string;
+            invitation_id: number | null;
+            file: File | null;
             request_name: string;
-            official: string;
-            to_division: null;
-            hari_tanggal: string;
-            waktu: string;
-            tempat: string;
-            agenda: string;
-            invited_users: string[];
         }>
     >;
     handleChange: (
@@ -942,14 +928,20 @@ DataTableProps<TData, TValue>) {
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
                                                                               <AlertDialogCancel>
-                                                                                  Kembali
+                                                                                  Kembali{" "}
+                                                                                  {
+                                                                                      row
+                                                                                          .original
+                                                                                          .summary!
+                                                                                          .id
+                                                                                  }
                                                                               </AlertDialogCancel>
                                                                               <AlertDialogAction
                                                                                   onClick={() => {
                                                                                       handleApprove(
                                                                                           row
                                                                                               .original
-                                                                                              .invite!
+                                                                                              .summary!
                                                                                               .id
                                                                                       );
                                                                                   }}
@@ -1209,58 +1201,10 @@ DataTableProps<TData, TValue>) {
                                                             //             .content,
                                                             // })
                                                             setFormData({
+                                                                invitation_id: 0,
+                                                                file: null,
                                                                 request_name:
-                                                                    // row.original
-                                                                    //     .request_name!
-                                                                    //     . ||
                                                                     "",
-                                                                perihal:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .perihal ||
-                                                                    "",
-                                                                content:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .content ||
-                                                                    "",
-                                                                official:
-                                                                    // row.original.invite!.official?.id?.toString() ||
-                                                                    "",
-                                                                to_division:
-                                                                    // row.original
-                                                                    //     .invite!
-                                                                    //     .to_division
-                                                                    //     ?.id ||
-                                                                    null,
-                                                                hari_tanggal:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .hari_tanggal ||
-                                                                    "",
-                                                                waktu:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .waktu ||
-                                                                    "",
-                                                                tempat:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .tempat ||
-                                                                    "",
-                                                                agenda:
-                                                                    row.original
-                                                                        .invite!
-                                                                        .agenda ||
-                                                                    "",
-                                                                invited_users:
-                                                                    // row.original.invite!.invited_users?.map(
-                                                                    //     (
-                                                                    //         user
-                                                                    //     ) =>
-                                                                    //         user.id.toString()
-                                                                    // ) || [],
-                                                                    [],
                                                             })
                                                         }
                                                         // onClick={() =>
@@ -1308,124 +1252,114 @@ DataTableProps<TData, TValue>) {
                                                                 Rapat Baru
                                                             </AlertDialogTitle>
                                                             <ScrollArea className="h-[500px] w-full pr-4">
-                                                                <div className="">
+                                                                <div className="mt-4">
                                                                     <label
                                                                         htmlFor="perihal"
                                                                         className="block mb-2"
                                                                     >
-                                                                        Perihal
+                                                                        Nama
+                                                                        Permintaan
+                                                                        Persetujuan
                                                                     </label>
                                                                     <input
                                                                         onChange={
                                                                             handleChange
                                                                         }
                                                                         type="text"
-                                                                        name="perihal"
+                                                                        name="request_name"
                                                                         id=""
-                                                                        value={
-                                                                            formData.perihal
-                                                                        }
                                                                         className="w-full p-2 border rounded-lg"
+                                                                        value={
+                                                                            formData.request_name
+                                                                        }
                                                                     />
                                                                     <label
-                                                                        htmlFor="content"
+                                                                        htmlFor="invitation_id"
                                                                         className="block mb-2"
                                                                     >
-                                                                        Isi
+                                                                        Undangan
+                                                                        Rapat
                                                                     </label>
-                                                                    <textarea
-                                                                        onChange={
-                                                                            handleChange
-                                                                        }
-                                                                        rows={
-                                                                            10
-                                                                        }
-                                                                        name="content"
-                                                                        id=""
-                                                                        value={
-                                                                            formData.content
-                                                                        }
+                                                                    {/* <select
+                                                                        id="invitation_id"
                                                                         className="w-full p-2 border rounded-lg"
-                                                                    />
-                                                                    <label
-                                                                        htmlFor="hari_tanggal"
-                                                                        className="block mb-2"
-                                                                    >
-                                                                        Hari /
-                                                                        tanggal
-                                                                    </label>
-                                                                    <input
-                                                                        onChange={
-                                                                            handleChange
+                                                                        
+                                                                        
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            setFormData(
+                                                                                {
+                                                                                    ...formData,
+                                                                                    invitation_id:
+                                                                                        parseInt(
+                                                                                            e
+                                                                                                .target
+                                                                                                .value
+                                                                                        ),
+                                                                                }
+                                                                            )
                                                                         }
-                                                                        type="date"
-                                                                        name="hari_tanggal"
-                                                                        id=""
-                                                                        // value={format(
-                                                                        //     parseISO(
-                                                                        //         formData.hari_tanggal
-                                                                        //     ),
-                                                                        //     "yyyy-MM-dd"
-                                                                        // )}
-                                                                        value={safeFormatDate(
-                                                                            formData.hari_tanggal
+                                                                        value={
+                                                                            formData.invitation_id ||
+                                                                            ""
+                                                                        }
+                                                                    >
+                                                                        <option value="">
+                                                                            Pilih
+                                                                            Undangan
+                                                                            Rapat
+                                                                        </option>
+                                                                        {invite.map(
+                                                                            (
+                                                                                req: any
+                                                                            ) => (
+                                                                                <option
+                                                                                    key={
+                                                                                        req.id
+                                                                                    }
+                                                                                    value={
+                                                                                        req
+                                                                                            .invite
+                                                                                            .id
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        req.request_name
+                                                                                    }
+                                                                                </option>
+                                                                            )
                                                                         )}
-                                                                        className="w-full p-2 border rounded-lg"
-                                                                    />
-                                                                    <label
-                                                                        htmlFor="waktu"
-                                                                        className="block mb-2"
+                                                                    </select> */}
+
+                                                                    {/* <label
+                                                                        htmlFor="file"
+                                                                        className="block mb-2 mt-4"
                                                                     >
-                                                                        Waktu
+                                                                        File
+                                                                        Risalah
+                                                                        Rapat
                                                                     </label>
                                                                     <input
-                                                                        onChange={
-                                                                            handleChange
-                                                                        }
-                                                                        type="text"
-                                                                        name="waktu"
-                                                                        id=""
-                                                                        value={
-                                                                            formData.waktu
-                                                                        }
+                                                                        type="file"
+                                                                        id="file"
                                                                         className="w-full p-2 border rounded-lg"
-                                                                    />
-                                                                    <label
-                                                                        htmlFor="tempat"
-                                                                        className="block mb-2"
-                                                                    >
-                                                                        Tempat
-                                                                    </label>
-                                                                    <input
                                                                         onChange={
-                                                                            handleChange
+                                                                            handleSummaryFileChange
                                                                         }
-                                                                        type="text"
-                                                                        name="tempat"
-                                                                        id=""
-                                                                        value={
-                                                                            formData.tempat
-                                                                        }
-                                                                        className="w-full p-2 border rounded-lg"
                                                                     />
-                                                                    <label
-                                                                        htmlFor="agenda"
-                                                                        className="block mb-2"
-                                                                    >
-                                                                        Agenda
-                                                                    </label>
-                                                                    <input
-                                                                        onChange={
-                                                                            handleChange
-                                                                        }
-                                                                        type="text"
-                                                                        name="agenda"
-                                                                        id=""
-                                                                        value={
-                                                                            formData.agenda
-                                                                        }
-                                                                        className="w-full p-2 border rounded-lg"
-                                                                    />
+
+                                                                    {formData.file && (
+                                                                        <div className="mt-2 text-sm text-green-600">
+                                                                            File
+                                                                            selected:{" "}
+                                                                            {
+                                                                                formData
+                                                                                    .file
+                                                                                    .name
+                                                                            }
+                                                                        </div>
+                                                                    )} */}
                                                                 </div>
                                                             </ScrollArea>
                                                         </AlertDialogHeader>
