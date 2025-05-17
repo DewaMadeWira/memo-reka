@@ -193,7 +193,11 @@ export default function Index({
                         </h1>
                     </div>
                     <AlertDialog>
-                        <AlertDialogTrigger className="bg-blue-500 p-2 mt-2 text-white text-sm font-medium rounded-lg">
+                        <AlertDialogTrigger
+                            className={`bg-blue-500 p-2 mt-2 text-white text-sm font-medium rounded-lg ${
+                                user.role_id == 1 ? "hidden" : ""
+                            }`}
+                        >
                             Unggah Risalah Rapat
                         </AlertDialogTrigger>
                         <AlertDialogContent>

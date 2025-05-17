@@ -235,7 +235,7 @@ export function DataTable<TData, TValue>({
                                                             Kembali
                                                         </AlertDialogCancel>
                                                         <AlertDialogAction
-                                                        className="bg-red-500"
+                                                            className="bg-red-500"
                                                             onClick={() =>
                                                                 handleDelete(
                                                                     Number(
@@ -277,7 +277,7 @@ export function DataTable<TData, TValue>({
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    Previous
+                    Sebelumnya
                 </Button>
                 <Button
                     variant="outline"
@@ -285,7 +285,7 @@ export function DataTable<TData, TValue>({
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Next
+                    Selanjutnya
                 </Button>
             </div>
         </div>

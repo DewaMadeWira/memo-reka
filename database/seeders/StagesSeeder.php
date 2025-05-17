@@ -233,7 +233,7 @@ class StagesSeeder extends Seeder
             'letter_id' => 3,
             'approver_id' => 1,
             'to_stage_id' => 17,
-            'status_id' => 5,
+            'status_id' => 1,
             'rejected_id' => 18,
             'requires_file_upload' => true,
         ]);
@@ -254,9 +254,9 @@ class StagesSeeder extends Seeder
             'sequence' => 0,
             'description' => "Risalah Rapat ditolak oleh Manajer Internal.",
             'letter_id' => 3,
-            'approver_id' => 1,
+            'approver_id' => 2,
             'to_stage_id' => 16,
-            'status_id' => 5,
+            'status_id' => 4,
             'rejected_id' => NULL,
             'is_fixable' => true,
         ]);

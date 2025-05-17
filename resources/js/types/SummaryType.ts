@@ -5,6 +5,7 @@ export type Summary = {
     invitation_id: number;
     file_path: string;
     invitation: Invitation;
+    rejection_reason?: string;
     created_at: Date;
     updated_at: Date;
     invite?: Invitation;

@@ -587,13 +587,14 @@ DataTableProps<TData, TValue>) {
                                                                           </TooltipContent>
                                                                       </Tooltip>
                                                                   </TooltipProvider> */}
+
                                                                   <AlertDialog>
                                                                       <AlertDialogTrigger>
                                                                           <button
                                                                               className={
                                                                                   row
                                                                                       .original
-                                                                                      .invite!
+                                                                                      .summary!
                                                                                       .rejection_reason
                                                                                       ? `${actionButtonClass} bg-yellow-500`
                                                                                       : "hidden"
@@ -661,7 +662,7 @@ DataTableProps<TData, TValue>) {
                                                                                       <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
                                                                                           {row
                                                                                               .original
-                                                                                              .invite!
+                                                                                              .summary!
                                                                                               .rejection_reason ||
                                                                                               "Tidak ada alasan yang diberikan"}
                                                                                       </p>
@@ -956,13 +957,13 @@ DataTableProps<TData, TValue>) {
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
                                                                   </AlertDialog>
-                                                                  {/* <AlertDialog>
+                                                                  <AlertDialog>
                                                                       <AlertDialogTrigger>
                                                                           <button
                                                                               className={
                                                                                   row
                                                                                       .original
-                                                                                      .invite!
+                                                                                      .summary!
                                                                                       .rejection_reason
                                                                                       ? `${actionButtonClass} bg-yellow-500`
                                                                                       : "hidden"
@@ -1008,34 +1009,32 @@ DataTableProps<TData, TValue>) {
                                                                                   Undangan
                                                                                   Rapat
                                                                               </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Ditolak
-                                                                                          pada
-                                                                                          tahap:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .stages
-                                                                                              .stage_name ||
-                                                                                              "Tidak diketahui"}
-                                                                                      </p>
+                                                                              <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                                                                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                      Ditolak
+                                                                                      pada
+                                                                                      tahap:
+                                                                                  </p>
+                                                                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                                                                      {row
+                                                                                          .original
+                                                                                          .stages
+                                                                                          .stage_name ||
+                                                                                          "Tidak diketahui"}
+                                                                                  </p>
 
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Alasan
-                                                                                          penolakan:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .invite!
-                                                                                              .rejection_reason ||
-                                                                                              "Tidak ada alasan yang diberikan"}
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </AlertDialogDescription>
+                                                                                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                      Alasan
+                                                                                      penolakan:
+                                                                                  </p>
+                                                                                  <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                                                                                      {row
+                                                                                          .original
+                                                                                          .summary!
+                                                                                          .rejection_reason ||
+                                                                                          "Tidak ada alasan yang diberikan"}
+                                                                                  </p>
+                                                                              </div>
                                                                           </AlertDialogHeader>
                                                                           <AlertDialogFooter>
                                                                               <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
@@ -1043,7 +1042,7 @@ DataTableProps<TData, TValue>) {
                                                                               </AlertDialogCancel>
                                                                           </AlertDialogFooter>
                                                                       </AlertDialogContent>
-                                                                  </AlertDialog> */}
+                                                                  </AlertDialog>
                                                                   <AlertDialog>
                                                                       <AlertDialogTrigger>
                                                                           <button
@@ -1872,7 +1871,7 @@ DataTableProps<TData, TValue>) {
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    Previous
+                    Sebelumnya
                 </Button>
                 <Button
                     variant="outline"
@@ -1880,7 +1879,7 @@ DataTableProps<TData, TValue>) {
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Next
+                    Selanjutnya
                 </Button>
             </div>
         </div>

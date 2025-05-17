@@ -174,7 +174,8 @@ export function DataTable<TData, TValue>({
                                                         <div className="flex flex-col gap-3">
                                                             <div className="flex flex-col gap-2">
                                                                 <label htmlFor="name">
-                                                                    Nama Tipe Surat
+                                                                    Nama Tipe
+                                                                    Surat
                                                                 </label>
                                                                 <input
                                                                     onChange={
@@ -276,7 +277,7 @@ export function DataTable<TData, TValue>({
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    Previous
+                    Sebelumnya
                 </Button>
                 <Button
                     variant="outline"
@@ -284,7 +285,7 @@ export function DataTable<TData, TValue>({
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Next
+                    Selanjutnya
                 </Button>
             </div>
         </div>
