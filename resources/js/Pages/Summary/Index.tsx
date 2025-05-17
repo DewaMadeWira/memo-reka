@@ -186,7 +186,7 @@ export default function Index({
                 <div className="flex justify-between items-center">
                     <div className="">
                         <h1 className="text-2xl font-semibold">
-                            Undangan Rapat
+                            Risalah Rapat
                         </h1>
                         <h1 className="text-xl font-medium mt-2">
                             Divisi : {userData.division.division_name}

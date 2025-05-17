@@ -94,7 +94,7 @@ const items = [
             },
             {
                 title: "Risalah Rapat Diterima",
-                url: "/risalah-rapat?intent=invitation.eksternal",
+                url: "/risalah-rapat?intent=risalah.eksternal",
             },
         ],
     },

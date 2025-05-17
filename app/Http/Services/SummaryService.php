@@ -92,32 +92,25 @@ class SummaryService
 
 
                 return $summary;
-            case 'risalah-rapat.internal':
-                // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division', 'memo.to_division', 'memo.signatory')->whereHas('stages', function ($q) {
-                //     $q->where('stage_name', "Memo Internal");
-                // })->whereHas('memo', function ($q) use ($division) {
-                //     $q->where('from_division', $division);
-                // })->get();
+            case 'risalah.internal':
+                $summary = SummaryLetter::get();
+                // $summary = RequestLetter::with('summary')->get();
+                // dd($summary);
+
                 $summary = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
                 }, 'stages.status', 'summary', 'summary.invite', 'summary.invite.to_division', 'summary.invite.from_division'])->whereHas('summary.invite', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
-                // dd($summary);
-                // $memo = RequestLetter::with(['user', 'stages' => function ($query) {
-                //     $query->withTrashed();
-                // }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
-                //     $q->where('from_division', $division);
-                // })->get();
-
-                // dd($memo);
 
 
                 $summary->each(function ($requestLetter) {
+                    // Handle different possible types of progress_stages
                     $progressStages = [];
 
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
+                            // Try to decode JSON string
                             $decoded = json_decode($requestLetter->progress_stages, true);
                             if (is_array($decoded)) {
                                 $progressStages = $decoded;
@@ -127,26 +120,45 @@ class SummaryService
                         }
                     }
 
-                    $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
+                    // Now use the properly formatted array
+                    // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
+                    if (!empty($progressStages)) {
+                        $requestLetter->progress = RequestStages::withTrashed()
+                            ->with("request_rejected")
+                            ->whereIn('id', $progressStages)
+                            ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
+                                // Only apply the ordering if there are items in the array
+                                return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
+                            })
+                            ->get();
+                    } else {
+                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                    }
+                    // return $requestLetter;
+                    // error_log($requestLetter);
                 });
-                // error_log($memo);
+
 
                 return $summary;
-            case 'risalah-rapat.eksternal':
+            case 'risalah.eksternal':
+                $summary = SummaryLetter::get();
+                // $summary = RequestLetter::with('summary')->get();
+                // dd($summary);
+
                 $summary = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
                 }, 'stages.status', 'summary', 'summary.invite', 'summary.invite.to_division', 'summary.invite.from_division'])->whereHas('summary.invite', function ($q) use ($division) {
                     $q->where('to_division', $division);
                 })->get();
 
-                // dd($memo);
-
 
                 $summary->each(function ($requestLetter) {
+                    // Handle different possible types of progress_stages
                     $progressStages = [];
 
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
+                            // Try to decode JSON string
                             $decoded = json_decode($requestLetter->progress_stages, true);
                             if (is_array($decoded)) {
                                 $progressStages = $decoded;
@@ -156,8 +168,24 @@ class SummaryService
                         }
                     }
 
-                    $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
+                    // Now use the properly formatted array
+                    // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
+                    if (!empty($progressStages)) {
+                        $requestLetter->progress = RequestStages::withTrashed()
+                            ->with("request_rejected")
+                            ->whereIn('id', $progressStages)
+                            ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
+                                // Only apply the ordering if there are items in the array
+                                return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
+                            })
+                            ->get();
+                    } else {
+                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                    }
+                    // return $requestLetter;
+                    // error_log($requestLetter);
                 });
+
 
                 return $summary;
 
