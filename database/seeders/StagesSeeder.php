@@ -247,6 +247,7 @@ class StagesSeeder extends Seeder
             'to_stage_id' => NULL,
             'status_id' => 5,
             'rejected_id' => NULL,
+            'requires_file_upload' => true,
         ]);
         DB::table('request_stages')->insert([
             'id' => 18,
@@ -259,6 +260,7 @@ class StagesSeeder extends Seeder
             'status_id' => 4,
             'rejected_id' => NULL,
             'is_fixable' => true,
+            'requires_file_upload' => true,
         ]);
         Schema::enableForeignKeyConstraints();
     }

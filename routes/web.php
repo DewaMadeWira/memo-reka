@@ -53,6 +53,19 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
         Route::resource('admin/manajemen-tipe-surat', LetterTypeManagement::class);
     });
+    Route::post('risalah-rapat/update/{id}', function (Request $request, $id) {
+
+        $file = $request->file("file");
+        $ext = $file->getClientOriginalExtension();
+        $filename = rand(100000000, 999999999) . '.' . $ext;
+        Storage::disk('local')->put('risalah-rapat/' . $filename, FacadesFile::get($file));
+
+        // dd($this->generateNomorSurat($user, $official)->memo_number);
+        $summary = SummaryLetter::where("id", $id)->update([
+            // 'memo_number' => '1234/MemoNumber/Test',
+            'file_path' => $filename,
+        ]);
+    });
     Route::post('upload-bukti', function (Request $request) {
         // Set timeout to a larger value for big uploads
         set_time_limit(300); // 5 minutes

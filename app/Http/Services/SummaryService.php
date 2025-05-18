@@ -240,6 +240,7 @@ class SummaryService
         if (Gate::allows('admin')) {
             abort(403);
         }
+        // dd($request);
 
         // $division = $this->authService->userDivision();
         // $user = $this->authService->index();

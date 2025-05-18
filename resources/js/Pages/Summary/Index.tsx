@@ -112,8 +112,30 @@ export default function Index({
         });
     }
     function handleUpdate(id: number) {
-        console.log(formData);
-        router.put("/undangan-rapat/" + id, formData, {
+        console.log("Original file object:", formData.file);
+
+        // Create a proper FormData object
+        const data = new FormData();
+        if (formData.file) {
+            data.append("file", formData.file);
+            data.append("name", "mamamia");
+
+            // Better debugging to confirm the file was appended
+            console.log("File name:", formData.file.name);
+            console.log("File size:", formData.file.size);
+
+            // You can iterate over the FormData entries to see what's actually in it
+            // This is the correct way to check FormData contents
+            for (let pair of data.entries()) {
+                console.log(pair[0] + ": " + pair[1]);
+            }
+        } else {
+            console.error("No file to upload!");
+            return; // Don't proceed if there's no file
+        }
+
+        router.post("/risalah-rapat/update/" + id, data, {
+            forceFormData: true,
             onError: (errors) => {
                 toast({
                     title: "Terjadi Kesalahan !",
@@ -332,6 +354,7 @@ export default function Index({
                         ): void {
                             throw new Error("Function not implemented.");
                         }}
+                        handleSummaryFileChange={handleSummaryFileChange}
                         setFileData={function (
                             value: React.SetStateAction<{
                                 file: File | null;

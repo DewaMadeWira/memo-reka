@@ -102,6 +102,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
     handleReject: (id: number, rejectionReason: string) => void;
     handleUpdate: (id: number) => void;
     handleUpload: (id: number) => void;
+    handleSummaryFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
     // request_file_upload: number;
     formData: {
@@ -154,6 +155,7 @@ export function DataTable<TData extends RequestLetter, TValue>({
     handleUpdate,
     official,
     division,
+    handleSummaryFileChange,
 }: // request_file_upload,
 // handleDelete,
 // role,
@@ -1244,93 +1246,14 @@ DataTableProps<TData, TValue>) {
                                                     <AlertDialogContent className="w-[300rem]">
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle className="font-medium">
-                                                                Buat Undangan
-                                                                Rapat Baru
+                                                                Perbaiki Risalah
+                                                                Rapat
                                                             </AlertDialogTitle>
                                                             <ScrollArea className="h-[500px] w-full pr-4">
                                                                 <div className="mt-4">
                                                                     <label
                                                                         htmlFor="perihal"
                                                                         className="block mb-2"
-                                                                    >
-                                                                        Nama
-                                                                        Permintaan
-                                                                        Persetujuan
-                                                                    </label>
-                                                                    <input
-                                                                        onChange={
-                                                                            handleChange
-                                                                        }
-                                                                        type="text"
-                                                                        name="request_name"
-                                                                        id=""
-                                                                        className="w-full p-2 border rounded-lg"
-                                                                        value={
-                                                                            formData.request_name
-                                                                        }
-                                                                    />
-                                                                    <label
-                                                                        htmlFor="invitation_id"
-                                                                        className="block mb-2"
-                                                                    >
-                                                                        Undangan
-                                                                        Rapat
-                                                                    </label>
-                                                                    {/* <select
-                                                                        id="invitation_id"
-                                                                        className="w-full p-2 border rounded-lg"
-                                                                        
-                                                                        
-                                                                        onChange={(
-                                                                            e
-                                                                        ) =>
-                                                                            setFormData(
-                                                                                {
-                                                                                    ...formData,
-                                                                                    invitation_id:
-                                                                                        parseInt(
-                                                                                            e
-                                                                                                .target
-                                                                                                .value
-                                                                                        ),
-                                                                                }
-                                                                            )
-                                                                        }
-                                                                        value={
-                                                                            formData.invitation_id ||
-                                                                            ""
-                                                                        }
-                                                                    >
-                                                                        <option value="">
-                                                                            Pilih
-                                                                            Undangan
-                                                                            Rapat
-                                                                        </option>
-                                                                        {invite.map(
-                                                                            (
-                                                                                req: any
-                                                                            ) => (
-                                                                                <option
-                                                                                    key={
-                                                                                        req.id
-                                                                                    }
-                                                                                    value={
-                                                                                        req
-                                                                                            .invite
-                                                                                            .id
-                                                                                    }
-                                                                                >
-                                                                                    {
-                                                                                        req.request_name
-                                                                                    }
-                                                                                </option>
-                                                                            )
-                                                                        )}
-                                                                    </select> */}
-
-                                                                    {/* <label
-                                                                        htmlFor="file"
-                                                                        className="block mb-2 mt-4"
                                                                     >
                                                                         File
                                                                         Risalah
@@ -1344,18 +1267,6 @@ DataTableProps<TData, TValue>) {
                                                                             handleSummaryFileChange
                                                                         }
                                                                     />
-
-                                                                    {formData.file && (
-                                                                        <div className="mt-2 text-sm text-green-600">
-                                                                            File
-                                                                            selected:{" "}
-                                                                            {
-                                                                                formData
-                                                                                    .file
-                                                                                    .name
-                                                                            }
-                                                                        </div>
-                                                                    )} */}
                                                                 </div>
                                                             </ScrollArea>
                                                         </AlertDialogHeader>
@@ -1375,12 +1286,12 @@ DataTableProps<TData, TValue>) {
                                                                     handleUpdate(
                                                                         row
                                                                             .original
-                                                                            .invite!
+                                                                            .summary!
                                                                             .id
                                                                     )
                                                                 }
                                                             >
-                                                                Ubah Undangan
+                                                                Ubah Risalah
                                                                 Rapat
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>
@@ -1444,11 +1355,15 @@ DataTableProps<TData, TValue>) {
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
                                                 </AlertDialog> */}
+                                                {/* {
+                                                    row.original.summary!
+                                                        .file_path
+                                                } */}
+
                                                 <AlertDialog>
                                                     <AlertDialogTrigger>
                                                         {row.original.summary!
-                                                            .file_path !=
-                                                        null ? (
+                                                            .file_path && (
                                                             <button
                                                                 className={
                                                                     row.original
@@ -1461,51 +1376,6 @@ DataTableProps<TData, TValue>) {
                                                             >
                                                                 <FileSearch></FileSearch>
                                                             </button>
-                                                        ) : user.role_id !=
-                                                          1 ? (
-                                                            <button
-                                                                className={
-                                                                    row.original
-                                                                        .stages
-                                                                        .requires_file_upload !=
-                                                                        1 ||
-                                                                    row.original
-                                                                        .invite!
-                                                                        .to_division
-                                                                        .id !=
-                                                                        user.division_id
-                                                                        ? "hidden"
-                                                                        : `${actionButtonClass}`
-                                                                }
-                                                            >
-                                                                <TooltipProvider
-                                                                    delayDuration={
-                                                                        100
-                                                                    }
-                                                                    skipDelayDuration={
-                                                                        0
-                                                                    }
-                                                                >
-                                                                    <Tooltip>
-                                                                        <TooltipTrigger>
-                                                                            <FileUp></FileUp>
-                                                                        </TooltipTrigger>
-                                                                        <TooltipContent
-                                                                            side="top"
-                                                                            sideOffset={
-                                                                                10
-                                                                            }
-                                                                        >
-                                                                            <p>
-                                                                                Upload
-                                                                                File
-                                                                            </p>
-                                                                        </TooltipContent>
-                                                                    </Tooltip>
-                                                                </TooltipProvider>
-                                                            </button>
-                                                        ) : (
-                                                            <></>
                                                         )}
                                                     </AlertDialogTrigger>
                                                     {row.original.summary!
