@@ -1377,6 +1377,7 @@ DataTableProps<TData, TValue>) {
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
                                                 </AlertDialog>
+                                                {/* View Files Button */}
                                                 <AlertDialog>
                                                     <AlertDialogTrigger
                                                         onClick={() => {
@@ -1391,8 +1392,8 @@ DataTableProps<TData, TValue>) {
                                                         }}
                                                     >
                                                         {row.original.memo!
-                                                            .images.length !=
-                                                        0 ? (
+                                                            .images.length >
+                                                            0 && (
                                                             <button
                                                                 className={
                                                                     row.original
@@ -1400,14 +1401,76 @@ DataTableProps<TData, TValue>) {
                                                                         .requires_file_upload !=
                                                                     1
                                                                         ? "hidden"
-                                                                        : `bg-blue-500 p-2 mt-2 text-white rounded-lg`
+                                                                        : `${actionButtonClass}`
                                                                 }
                                                             >
-                                                                <FileSearch></FileSearch>
-                                                                {/* Lihat File */}
+                                                                <TooltipProvider
+                                                                    delayDuration={
+                                                                        100
+                                                                    }
+                                                                    skipDelayDuration={
+                                                                        0
+                                                                    }
+                                                                >
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger>
+                                                                            <FileSearch />
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent
+                                                                            side="top"
+                                                                            sideOffset={
+                                                                                10
+                                                                            }
+                                                                        >
+                                                                            <p>
+                                                                                Lihat
+                                                                                File
+                                                                            </p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
                                                             </button>
-                                                        ) : user.role_id !=
-                                                          1 ? (
+                                                        )}
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent className="w-full max-w-7xl">
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Preview File
+                                                                {row.original
+                                                                    .memo!
+                                                                    .images
+                                                                    .length > 1
+                                                                    ? "s"
+                                                                    : ""}
+                                                            </AlertDialogTitle>
+                                                            {imagePreviewOpen && (
+                                                                <ImagePreview
+                                                                    isOpen={
+                                                                        imagePreviewOpen
+                                                                    }
+                                                                    onClose={() =>
+                                                                        setImagePreviewOpen(
+                                                                            false
+                                                                        )
+                                                                    }
+                                                                    images={
+                                                                        previewImages
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel className="bg-blue-500 text-white">
+                                                                Kembali
+                                                            </AlertDialogCancel>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+
+                                                {/* Upload Files Button */}
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger>
+                                                        {user.role_id != 1 && (
                                                             <button
                                                                 className={
                                                                     row.original
@@ -1433,7 +1496,7 @@ DataTableProps<TData, TValue>) {
                                                                 >
                                                                     <Tooltip>
                                                                         <TooltipTrigger>
-                                                                            <FileUp></FileUp>
+                                                                            <FileUp />
                                                                         </TooltipTrigger>
                                                                         <TooltipContent
                                                                             side="top"
@@ -1449,515 +1512,282 @@ DataTableProps<TData, TValue>) {
                                                                     </Tooltip>
                                                                 </TooltipProvider>
                                                             </button>
-                                                        ) : (
-                                                            <></>
                                                         )}
                                                     </AlertDialogTrigger>
-                                                    {row.original.memo!.images
-                                                        .length > 0 ? (
-                                                        <AlertDialogContent className="w-full max-w-7xl ">
-                                                            <AlertDialogHeader className="">
-                                                                <AlertDialogTitle>
-                                                                    Preview File
-                                                                    {row
-                                                                        .original
-                                                                        .memo!
-                                                                        .images
-                                                                        .length >
-                                                                    1
-                                                                        ? "s"
-                                                                        : ""}
-                                                                </AlertDialogTitle>
-                                                                {row.original
-                                                                    .memo!
-                                                                    .images
-                                                                    .length >
-                                                                0 ? (
-                                                                    imagePreviewOpen && (
-                                                                        <ImagePreview
-                                                                            isOpen={
-                                                                                imagePreviewOpen
-                                                                            }
-                                                                            onClose={() =>
-                                                                                setImagePreviewOpen(
-                                                                                    false
+                                                    <AlertDialogContent className="w-full">
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Upload File
+                                                            </AlertDialogTitle>
+                                                            <div>
+                                                                <div>
+                                                                    {/* File Upload Section */}
+                                                                    <div className="mt-4">
+                                                                        <label
+                                                                            htmlFor="file-upload"
+                                                                            className="block text-sm font-medium text-gray-700"
+                                                                        >
+                                                                            Upload
+                                                                            Bukti
+                                                                        </label>
+                                                                        <input
+                                                                            type="file"
+                                                                            id="file-upload"
+                                                                            multiple
+                                                                            className="mt-1 block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100"
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                handleFileSelection(
+                                                                                    e
+                                                                                        .target
+                                                                                        .files,
+                                                                                    row
+                                                                                        .original
+                                                                                        .memo!
+                                                                                        .id
                                                                                 )
                                                                             }
-                                                                            images={
-                                                                                previewImages
-                                                                            }
                                                                         />
-                                                                    )
-                                                                ) : (
-                                                                    // Keep your existing file upload dialog content
-                                                                    <AlertDialogContent className="w-full">
-                                                                        {/* Your existing file upload UI */}
-                                                                        {/* ... */}
-                                                                    </AlertDialogContent>
-                                                                )}
-                                                                {/* <div className="flex flex-col w-full">
-                                                                    <>
-                                                                        <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
-                                                                            <div
-                                                                                className="absolute inset-0 flex items-center justify-center z-10 bg-white/50"
-                                                                                id={`loading-indicator-${row.id}-${currentImageIndex}`}
-                                                                            >
-                                                                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                                                                            </div>
 
-                                                                            {imagesCount >
-                                                                                1 && (
-                                                                                <>
-                                                                                    <button
-                                                                                        onClick={
-                                                                                            navigatePrev
-                                                                                        }
-                                                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 z-20"
-                                                                                        aria-label="Previous image"
-                                                                                    >
-                                                                                        <svg
-                                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                                            width="24"
-                                                                                            height="24"
-                                                                                            viewBox="0 0 24 24"
-                                                                                            fill="none"
-                                                                                            stroke="currentColor"
-                                                                                            strokeWidth="2"
-                                                                                            strokeLinecap="round"
-                                                                                            strokeLinejoin="round"
-                                                                                        >
-                                                                                            <polyline points="15 18 9 12 15 6"></polyline>
-                                                                                        </svg>
-                                                                                    </button>
-                                                                                    <button
-                                                                                        onClick={
-                                                                                            ()=>
-                                                                                            navigateNext
-                                                                                        }
-                                                                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 z-20"
-                                                                                        aria-label="Next image"
-                                                                                    >
-                                                                                        <svg
-                                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                                            width="24"
-                                                                                            height="24"
-                                                                                            viewBox="0 0 24 24"
-                                                                                            fill="none"
-                                                                                            stroke="currentColor"
-                                                                                            strokeWidth="2"
-                                                                                            strokeLinecap="round"
-                                                                                            strokeLinejoin="round"
-                                                                                        >
-                                                                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                                                                        </svg>
-                                                                                    </button>
-                                                                                </>
-                                                                            )}
-
-                                                                            <div className="w-full h-full flex items-center justify-center overflow-auto">
-                                                                                <img
-                                                                                    src={`memo-file/${
-                                                                                        currentImage?.file_path ||
-                                                                                        row
-                                                                                            .original
-                                                                                            .memo!
-                                                                                            .file_path
-                                                                                    }`}
-                                                                                    className="max-w-full max-h-full object-contain transition-transform duration-200 hover:scale-105"
-                                                                                    alt="Document preview"
-                                                                                    onLoad={(
-                                                                                        e
-                                                                                    ) => {
-                                                                                        // Hide loading indicator when image loads
-                                                                                        const loadingEl =
-                                                                                            document.getElementById(
-                                                                                                `loading-indicator-${row.id}-${currentImageIndex}`
-                                                                                            );
-                                                                                        if (
-                                                                                            loadingEl
-                                                                                        )
-                                                                                            loadingEl.style.display =
-                                                                                                "none";
-                                                                                    }}
-                                                                                    onError={(
-                                                                                        e
-                                                                                    ) => {
-                                                                                        // Show error message if image fails to load
-                                                                                        e.currentTarget.src =
-                                                                                            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAwYzYuNjIzIDAgMTIgNS4zNzcgMTIgMTJzLTUuMzc3IDEyLTEyIDEyLTEyLTUuMzc3LTEyLTEyIDUuMzc3LTEyIDEyLTEyem0wIDFjNi4wNzEgMCAxMSA0LjkyOSAxMSAxMXMtNC45MjkgMTEtMTEgMTEtMTEtNC45MjktMTEtMTEgNC45MjktMTEgMTEtMTF6bS41IDEyaC0ydi02aDJ2NnptLTEtNi43NWMtLjY5IDAtMS4yNS0uNTYtMS4yNS0xLjI1cy41Ni0xLjI1IDEuMjUtMS4yNSAxLjI1LjU2IDEuMjUgMS4yNS0uNTYgMS4yNS0xLjI1IDEuMjV6Ii8+PC9zdmc+";
-                                                                                        e.currentTarget.className =
-                                                                                            "w-24 h-24 opacity-60";
-                                                                                        const loadingEl =
-                                                                                            document.getElementById(
-                                                                                                `loading-indicator-${row.id}-${currentImageIndex}`
-                                                                                            );
-                                                                                        if (
-                                                                                            loadingEl
-                                                                                        ) {
-                                                                                            loadingEl.innerHTML =
-                                                                                                '<p class="text-red-500">Failed to load image</p>';
-                                                                                            loadingEl.classList.remove(
-                                                                                                "bg-white/50"
-                                                                                            );
-                                                                                        }
-                                                                                    }}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="flex items-center justify-between mt-4">
-                                                                            <div className="text-sm text-gray-500">
-                                                                                {
-                                                                                    currentImage?.file_name
-                                                                                }
-                                                                            </div>
-                                                                            {imagesCount >
-                                                                                1 && (
-                                                                                <div className="flex items-center gap-1">
-                                                                                    <span className="text-sm text-gray-500">
-                                                                                        {currentImageIndex +
-                                                                                            1}{" "}
-                                                                                        /{" "}
-                                                                                        {
-                                                                                            imagesCount
-                                                                                        }
-                                                                                    </span>
-                                                                                </div>
-                                                                            )}
-                                                                            <div className="flex gap-2">
-                                                                                <button
-                                                                                    className="px-3 py-1 bg-gray-200 rounded-md text-sm"
-                                                                                    onClick={() =>
-                                                                                        window.open(
-                                                                                            `memo-file/${
-                                                                                                currentImage?.file_path ||
-                                                                                                row
-                                                                                                    .original
-                                                                                                    .memo!
-                                                                                                    .file_path
-                                                                                            }`,
-                                                                                            "_blank"
-                                                                                        )
-                                                                                    }
-                                                                                >
-                                                                                    Buka
-                                                                                    di
-                                                                                    tab
-                                                                                    baru
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </>
-                                                                </div> */}
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel className="bg-blue-500 text-white">
-                                                                    Kembali
-                                                                </AlertDialogCancel>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    ) : (
-                                                        <AlertDialogContent className="w-full">
-                                                            <AlertDialogHeader className="">
-                                                                <AlertDialogTitle>
-                                                                    Upload File
-                                                                </AlertDialogTitle>
-                                                                <div className="">
-                                                                    <div className="">
-                                                                        {/* File Upload Section */}
-                                                                        <div className="mt-4">
-                                                                            <label
-                                                                                htmlFor="file-upload"
-                                                                                className="block text-sm font-medium text-gray-700"
-                                                                            >
-                                                                                Upload
-                                                                                Bukti
-                                                                            </label>
-                                                                            <input
-                                                                                type="file"
-                                                                                id="file-upload"
-                                                                                multiple
-                                                                                className="mt-1 block w-full text-sm text-gray-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-md file:border-0
-            file:text-sm file:font-semibold
-            file:bg-blue-50 file:text-blue-700
-            hover:file:bg-blue-100"
-                                                                                onChange={(
-                                                                                    e
-                                                                                ) =>
-                                                                                    handleFileSelection(
-                                                                                        e
-                                                                                            .target
-                                                                                            .files,
-                                                                                        row
-                                                                                            .original
-                                                                                            .memo!
-                                                                                            .id
-                                                                                    )
-                                                                                }
-                                                                            />
-
-                                                                            {/* Preview area */}
-                                                                            {filePreview.length >
-                                                                                0 && (
-                                                                                <ScrollArea className="">
-                                                                                    <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                                                        {filePreview.map(
-                                                                                            (
-                                                                                                preview,
-                                                                                                index
-                                                                                            ) => (
-                                                                                                <div
-                                                                                                    key={
-                                                                                                        index
-                                                                                                    }
-                                                                                                    className="relative "
-                                                                                                >
-                                                                                                    {preview ? (
-                                                                                                        <img
-                                                                                                            src={
-                                                                                                                preview
-                                                                                                            }
-                                                                                                            alt={`Preview ${
-                                                                                                                index +
-                                                                                                                1
-                                                                                                            }`}
-                                                                                                            className="h-24 w-full object-cover rounded-md"
-                                                                                                        />
-                                                                                                    ) : (
-                                                                                                        <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
-                                                                                                            <span className="text-gray-500">
-                                                                                                                Non-image
-                                                                                                                file
-                                                                                                            </span>
-                                                                                                        </div>
-                                                                                                    )}
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1"
-                                                                                                        onClick={() => {
-                                                                                                            // Remove this file from preview and fileData
-                                                                                                            if (
-                                                                                                                fileData
-                                                                                                            ) {
-                                                                                                                const newFiles =
-                                                                                                                    [
-                                                                                                                        ...fileData.files,
-                                                                                                                    ];
-                                                                                                                const newFileNames =
-                                                                                                                    [
-                                                                                                                        ...fileData.fileNames,
-                                                                                                                    ];
-                                                                                                                const newPreviews =
-                                                                                                                    [
-                                                                                                                        ...filePreview,
-                                                                                                                    ];
-                                                                                                                newFiles.splice(
-                                                                                                                    index,
-                                                                                                                    1
-                                                                                                                );
-                                                                                                                newFileNames.splice(
-                                                                                                                    index,
-                                                                                                                    1
-                                                                                                                );
-                                                                                                                newPreviews.splice(
-                                                                                                                    index,
-                                                                                                                    1
-                                                                                                                );
-                                                                                                                if (
-                                                                                                                    newFiles.length ===
-                                                                                                                    0
-                                                                                                                ) {
-                                                                                                                    setFileData(
-                                                                                                                        null
-                                                                                                                    );
-                                                                                                                    setFilePreview(
-                                                                                                                        []
-                                                                                                                    );
-                                                                                                                } else {
-                                                                                                                    setFileData(
-                                                                                                                        {
-                                                                                                                            ...fileData,
-                                                                                                                            files: newFiles,
-                                                                                                                            fileNames:
-                                                                                                                                newFileNames,
-                                                                                                                        }
-                                                                                                                    );
-                                                                                                                    setFilePreview(
-                                                                                                                        newPreviews
-                                                                                                                    );
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <svg
-                                                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                                                            className="h-4 w-4"
-                                                                                                            fill="none"
-                                                                                                            viewBox="0 0 24 24"
-                                                                                                            stroke="currentColor"
-                                                                                                        >
-                                                                                                            <path
-                                                                                                                strokeLinecap="round"
-                                                                                                                strokeLinejoin="round"
-                                                                                                                strokeWidth={
-                                                                                                                    2
-                                                                                                                }
-                                                                                                                d="M6 18L18 6M6 6l12 12"
-                                                                                                            />
-                                                                                                        </svg>
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            )
-                                                                                        )}
-                                                                                    </div>
-                                                                                </ScrollArea>
-                                                                            )}
-
-                                                                            {/* File names display */}
-                                                                            {fileData &&
-                                                                                fileData.fileNames &&
-                                                                                fileData
-                                                                                    .fileNames
-                                                                                    .length >
-                                                                                    0 && (
-                                                                                    <div className="mt-2">
-                                                                                        <p className="text-sm font-medium text-gray-700">
-                                                                                            Selected
-                                                                                            files:
-                                                                                        </p>
-                                                                                        <ul className="mt-1 text-sm text-gray-500 list-disc list-inside">
-                                                                                            {fileData!.fileNames.map(
-                                                                                                (
-                                                                                                    name,
-                                                                                                    index
-                                                                                                ) => (
-                                                                                                    <li
-                                                                                                        key={
-                                                                                                            index
-                                                                                                        }
-                                                                                                    >
-                                                                                                        {
-                                                                                                            name
-                                                                                                        }
-                                                                                                    </li>
-                                                                                                )
-                                                                                            )}
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                )}
-
-                                                                            {/* Upload button */}
-                                                                            {/* {fileData &&
-                                                                                fileData.files &&
-                                                                                fileData
-                                                                                    .files
-                                                                                    .length >
-                                                                                    0 && (
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                                                                        onClick={() =>
-                                                                                            handleUpload
-                                                                                        }
-                                                                                    >
-                                                                                        Upload
-                                                                                        Files
-                                                                                    </button>
-                                                                                )} */}
-                                                                        </div>
+                                                                        {/* Preview area */}
                                                                         {filePreview.length >
                                                                             0 && (
-                                                                            <div className="mt-4 mb-4">
-                                                                                <h4 className="text-sm font-medium mb-2">
-                                                                                    Preview:
-                                                                                </h4>
-                                                                                <ScrollArea className="h-36">
-                                                                                    <div className="grid grid-cols-2 gap-4 ">
-                                                                                        {filePreview.map(
+                                                                            <ScrollArea>
+                                                                                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                                                    {filePreview.map(
+                                                                                        (
+                                                                                            preview,
+                                                                                            index
+                                                                                        ) => (
+                                                                                            <div
+                                                                                                key={
+                                                                                                    index
+                                                                                                }
+                                                                                                className="relative"
+                                                                                            >
+                                                                                                {preview ? (
+                                                                                                    <img
+                                                                                                        src={
+                                                                                                            preview
+                                                                                                        }
+                                                                                                        alt={`Preview ${
+                                                                                                            index +
+                                                                                                            1
+                                                                                                        }`}
+                                                                                                        className="h-24 w-full object-cover rounded-md"
+                                                                                                    />
+                                                                                                ) : (
+                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                        <span className="text-gray-500">
+                                                                                                            Non-image
+                                                                                                            file
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                                )}
+                                                                                                <button
+                                                                                                    type="button"
+                                                                                                    className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1"
+                                                                                                    onClick={() => {
+                                                                                                        // Remove this file from preview and fileData
+                                                                                                        if (
+                                                                                                            fileData
+                                                                                                        ) {
+                                                                                                            const newFiles =
+                                                                                                                [
+                                                                                                                    ...fileData.files,
+                                                                                                                ];
+                                                                                                            const newFileNames =
+                                                                                                                [
+                                                                                                                    ...fileData.fileNames,
+                                                                                                                ];
+                                                                                                            const newPreviews =
+                                                                                                                [
+                                                                                                                    ...filePreview,
+                                                                                                                ];
+                                                                                                            newFiles.splice(
+                                                                                                                index,
+                                                                                                                1
+                                                                                                            );
+                                                                                                            newFileNames.splice(
+                                                                                                                index,
+                                                                                                                1
+                                                                                                            );
+                                                                                                            newPreviews.splice(
+                                                                                                                index,
+                                                                                                                1
+                                                                                                            );
+                                                                                                            if (
+                                                                                                                newFiles.length ===
+                                                                                                                0
+                                                                                                            ) {
+                                                                                                                setFileData(
+                                                                                                                    null
+                                                                                                                );
+                                                                                                                setFilePreview(
+                                                                                                                    []
+                                                                                                                );
+                                                                                                            } else {
+                                                                                                                setFileData(
+                                                                                                                    {
+                                                                                                                        ...fileData,
+                                                                                                                        files: newFiles,
+                                                                                                                        fileNames:
+                                                                                                                            newFileNames,
+                                                                                                                    }
+                                                                                                                );
+                                                                                                                setFilePreview(
+                                                                                                                    newPreviews
+                                                                                                                );
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <svg
+                                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                                        className="h-4 w-4"
+                                                                                                        fill="none"
+                                                                                                        viewBox="0 0 24 24"
+                                                                                                        stroke="currentColor"
+                                                                                                    >
+                                                                                                        <path
+                                                                                                            strokeLinecap="round"
+                                                                                                            strokeLinejoin="round"
+                                                                                                            strokeWidth={
+                                                                                                                2
+                                                                                                            }
+                                                                                                            d="M6 18L18 6M6 6l12 12"
+                                                                                                        />
+                                                                                                    </svg>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        )
+                                                                                    )}
+                                                                                </div>
+                                                                            </ScrollArea>
+                                                                        )}
+
+                                                                        {/* File names display */}
+                                                                        {fileData &&
+                                                                            fileData.fileNames &&
+                                                                            fileData
+                                                                                .fileNames
+                                                                                .length >
+                                                                                0 && (
+                                                                                <div className="mt-2">
+                                                                                    <p className="text-sm font-medium text-gray-700">
+                                                                                        Selected
+                                                                                        files:
+                                                                                    </p>
+                                                                                    <ul className="mt-1 text-sm text-gray-500 list-disc list-inside">
+                                                                                        {fileData.fileNames.map(
                                                                                             (
-                                                                                                preview,
+                                                                                                name,
                                                                                                 index
                                                                                             ) => (
-                                                                                                <div
+                                                                                                <li
                                                                                                     key={
                                                                                                         index
                                                                                                     }
-                                                                                                    className="border rounded-md p-2"
                                                                                                 >
-                                                                                                    {preview ? (
-                                                                                                        <img
-                                                                                                            src={
-                                                                                                                preview
-                                                                                                            }
-                                                                                                            alt={`File Preview ${
-                                                                                                                index +
-                                                                                                                1
-                                                                                                            }`}
-                                                                                                            className="max-h-48 max-w-full mx-auto"
-                                                                                                        />
-                                                                                                    ) : (
-                                                                                                        <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
-                                                                                                            <span className="text-gray-500">
-                                                                                                                Non-image
-                                                                                                                file
-                                                                                                            </span>
-                                                                                                        </div>
-                                                                                                    )}
-                                                                                                    <p className="text-xs text-center mt-2 text-gray-500">
-                                                                                                        {
-                                                                                                            fileData
-                                                                                                                ?.fileNames[
-                                                                                                                index
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    </p>
-                                                                                                </div>
+                                                                                                    {
+                                                                                                        name
+                                                                                                    }
+                                                                                                </li>
                                                                                             )
                                                                                         )}
-                                                                                    </div>
-                                                                                </ScrollArea>
-                                                                            </div>
-                                                                        )}
+                                                                                    </ul>
+                                                                                </div>
+                                                                            )}
                                                                     </div>
 
-                                                                    {/* <input type="file" /> */}
-                                                                    {/* <PDFViewer className="w-full h-[80vh]">
-                                                                    <Template
-                                                                        data={
-                                                                            row
-                                                                                .original
-                                                                                .memo
-                                                                        }
-                                                                    />
-                                                                </PDFViewer> */}
+                                                                    {filePreview.length >
+                                                                        0 && (
+                                                                        <div className="mt-4 mb-4">
+                                                                            <h4 className="text-sm font-medium mb-2">
+                                                                                Preview:
+                                                                            </h4>
+                                                                            <ScrollArea className="h-36">
+                                                                                <div className="grid grid-cols-2 gap-4">
+                                                                                    {filePreview.map(
+                                                                                        (
+                                                                                            preview,
+                                                                                            index
+                                                                                        ) => (
+                                                                                            <div
+                                                                                                key={
+                                                                                                    index
+                                                                                                }
+                                                                                                className="border rounded-md p-2"
+                                                                                            >
+                                                                                                {preview ? (
+                                                                                                    <img
+                                                                                                        src={
+                                                                                                            preview
+                                                                                                        }
+                                                                                                        alt={`File Preview ${
+                                                                                                            index +
+                                                                                                            1
+                                                                                                        }`}
+                                                                                                        className="max-h-48 max-w-full mx-auto"
+                                                                                                    />
+                                                                                                ) : (
+                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                        <span className="text-gray-500">
+                                                                                                            Non-image
+                                                                                                            file
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                                )}
+                                                                                                <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                                    {
+                                                                                                        fileData
+                                                                                                            ?.fileNames[
+                                                                                                            index
+                                                                                                        ]
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        )
+                                                                                    )}
+                                                                                </div>
+                                                                            </ScrollArea>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel className=" ">
-                                                                    Kembali
-                                                                </AlertDialogCancel>
-                                                                <AlertDialogAction
-                                                                    className="bg-blue-500 text-white"
-                                                                    onClick={() =>
-                                                                        handleUpload(
-                                                                            row
-                                                                                .original
-                                                                                .memo!
-                                                                                .id
-                                                                        )
-                                                                    }
-                                                                    // disabled={
-                                                                    //     !fileData!
-                                                                    //         .files
-                                                                    // }
-                                                                >
-                                                                    Upload
-                                                                </AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    )}
+                                                            </div>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Kembali
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className="bg-blue-500 text-white"
+                                                                onClick={() =>
+                                                                    handleUpload(
+                                                                        row
+                                                                            .original
+                                                                            .memo!
+                                                                            .id
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    !fileData ||
+                                                                    fileData
+                                                                        .files
+                                                                        .length ===
+                                                                        0
+                                                                }
+                                                            >
+                                                                Upload
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
                                                 </AlertDialog>
                                             </div>
                                             {/* <AlertDialog>

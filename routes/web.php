@@ -120,6 +120,9 @@ Route::middleware('auth')->group(function () {
         }
     });
 
+    Route::post('delete-evidence-multiple', [MemoController::class, 'deleteEvidenceMultiple']);
+
+
 
     Route::resource('memo', MemoController::class);
     Route::resource('undangan-rapat', InvitationController::class);

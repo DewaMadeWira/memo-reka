@@ -150,7 +150,7 @@ export default function Index({
                 toast({
                     className: "bg-green-500 text-white",
                     title: "Berhasil !",
-                    description: "Undangan Rapat berhasil diubah",
+                    description: "Risalah Rapat berhasil diubah",
                 });
                 router.visit(window.location.pathname, {
                     preserveScroll: true,

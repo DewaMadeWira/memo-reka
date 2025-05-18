@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\MemoService;
 use App\Models\Division;
+use App\Models\MemoImage;
 use App\Models\MemoLetter;
 use App\Models\Notification;
 use App\Models\Official;
@@ -13,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class MemoController extends Controller
 {
@@ -253,5 +256,52 @@ class MemoController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function deleteEvidenceMultiple(Request $request)
+    {
+        // $ids = $request->input('ids');
+        // MemoImage::whereIn('id', $ids)->delete();
+        // return response()->json(['message' => 'Evidence deleted successfully']);
+        $request->validate([
+            'imageIds' => 'required|array',
+            'imageIds.*' => 'integer|exists:memo_images,id',
+        ]);
+
+        $imageIds = $request->input('imageIds');
+
+        // Start a database transaction
+        DB::beginTransaction();
+
+        try {
+            // Get all images that will be deleted
+            $images = MemoImage::whereIn('id', $imageIds)->get();
+
+            // Delete files from storage
+            foreach ($images as $image) {
+                if (Storage::exists('public/memo-file/' . $image->file_path)) {
+                    Storage::delete('public/memo-file/' . $image->file_path);
+                }
+            }
+
+            // Delete the database records
+            MemoImage::whereIn('id', $imageIds)->delete();
+
+            // Commit the transaction
+            DB::commit();
+            
+
+            // return response()->json([
+            //     'message' => count($imageIds) . ' image(s) deleted successfully',
+            //     'deletedIds' => $imageIds
+            // ]);
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of error
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Failed to delete images',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
