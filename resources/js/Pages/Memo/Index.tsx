@@ -247,6 +247,9 @@ export default function Index({
                     title: "Berhasil !",
                     description: "Memo berhasil dibuat",
                 });
+                router.visit(window.location.pathname, {
+                    preserveScroll: true,
+                });
             },
         });
     };
@@ -276,6 +279,9 @@ export default function Index({
                     className: "bg-green-500 text-white",
                     title: "Berhasil !",
                     description: "Memo berhasil diubah",
+                });
+                router.visit(window.location.pathname, {
+                    preserveScroll: true,
                 });
             },
         });

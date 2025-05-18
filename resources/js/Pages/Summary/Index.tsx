@@ -96,7 +96,9 @@ export default function Index({
                     file: null,
                     request_name: "",
                 });
-                router.reload();
+                router.visit(window.location.pathname, {
+                    preserveScroll: true,
+                });
             },
         });
     };
@@ -150,7 +152,9 @@ export default function Index({
                     title: "Berhasil !",
                     description: "Undangan Rapat berhasil diubah",
                 });
-                router.reload();
+                router.visit(window.location.pathname, {
+                    preserveScroll: true,
+                });
             },
         });
     }

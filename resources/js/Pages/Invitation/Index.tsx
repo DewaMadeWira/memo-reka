@@ -52,7 +52,26 @@ export default function Index({
     console.log(all_user);
     console.log(request);
     const handleSubmit = () => {
-        router.post("/request?intent=invitation.create", formData);
+        router.post("/request?intent=invitation.create", formData, {
+            onError: (errors) => {
+                toast({
+                    title: "Terjadi Kesalahan !",
+                    description: errors.message,
+                    variant: "destructive",
+                });
+                console.log(errors);
+            },
+            onSuccess: () => {
+                toast({
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil !",
+                    description: "Undangan Rapat berhasil dibuat",
+                });
+                router.visit(window.location.pathname, {
+                    preserveScroll: true,
+                });
+            },
+        });
     };
     // const handleApprove = ({ id }: { id: number }) => {
     //     router.post("/invite-approve/" + id);
@@ -82,7 +101,9 @@ export default function Index({
                     title: "Berhasil !",
                     description: "Undangan Rapat berhasil diubah",
                 });
-                router.reload();
+                router.visit(window.location.pathname, {
+                    preserveScroll: true,
+                });
             },
         });
     }
