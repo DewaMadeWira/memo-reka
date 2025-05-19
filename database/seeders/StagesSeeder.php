@@ -26,6 +26,7 @@ class StagesSeeder extends Seeder
             'status_id' => 1,
             'rejected_id' => 2,
             'is_external' => false,
+            'notify_internal_manager' => true,
         ]);
         // May use is rejectable 
         // If Rejected Didn't go anywhere change status to Rejected
@@ -41,6 +42,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => NULL,
             'is_external' => false,
             'is_fixable' => true,
+            'notify_internal_user' => true,
         ]);
 
         DB::table('request_stages')->insert([
@@ -54,6 +56,7 @@ class StagesSeeder extends Seeder
             'status_id' => 2,
             'rejected_id' => 14,
             'is_external' => true,
+            'notify_internal_user' => true,
         ]);
         // If Rejected Go Mark as Rejected and Done
         // DB::table('request_stages')->insert([
@@ -79,6 +82,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => NULL,
             'requires_file_upload' => true,
             'is_external' => true,
+            'notify_external' => true,
         ]);
 
         DB::table('request_stages')->insert([
@@ -93,6 +97,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => 5,
             'requires_file_upload' => false,
             'is_external' => true,
+            'notify_internal_manager' => true,
         ]);
 
         // DB::table('request_stages')->insert([
@@ -119,6 +124,7 @@ class StagesSeeder extends Seeder
             'is_external' => true,
             'requires_file_upload' => true,
             'is_external' => true,
+            'notify_internal_user' => true,
         ]);
         // If rejected didn't go anywhere 
         DB::table('request_stages')->insert([
@@ -131,6 +137,9 @@ class StagesSeeder extends Seeder
             'to_stage_id' => NULL,
             'status_id' => 5,
             'rejected_id' => NULL,
+            'notify_internal' => true,
+            'notify_external' => true,
+
 
         ]);
         DB::table('request_stages')->insert([

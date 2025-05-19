@@ -484,11 +484,115 @@ class MemoService
         $isRejected = false,
         $rejectionReason = null
     ) {
+        $isRejected = $request->stages->status_id == 4;
         $memoNumber = $request->memo->memo_number;
-        if (!$isNextStageExternal) {
+        $currentStage = RequestStages::find($request->stages_id);
+        // dd("mamamia");
+        // dd($currentStage);
 
+        // Get notification settings from the current stage
+        $notifyInternalManager = $currentStage->notify_internal_manager ?? false;
+        $notifyInternalUser = $currentStage->notify_internal_user ?? false;
+        $notifyInternal = $currentStage->notify_internal ?? false;
+        $notifyExternal = $currentStage->notify_external ?? false;
+        $notifyCreator = $currentStage->notify_creator ?? false;
+
+        // Determine message content based on status (approved/rejected)
+        $statusMessage = $isRejected
+            ? "Memo '{$memoNumber}' telah ditolak, periksa kembali alasan penolakan !"
+            : "Memo '{$memoNumber}' telah disetujui dan masuk ke tahap {$nextStageName}";
+
+
+        $isExternal = $currentStage->is_external ?? false;
+
+        if ($isExternal && !$isExternal) {
+            // return;
+            if ($notifyInternalUser) {
+                // dd("notify internal user");
+                foreach ($externalUsers as $user) {
+                    SendMemoNotification::dispatch(
+                        $user->id,
+                        $isRejected ? 'Memo Ditolak!' : 'Memo Disetujui!',
+                        $statusMessage,
+                        $request->id
+                    );
+                }
+            }
+
+            if ($notifyInternalManager) {
+                // dd("notify internal manager");
+                foreach ($externalManagers as $manager) {
+                    SendMemoNotification::dispatch(
+                        $manager->id,
+                        $isRejected ? 'Memo Ditolak!' : 'Memo Perlu Persetujuan!',
+                        $statusMessage,
+                        $request->id
+                    );
+                }
+            }
+            return;
         }
-        
+
+        // Handle internal notifications
+        if ($notifyInternalUser) {
+            // dd("notify internal user");
+            foreach ($internalUsers as $user) {
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    $isRejected ? 'Memo Ditolak!' : 'Memo Disetujui!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        if ($notifyInternalManager) {
+            // dd("notify internal manager");
+            foreach ($internalManagers as $manager) {
+                SendMemoNotification::dispatch(
+                    $manager->id,
+                    $isRejected ? 'Memo Ditolak!' : 'Memo Perlu Persetujuan!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // Handle external notifications
+        if ($notifyExternal) {
+            foreach ($externalUsers as $user) {
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    $isRejected ? 'Memo Ditolak!' : 'Memo Baru Diterima!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+
+            foreach ($externalManagers as $manager) {
+                SendMemoNotification::dispatch(
+                    $manager->id,
+                    $isRejected ? 'Memo Ditolak!' : 'Memo Perlu Persetujuan!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // Notify creator specifically if needed
+        if ($notifyCreator) {
+            // Find the creator (user who created the memo)
+            $creator = User::find($request->user_id);
+            if ($creator) {
+                SendMemoNotification::dispatch(
+                    $creator->id,
+                    $isRejected ? 'Memo Ditolak!' : 'Status Memo Diperbarui!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
 
 
         // Handle internal workflow notifications
