@@ -25,6 +25,14 @@ return new class extends Migration
             $table->boolean('is_fixable')->default(false);
             $table->boolean('requires_rejection_reason')->default(false);
             $table->boolean('is_external')->default(false);
+            $table->boolean('notify_internal_manager')->nullable();    // e.g., ["internal_manager"]
+            $table->boolean('notify_internal_user')->nullable(); // e.g., ["internal_user"]
+            $table->boolean('notify_internal')->nullable(); // e.g., ["internal_user", "internal_manager"]
+            $table->boolean('notify_external')->nullable(); // e.g., ["external_user"]
+            $table->boolean('notify_creator')->nullable(); // e.g., ["external_user"]
+
+            // $table->boolean('notify_external_manager')->nullable(); // e.g., ["external_manager"]
+            // $table->boolean('notify_external_user')->nullable(); // e.g., ["external_manager"]
             $table->timestamps();
             $table->foreign('letter_id')->references('id')->on('letter_types');
             $table->foreign('approver_id')->references('id')->on('roles');

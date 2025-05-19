@@ -90,7 +90,7 @@ class StagesSeeder extends Seeder
             'approver_id' => 1,
             'to_stage_id' => 6,
             'status_id' => 3,
-            'rejected_id' => 4,
+            'rejected_id' => 5,
             'requires_file_upload' => false,
             'is_external' => true,
         ]);
@@ -108,14 +108,16 @@ class StagesSeeder extends Seeder
         // ]);
         DB::table('request_stages')->insert([
             'id' => 5,
-            'stage_name' => "Memo Eksternal Ditolak Manajer Eksternal",
+            'stage_name' => "Bukti Memo Ditolak Manajer Eksternal",
             'sequence' => 0,
-            'description' => "Pada tahap ini memo ditolak oleh manajer eksternal. Jika ditolak, Memo tidak dapat direvisi dan harus dibuat ulang menggunakan nomor surat baru",
+            'description' => "Bukti ditolak oleh manajer, perbaiki dan upload kembali bukti kerja memo.",
             'letter_id' => 1,
-            'approver_id' => 1,
-            'to_stage_id' => 4,
+            'approver_id' => 2,
+            'to_stage_id' => 15,
             'status_id' => 4,
             'rejected_id' => NULL,
+            'is_external' => true,
+            'requires_file_upload' => true,
             'is_external' => true,
         ]);
         // If rejected didn't go anywhere 
@@ -222,8 +224,9 @@ class StagesSeeder extends Seeder
             'letter_id' => 1,
             'approver_id' => 1,
             'to_stage_id' => NULL,
-            'status_id' => 5,
+            'status_id' => 6,
             'rejected_id' => NULL,
+            'is_external' => true,
         ]);
         DB::table('request_stages')->insert([
             'id' => 16,
