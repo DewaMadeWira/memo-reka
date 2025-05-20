@@ -57,6 +57,20 @@ class StagesSeeder extends Seeder
             'rejected_id' => 14,
             'is_external' => true,
             'notify_internal_user' => true,
+            'notify_external' => true,
+        ]);
+        DB::table('request_stages')->insert([
+            'id' => 14,
+            'stage_name' => "Memo Ditolak Manajer",
+            'sequence' => 0,
+            'description' => "Memo ditolak oleh Manajer Eksternal. Untuk memperbaiki buat memo baru.",
+            'letter_id' => 1,
+            'approver_id' => 1,
+            'to_stage_id' => NULL,
+            'status_id' => 6,
+            'rejected_id' => NULL,
+            'is_external' => true,
+            'notify_internal' => true,
         ]);
         // If Rejected Go Mark as Rejected and Done
         // DB::table('request_stages')->insert([
@@ -82,7 +96,8 @@ class StagesSeeder extends Seeder
             'rejected_id' => NULL,
             'requires_file_upload' => true,
             'is_external' => true,
-            'notify_external' => true,
+            'notify_internal' => true,
+            'notify_external_user' => true,
         ]);
 
         DB::table('request_stages')->insert([
@@ -97,7 +112,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => 5,
             'requires_file_upload' => false,
             'is_external' => true,
-            'notify_internal_manager' => true,
+            'notify_external_manager' => true,
         ]);
 
         // DB::table('request_stages')->insert([
@@ -124,7 +139,7 @@ class StagesSeeder extends Seeder
             'is_external' => true,
             'requires_file_upload' => true,
             'is_external' => true,
-            'notify_internal_user' => true,
+            'notify_external_user' => true,
         ]);
         // If rejected didn't go anywhere 
         DB::table('request_stages')->insert([
@@ -224,18 +239,6 @@ class StagesSeeder extends Seeder
             'to_stage_id' => NULL,
             'status_id' => 5,
             'rejected_id' => NULL,
-        ]);
-        DB::table('request_stages')->insert([
-            'id' => 14,
-            'stage_name' => "Memo Ditolak Manajer",
-            'sequence' => 0,
-            'description' => "Memo ditolak oleh Manajer Eksternal. Untuk memperbaiki buat memo baru.",
-            'letter_id' => 1,
-            'approver_id' => 1,
-            'to_stage_id' => NULL,
-            'status_id' => 6,
-            'rejected_id' => NULL,
-            'is_external' => true,
         ]);
         DB::table('request_stages')->insert([
             'id' => 16,

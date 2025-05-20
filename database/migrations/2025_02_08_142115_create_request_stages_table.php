@@ -29,7 +29,9 @@ return new class extends Migration
             $table->boolean('notify_internal_user')->nullable(); // e.g., ["internal_user"]
             $table->boolean('notify_internal')->nullable(); // e.g., ["internal_user", "internal_manager"]
             $table->boolean('notify_external')->nullable(); // e.g., ["external_user"]
-            $table->boolean('notify_creator')->nullable(); // e.g., ["external_user"]
+            $table->boolean('notify_external_manager')->nullable(); // e.g., ["external_user"]
+            $table->boolean('notify_external_user')->nullable(); // e.g., ["external_user"]
+            // $table->boolean('notify_creator')->nullable(); // e.g., ["external_user"]
 
             // $table->boolean('notify_external_manager')->nullable(); // e.g., ["external_manager"]
             // $table->boolean('notify_external_user')->nullable(); // e.g., ["external_manager"]
