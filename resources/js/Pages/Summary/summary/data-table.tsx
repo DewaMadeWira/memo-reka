@@ -1422,14 +1422,43 @@ DataTableProps<TData, TValue>) {
                                                             <AlertDialogHeader className="">
                                                                 <AlertDialogTitle>
                                                                     Preview File
-                                                                    {
-                                                                        row
-                                                                            .original
-                                                                            .summary!
-                                                                            .file_path
-                                                                    }
                                                                 </AlertDialogTitle>
                                                                 <div className="flex flex-col w-full">
+                                                                    {/* Add meeting title and summary information */}
+                                                                    <div className="mb-6 p-4 bg-blue-50 rounded-md border border-blue-200">
+                                                                        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                                                                            Judul : {" "}
+                                                                            {row
+                                                                                .original
+                                                                                .summary!
+                                                                                .judul_rapat ||
+                                                                                "Tidak ada judul"}
+                                                                        </h3>
+                                                                        <div className="mt-3">
+                                                                            <h4 className="text-sm font-medium text-blue-700 mb-1">
+                                                                                Rangkuman
+                                                                                Rapat:
+                                                                            </h4>
+                                                                            <p className="text-sm text-gray-700 whitespace-pre-line">
+                                                                                {row
+                                                                                    .original
+                                                                                    .summary!
+                                                                                    .rangkuman_rapat ||
+                                                                                    "Tidak ada rangkuman"}
+                                                                            </p>
+                                                                        </div>
+                                                                        {/* <div className="mt-3 text-xs text-gray-500">
+                                                                            Tanggal:{" "}
+                                                                            {safeFormatDate(
+                                                                                row
+                                                                                    .original
+                                                                                    .summary!
+                                                                                    .created_at
+                                                                            )}
+                                                                        </div> */}
+                                                                    </div>
+
+                                                                    {/* Original file preview content */}
                                                                     <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
                                                                         <div
                                                                             className="absolute inset-0 flex items-center justify-center z-10 bg-white/50"
@@ -1447,51 +1476,6 @@ DataTableProps<TData, TValue>) {
                                                                                         .file_path
                                                                                 }
                                                                             </p>
-                                                                            {/* <img
-                                                                                src={`invite-file/${
-                                                                                    row
-                                                                                        .original
-                                                                                        .summary!
-                                                                                        .file_path
-                                                                                }`}
-                                                                                className="max-w-full max-h-full object-contain transition-transform duration-200 hover:scale-105"
-                                                                                alt="Document preview"
-                                                                                onLoad={(
-                                                                                    e
-                                                                                ) => {
-                                                                                    // Hide loading indicator when image loads
-                                                                                    const loadingEl =
-                                                                                        document.getElementById(
-                                                                                            "loading-indicator"
-                                                                                        );
-                                                                                    if (
-                                                                                        loadingEl
-                                                                                    )
-                                                                                        loadingEl.style.display =
-                                                                                            "none";
-                                                                                }}
-                                                                                onError={(
-                                                                                    e
-                                                                                ) => {
-                                                                                    e.currentTarget.src =
-                                                                                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAwYzYuNjIzIDAgMTIgNS4zNzcgMTIgMTJzLTUuMzc3IDEyLTEyIDEyLTEyLTUuMzc3LTEyLTEyIDUuMzc3LTEyIDEyLTEyem0wIDFjNi4wNzEgMCAxMSA0LjkyOSAxMSAxMXMtNC45MjkgMTEtMTEgMTEtMTEtNC45MjktMTEtMTEgNC45MjktMTEgMTEtMTF6bS41IDEyaC0ydi02aDJ2NnptLTEtNi43NWMtLjY5IDAtMS4yNS0uNTYtMS4yNS0xLjI1cy41Ni0xLjI1IDEuMjUtMS4yNSAxLjI1LjU2IDEuMjUgMS4yNS0uNTYgMS4yNS0xLjI1IDEuMjV6Ii8+PC9zdmc+";
-                                                                                    e.currentTarget.className =
-                                                                                        "w-24 h-24 opacity-60";
-                                                                                    const loadingEl =
-                                                                                        document.getElementById(
-                                                                                            "loading-indicator"
-                                                                                        );
-                                                                                    if (
-                                                                                        loadingEl
-                                                                                    ) {
-                                                                                        loadingEl.innerHTML =
-                                                                                            '<p class="text-red-500">Failed to load image</p>';
-                                                                                        loadingEl.classList.remove(
-                                                                                            "bg-white/50"
-                                                                                        );
-                                                                                    }
-                                                                                }}
-                                                                            /> */}
                                                                         </div>
                                                                     </div>
 
