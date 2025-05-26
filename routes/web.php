@@ -64,6 +64,8 @@ Route::middleware('auth')->group(function () {
         $summary = SummaryLetter::where("id", $id)->update([
             // 'memo_number' => '1234/MemoNumber/Test',
             'file_path' => $filename,
+            'judul_rapat' => $request->judul_rapat,
+            'rangkuman_rapat' => $request->rangkuman_rapat,
         ]);
     });
     Route::post('upload-bukti', function (Request $request) {

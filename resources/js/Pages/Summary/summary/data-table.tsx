@@ -115,6 +115,8 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
             invitation_id: number | null;
             file: File | null;
             request_name: string;
+            judul_rapat: string;
+            rangkuman_rapat: string;
         }>
     >;
     handleChange: (
@@ -1203,6 +1205,9 @@ DataTableProps<TData, TValue>) {
                                                                 file: null,
                                                                 request_name:
                                                                     "",
+                                                                judul_rapat: "",
+                                                                rangkuman_rapat:
+                                                                    "",
                                                             })
                                                         }
                                                         // onClick={() =>
@@ -1251,6 +1256,39 @@ DataTableProps<TData, TValue>) {
                                                             </AlertDialogTitle>
                                                             <ScrollArea className="h-[500px] w-full pr-4">
                                                                 <div className="mt-4">
+                                                                    <label
+                                                                        htmlFor="judul_rapat"
+                                                                        className="block mb-2 mt-4"
+                                                                    >
+                                                                        Judul
+                                                                        Rapat
+                                                                    </label>
+                                                                    <input
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        type="text"
+                                                                        name="judul_rapat"
+                                                                        id="judul_rapat"
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    />
+
+                                                                    <label
+                                                                        htmlFor="rangkuman_rapat"
+                                                                        className="block mb-2 mt-4"
+                                                                    >
+                                                                        Rangkuman
+                                                                        Rapat
+                                                                    </label>
+                                                                    <textarea
+                                                                        onChange={
+                                                                            handleChange
+                                                                        }
+                                                                        name="rangkuman_rapat"
+                                                                        id="rangkuman_rapat"
+                                                                        rows={4}
+                                                                        className="w-full p-2 border rounded-lg"
+                                                                    ></textarea>
                                                                     <label
                                                                         htmlFor="perihal"
                                                                         className="block mb-2"

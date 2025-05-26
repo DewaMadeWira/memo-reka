@@ -58,6 +58,8 @@ export default function Index({
         invitation_id: null as number | null,
         file: null as File | null,
         request_name: "",
+        judul_rapat: "",
+        rangkuman_rapat: "",
     });
     const handleSummaryFileChange = (
         e: React.ChangeEvent<HTMLInputElement>
@@ -71,8 +73,6 @@ export default function Index({
     };
 
     const handleSummarySubmit = (invitationId: number) => {
-        // const formData = new FormData();
-        // formData.append("invitation_id", invitationId.toString());
         console.log(formData);
 
         router.post("/request?intent=summary.create", formData, {
@@ -95,6 +95,8 @@ export default function Index({
                     invitation_id: null,
                     file: null,
                     request_name: "",
+                    judul_rapat: "",
+                    rangkuman_rapat: "",
                 });
                 router.visit(window.location.pathname, {
                     preserveScroll: true,
@@ -102,9 +104,7 @@ export default function Index({
             },
         });
     };
-    // const handleApprove = ({ id }: { id: number }) => {
-    //     router.post("/invite-approve/" + id);
-    // };
+
     function handleApprove(id: number) {
         router.put("/request/" + id + "?intent=summary.approve");
     }
@@ -120,7 +120,8 @@ export default function Index({
         const data = new FormData();
         if (formData.file) {
             data.append("file", formData.file);
-            data.append("name", "mamamia");
+            data.append("judul_rapat", formData.judul_rapat);
+            data.append("rangkuman_rapat", formData.rangkuman_rapat);
 
             // Better debugging to confirm the file was appended
             console.log("File name:", formData.file.name);
@@ -162,29 +163,6 @@ export default function Index({
     const [searchQuery, setSearchQuery] = useState("");
     const [visibleUsers, setVisibleUsers] = useState(2);
     const [filteredUsers, setFilteredUsers] = useState<UserWithDivision[]>([]);
-
-    // useEffect(() => {
-    //     // First filter users based on search query
-    //     let filtered = all_user.filter(
-    //         (user) =>
-    //             user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //             user.division.division_code
-    //                 .toLowerCase()
-    //                 .includes(searchQuery.toLowerCase())
-    //     );
-
-    //     // Then sort the filtered list to put selected users at the top
-    //     filtered = [...filtered].sort((a, b) => {
-    //         const aSelected = formData.invited_users.includes(a.id.toString());
-    //         const bSelected = formData.invited_users.includes(b.id.toString());
-
-    //         if (aSelected && !bSelected) return -1;
-    //         if (!aSelected && bSelected) return 1;
-    //         return 0;
-    //     });
-
-    //     setFilteredUsers(filtered);
-    // }, [searchQuery, all_user, formData.invited_users]);
 
     const handleChange = (
         e: React.ChangeEvent<
@@ -250,9 +228,38 @@ export default function Index({
                                         id=""
                                         className="w-full p-2 border rounded-lg"
                                     />
+
+                                    <label
+                                        htmlFor="judul_rapat"
+                                        className="block mb-2 mt-4"
+                                    >
+                                        Judul Rapat
+                                    </label>
+                                    <input
+                                        onChange={handleChange}
+                                        type="text"
+                                        name="judul_rapat"
+                                        id="judul_rapat"
+                                        className="w-full p-2 border rounded-lg"
+                                    />
+
+                                    <label
+                                        htmlFor="rangkuman_rapat"
+                                        className="block mb-2 mt-4"
+                                    >
+                                        Rangkuman Rapat
+                                    </label>
+                                    <textarea
+                                        onChange={handleChange}
+                                        name="rangkuman_rapat"
+                                        id="rangkuman_rapat"
+                                        rows={4}
+                                        className="w-full p-2 border rounded-lg"
+                                    ></textarea>
+
                                     <label
                                         htmlFor="invitation_id"
-                                        className="block mb-2"
+                                        className="block mb-2 mt-4"
                                     >
                                         Undangan Rapat
                                     </label>
@@ -341,14 +348,6 @@ export default function Index({
                         formData={formData}
                         setFormData={setFormData}
                         handleChange={handleChange}
-                        // setFilePreview={setFilePreview}
-                        // setFileData={setFileData}
-                        // filePreview={filePreview}
-                        // fileData={fileData}
-                        // handleUpload={handleFileUpload}
-                        // handleUpdate={() => {
-                        //     return null;
-                        // }}
                         handleUpdate={handleUpdate}
                         handleUpload={function (id: number): void {
                             throw new Error("Function not implemented.");
@@ -374,75 +373,7 @@ export default function Index({
                         division={division}
                     />
                 </div>
-                {/*  */}
-
-                {/* <button
-                    onClick={handleSubmit}
-                    className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
-                        user.role_id == 1 ? "hidden" : ""
-                    }`}
-                >
-                    Buat Memo
-                </button> */}
             </div>
         </SidebarAuthenticated>
-        // <div className="w-full ">
-        //     <h1 className="text-2xl font-bold">Undangan Rapat</h1>
-        //     <table className="w-[80%]">
-        //         <tr>
-        //             <th>Id</th>
-        //             <th>Request Name</th>
-        //             <th>Stages</th>
-        //             <th>Status</th>
-        //             <th className={`${user.role_id == 1 ? "" : "hidden"}`}>
-        //                 Approval
-        //             </th>
-        //         </tr>
-        //         {request.map((request: any) => (
-        //             //{" "}
-        //             <tr key={request.id} className="">
-        //                 <td className="">{request.id}</td>
-        //                 <td className="">{request.request_name}</td>
-        //                 <td className="text-center">
-        //                     {request.stages.stage_name}
-        //                 </td>
-        //                 <td className="text-center">
-        //                     {request.stages.status.status_name}
-        //                 </td>
-        //                 <td className={`${user.role_id == 1 ? "" : "hidden"}`}>
-        //                     <div className="flex gap-2">
-        //                         <button
-        //                             onClick={() =>
-        //                                 handleApprove(request.invite.id)
-        //                             }
-        //                             className={`bg-green-500 p-2 mt-2 text-white rounded-lg
-        //                             `}
-        //                         >
-        //                             Approve
-        //                         </button>
-        //                         <button
-        //                             onClick={() =>
-        //                                 handleReject(request.invite.id)
-        //                             }
-        //                             className={`bg-red-500 p-2 mt-2 text-white rounded-lg
-        //                             `}
-        //                         >
-        //                             Reject
-        //                         </button>
-        //                     </div>
-        //                 </td>
-        //                 {/* //{" "} */}
-        //             </tr>
-        //         ))}
-        //     </table>
-        //     <button
-        //         onClick={handleSubmit}
-        //         className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${
-        //             user.role_id == 1 ? "hidden" : ""
-        //         }`}
-        //     >
-        //         Buat Memo
-        //     </button>
-        // </div>
     );
 }

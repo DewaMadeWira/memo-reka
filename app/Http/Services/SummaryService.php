@@ -259,7 +259,9 @@ class SummaryService
         $summary = SummaryLetter::create([
             // 'memo_number' => '1234/MemoNumber/Test',
             'invitation_id' => $request->invitation_id,
-            'file_path' => $filename
+            'file_path' => $filename,
+            'judul_rapat' => $request->judul_rapat,
+            'rangkuman_rapat' => $request->rangkuman_rapat,
         ]);
         $summary = SummaryLetter::with('invite')->findOrFail($summary->id);
 
