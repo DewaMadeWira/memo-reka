@@ -1427,7 +1427,8 @@ DataTableProps<TData, TValue>) {
                                                                     {/* Add meeting title and summary information */}
                                                                     <div className="mb-6 p-4 bg-blue-50 rounded-md border border-blue-200">
                                                                         <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                                                                            Judul : {" "}
+                                                                            Judul
+                                                                            :{" "}
                                                                             {row
                                                                                 .original
                                                                                 .summary!
@@ -1457,9 +1458,32 @@ DataTableProps<TData, TValue>) {
                                                                             )}
                                                                         </div> */}
                                                                     </div>
+                                                                    <div
+                                                                        style={{
+                                                                            height: "400px",
+                                                                        }}
+                                                                    >
+                                                                        <embed
+                                                                            src={`/risalah-file/${
+                                                                                row
+                                                                                    .original
+                                                                                    .summary!
+                                                                                    .file_path
+                                                                            }`}
+                                                                            type="application/pdf"
+                                                                            width="100%"
+                                                                            height="100%"
+                                                                            className="border"
+                                                                            onContextMenu={(
+                                                                                e
+                                                                            ) =>
+                                                                                e.preventDefault()
+                                                                            }
+                                                                        />
+                                                                    </div>
 
                                                                     {/* Original file preview content */}
-                                                                    <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
+                                                                    {/* <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
                                                                         <div
                                                                             className="absolute inset-0 flex items-center justify-center z-10 bg-white/50"
                                                                             id="loading-indicator"
@@ -1477,7 +1501,7 @@ DataTableProps<TData, TValue>) {
                                                                                 }
                                                                             </p>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> */}
 
                                                                     <div className="flex items-center justify-between mt-4">
                                                                         <div className="text-sm text-gray-500">

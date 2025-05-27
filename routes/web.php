@@ -130,6 +130,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('undangan-rapat', InvitationController::class);
     Route::resource('risalah-rapat', SummaryController::class);
     Route::get('/memo-file/{filename}', [ServeImageController::class, 'show'])->name('memo.file');
+    Route::get('/risalah-file/{filename}', [ServeImageController::class, 'show_pdf'])->name('risalah-rapat.file');
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');

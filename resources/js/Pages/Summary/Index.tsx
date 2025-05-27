@@ -61,14 +61,29 @@ export default function Index({
         judul_rapat: "",
         rangkuman_rapat: "",
     });
+    const [pdfPreview, setPdfPreview] = useState<string | null>(null);
     const handleSummaryFileChange = (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
         if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            if (file.type !== "application/pdf") {
+                toast({
+                    title: "Format File Tidak Valid",
+                    description: "Hanya file PDF yang diperbolehkan",
+                    variant: "destructive",
+                });
+                return;
+            }
+
             setFormData({
                 ...formData,
-                file: e.target.files[0],
+                file: file,
             });
+
+            // Create object URL for PDF preview
+            const fileUrl = URL.createObjectURL(file);
+            setPdfPreview(fileUrl);
         }
     };
 
@@ -205,110 +220,126 @@ export default function Index({
                             Unggah Risalah Rapat
                         </AlertDialogTrigger>
                         <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle className="font-medium">
-                                    Unggah Risalah Rapat
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Pilih undangan rapat dan unggah file risalah
-                                    rapat
-                                </AlertDialogDescription>
-
-                                <div className="mt-4">
-                                    <label
-                                        htmlFor="perihal"
-                                        className="block mb-2"
-                                    >
-                                        Nama Permintaan Persetujuan
-                                    </label>
-                                    <input
-                                        onChange={handleChange}
-                                        type="text"
-                                        name="request_name"
-                                        id=""
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-
-                                    <label
-                                        htmlFor="judul_rapat"
-                                        className="block mb-2 mt-4"
-                                    >
-                                        Judul Rapat
-                                    </label>
-                                    <input
-                                        onChange={handleChange}
-                                        type="text"
-                                        name="judul_rapat"
-                                        id="judul_rapat"
-                                        className="w-full p-2 border rounded-lg"
-                                    />
-
-                                    <label
-                                        htmlFor="rangkuman_rapat"
-                                        className="block mb-2 mt-4"
-                                    >
-                                        Rangkuman Rapat
-                                    </label>
-                                    <textarea
-                                        onChange={handleChange}
-                                        name="rangkuman_rapat"
-                                        id="rangkuman_rapat"
-                                        rows={4}
-                                        className="w-full p-2 border rounded-lg"
-                                    ></textarea>
-
-                                    <label
-                                        htmlFor="invitation_id"
-                                        className="block mb-2 mt-4"
-                                    >
-                                        Undangan Rapat
-                                    </label>
-                                    <select
-                                        id="invitation_id"
-                                        className="w-full p-2 border rounded-lg"
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                invitation_id: parseInt(
-                                                    e.target.value
-                                                ),
-                                            })
-                                        }
-                                        value={formData.invitation_id || ""}
-                                    >
-                                        <option value="">
-                                            Pilih Undangan Rapat
-                                        </option>
-                                        {invite.map((req: any) => (
-                                            <option
-                                                key={req.id}
-                                                value={req.invite.id}
-                                            >
-                                                {req.request_name}
+                            <ScrollArea className="h-[500px] pr-3">
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle className="font-medium">
+                                        Unggah Risalah Rapat
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Pilih undangan rapat dan unggah file
+                                        risalah rapat
+                                    </AlertDialogDescription>
+                                    <div className="mt-4">
+                                        <label
+                                            htmlFor="perihal"
+                                            className="block mb-2"
+                                        >
+                                            Nama Permintaan Persetujuan
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="request_name"
+                                            id=""
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="judul_rapat"
+                                            className="block mb-2 mt-4"
+                                        >
+                                            Judul Rapat
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            type="text"
+                                            name="judul_rapat"
+                                            id="judul_rapat"
+                                            className="w-full p-2 border rounded-lg"
+                                        />
+                                        <label
+                                            htmlFor="rangkuman_rapat"
+                                            className="block mb-2 mt-4"
+                                        >
+                                            Rangkuman Rapat
+                                        </label>
+                                        <textarea
+                                            onChange={handleChange}
+                                            name="rangkuman_rapat"
+                                            id="rangkuman_rapat"
+                                            rows={4}
+                                            className="w-full p-2 border rounded-lg"
+                                        ></textarea>
+                                        <label
+                                            htmlFor="invitation_id"
+                                            className="block mb-2 mt-4"
+                                        >
+                                            Undangan Rapat
+                                        </label>
+                                        <select
+                                            id="invitation_id"
+                                            className="w-full p-2 border rounded-lg"
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    invitation_id: parseInt(
+                                                        e.target.value
+                                                    ),
+                                                })
+                                            }
+                                            value={formData.invitation_id || ""}
+                                        >
+                                            <option value="">
+                                                Pilih Undangan Rapat
                                             </option>
-                                        ))}
-                                    </select>
-
-                                    <label
-                                        htmlFor="file"
-                                        className="block mb-2 mt-4"
-                                    >
-                                        File Risalah Rapat
-                                    </label>
-                                    <input
-                                        type="file"
-                                        id="file"
-                                        className="w-full p-2 border rounded-lg"
-                                        onChange={handleSummaryFileChange}
-                                    />
-
-                                    {formData.file && (
-                                        <div className="mt-2 text-sm text-green-600">
-                                            File selected: {formData.file.name}
-                                        </div>
-                                    )}
-                                </div>
-                            </AlertDialogHeader>
+                                            {invite.map((req: any) => (
+                                                <option
+                                                    key={req.id}
+                                                    value={req.invite.id}
+                                                >
+                                                    {req.request_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label
+                                            htmlFor="file"
+                                            className="block mb-2 mt-4"
+                                        >
+                                            File Risalah Rapat
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="file"
+                                            accept="application/pdf"
+                                            className="w-full p-2 border rounded-lg"
+                                            onChange={handleSummaryFileChange}
+                                        />
+                                        {formData.file && (
+                                            <div className="mt-2 text-sm text-green-600">
+                                                File selected:{" "}
+                                                {formData.file.name}
+                                            </div>
+                                        )}
+                                        {pdfPreview && (
+                                            <div className="mt-4 border rounded">
+                                                <div className="text-sm font-medium p-2 bg-gray-50">
+                                                    Preview PDF
+                                                </div>
+                                                <div
+                                                    style={{ height: "400px" }}
+                                                >
+                                                    <embed
+                                                        src={pdfPreview}
+                                                        type="application/pdf"
+                                                        width="100%"
+                                                        height="100%"
+                                                        className="border"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </AlertDialogHeader>
+                            </ScrollArea>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Batal</AlertDialogCancel>
                                 <AlertDialogAction
