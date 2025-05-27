@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DivisionManagementController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\InvitedUserController;
 use App\Http\Controllers\LetterTypeManagement;
 use App\Http\Controllers\MemoController;
 use App\Http\Controllers\OfficialManagementController;
@@ -52,6 +53,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin/manajemen-role', RoleManagementController::class);
         Route::resource('admin/manajemen-divisi', DivisionManagementController::class);
         Route::resource('admin/manajemen-tipe-surat', LetterTypeManagement::class);
+        Route::resource('admin/manajemen-pengguna-undangan', InvitedUserController::class)
+            ->except(['create', 'edit']);
     });
     Route::post('risalah-rapat/update/{id}', function (Request $request, $id) {
 
