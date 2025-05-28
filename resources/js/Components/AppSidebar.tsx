@@ -49,7 +49,7 @@ import logo from "/public/assets/images/icon.png";
 const items = [
     {
         title: "Dashboard",
-        url: "#",
+        url: "/dashboard",
         icon: ChartBarBig,
         subItems: [], // No subitems for dashboard
     },
@@ -105,7 +105,10 @@ const items = [
         subItems: [
             { title: "Akun dan Pengguna", type: "separator" },
             { title: "Pengguna", url: "/admin/manajemen-pengguna" },
-            { title: "Pengguna Terundang", url: "/admin/manajemen-pengguna-undangan" },
+            {
+                title: "Pengguna Terundang",
+                url: "/admin/manajemen-pengguna-undangan",
+            },
             { title: "Pejabat", url: "/admin/manajemen-pejabat" },
             { title: "Role", url: "/admin/manajemen-role" },
             { title: "Divisi", url: "/admin/manajemen-divisi" },

@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             StagesSeeder::class,
             LetterType::class,
+            MemoLetterSeeder::class,
+            RequestLetterSeeder::class
             // MemoSeeder::class,
         ]);
     }
