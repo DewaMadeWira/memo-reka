@@ -31,7 +31,7 @@ class InvitationController extends Controller
         $official = Official::get();
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
-        $all_user = InvitedUser::with("division")->get();
+        $all_user = InvitedUser::with("division", "official")->get();
 
         return Inertia::render('Invitation/Index', [
             'request' => $data,

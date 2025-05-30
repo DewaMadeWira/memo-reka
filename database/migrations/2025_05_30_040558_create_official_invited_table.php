@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invited_users', function (Blueprint $table) {
+        Schema::create('official_invited', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_pengguna');
-            $table->foreignId('division_id')->constrained('divisions');
-            $table->foreignId('official_id')->constrained('officials');
+            $table->string('official_name');
+            $table->string('official_code')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invited_users');
+        Schema::dropIfExists('official_invited');
     }
 };

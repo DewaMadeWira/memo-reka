@@ -40,7 +40,7 @@ class InvitationService
 
                 $invite = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
+                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user', 'invite.attendees.user.official'])->whereHas('invite', function ($q) use ($division) {
                     $q->where('from_division', $division)
                         ->orWhere('to_division', $division);;
                 })->get();
@@ -89,7 +89,7 @@ class InvitationService
 
                 $invite = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
+                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user', 'invite.attendees.user.official'])->whereHas('invite', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
 
@@ -136,7 +136,7 @@ class InvitationService
 
                 $invite = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
-                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division) {
+                }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user', 'invite.attendees.user.official'])->whereHas('invite', function ($q) use ($division) {
                     $q->where('to_division', $division);
                 })->get();
 

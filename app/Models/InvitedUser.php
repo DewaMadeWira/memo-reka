@@ -29,6 +29,6 @@ class InvitedUser extends Model
      */
     public function official(): BelongsTo
     {
-        return $this->belongsTo(Official::class);
+        return $this->belongsTo(OfficialInvited::class);
     }
 }

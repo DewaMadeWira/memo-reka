@@ -30,7 +30,9 @@ class DatabaseSeeder extends Seeder
             StagesSeeder::class,
             LetterType::class,
             MemoLetterSeeder::class,
-            RequestLetterSeeder::class
+            RequestLetterSeeder::class,
+            OfficialInvitedSeeder::class,
+            InvitedUserSeeder::class,
             // MemoSeeder::class,
         ]);
     }
