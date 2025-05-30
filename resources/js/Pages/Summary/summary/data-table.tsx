@@ -480,7 +480,8 @@ DataTableProps<TData, TValue>) {
                                                 <>
                                                     {row.original.stages
                                                         .is_external == 1
-                                                        ? row.original.invite!
+                                                        ? row.original.summary!
+                                                              .invite!
                                                               .to_division.id ==
                                                               user.division_id && (
                                                               <>

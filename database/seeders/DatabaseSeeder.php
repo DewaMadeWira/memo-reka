@@ -33,6 +33,10 @@ class DatabaseSeeder extends Seeder
             RequestLetterSeeder::class,
             OfficialInvitedSeeder::class,
             InvitedUserSeeder::class,
+            InvitationLetterSeeder::class,
+            RequestLetterSeederInvite::class,
+            SummaryLetterSeeder::class,
+            RequestLetterWithSummarySeeder::class,
             // MemoSeeder::class,
         ]);
     }
