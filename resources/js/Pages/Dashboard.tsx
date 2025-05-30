@@ -4,17 +4,20 @@ import { Head } from "@inertiajs/react";
 import { FileText, Calendar, FileCheck } from "lucide-react";
 import { LineChartComponent } from "./Charts/LineChart";
 import { PieChartComponent } from "./Charts/PieChart";
+import { PieChartComponentRejected } from "./Charts/PieChartRejected";
 
 export default function Dashboard({
     memoCount,
     invitationCount,
     summaryCount,
     chartData,
+    rejectedMemoCount,
 }: {
     memoCount: number;
     invitationCount: number;
     summaryCount: number;
     chartData: any;
+    rejectedMemoCount: number;
 }) {
     console.log(chartData);
     return (
@@ -94,12 +97,17 @@ export default function Dashboard({
                                 chartData={chartData}
                             ></LineChartComponent>
                         </div>
-                        <div className="mt-5">
+                        <div className="mt-5 flex justify-between">
                             <PieChartComponent
                                 memoCount={memoCount}
                                 summaryCount={summaryCount}
                                 invitationCount={invitationCount}
                             ></PieChartComponent>
+
+                            <PieChartComponentRejected
+                                memoCount={memoCount}
+                                rejectedCount={rejectedMemoCount}
+                            ></PieChartComponentRejected>
                         </div>
                     </div>
                 </div>

@@ -65,15 +65,93 @@ class RequestLetterSeeder extends Seeder
             'Permohonan Penggantian Peralatan',
         ];
 
-        // Create 100 request letters
-        for ($i = 0; $i < 100; $i++) {
-            // Get a random memo - each memo may be used for multiple requests
+        // First create 10 request letters with stages_id = 14 and status_id = 6
+        for ($i = 0; $i < 10; $i++) {
+            // Get a random memo
             $memoId = $memoIds[array_rand($memoIds)];
             $memo = MemoLetter::find($memoId);
 
-            // Use the memo's date as the base for the request date
-            // Some requests will be made on the same day as the memo
-            // Others might be 1-3 days after
+            $daysAfterMemo = rand(0, 3);
+            $requestDate = Carbon::parse($memo->created_at)->addDays($daysAfterMemo);
+
+            // Get random letter type
+            $letterTypeId = $letterTypeIds[array_rand($letterTypeIds)];
+
+            // Fixed stages_id = 14
+            $currentStage = 14;
+
+            // For to_stages, select 1-2 random stages that aren't the current stage
+            $toStages = [];
+            $availableToStages = array_diff($stagesArray, [$currentStage]);
+
+            if (!empty($availableToStages)) {
+                // Select one random stage
+                $randomKey = array_rand($availableToStages);
+                $toStages[] = $availableToStages[$randomKey];
+
+                // Sometimes add a second random stage
+                if (rand(0, 1) === 1 && count($availableToStages) > 1) {
+                    // Remove the first selected stage
+                    unset($availableToStages[$randomKey]);
+                    $toStages[] = $availableToStages[array_rand($availableToStages)];
+                }
+            } else {
+                // If somehow we have only one stage, use it
+                $toStages[] = $currentStage;
+            }
+
+            // Create progress stages
+            $progressStages = [];
+            $numProgressStages = min(3, count($stagesArray));
+            $numProgressStages = rand(1, $numProgressStages);
+
+            if (count($stagesArray) === 1) {
+                $progressStages[] = $stagesArray[0];
+            } else {
+                $progressIndices = array_rand($stagesArray, $numProgressStages);
+
+                if (!is_array($progressIndices)) {
+                    $progressIndices = [$progressIndices];
+                }
+
+                foreach ($progressIndices as $idx) {
+                    $progressStages[] = $stagesArray[$idx];
+                }
+            }
+
+            // For rejected_stages
+            $rejectedStages = [];
+            if (rand(0, 3) === 0) {
+                $rejectedIndex = array_rand($stagesArray);
+                $rejectedStages[] = $stagesArray[$rejectedIndex];
+            }
+
+            // Get a random request name
+            $requestName = $requestNames[array_rand($requestNames)] . ' (Special) ' . ($i + 1);
+
+            RequestLetter::create([
+                'request_name' => $requestName,
+                'user_id' => $userIds[array_rand($userIds)],
+                'stages_id' => $currentStage,
+                'memo_id' => $memoId,
+                'invitation_id' => null,
+                'letter_type_id' => $letterTypeId,
+                'summary_id' => null,
+                // 'status_id' => 6, // Fixed status_id = 6
+                'to_stages' => json_encode($toStages),
+                'rejected_stages' => json_encode($rejectedStages),
+                'progress_stages' => json_encode($progressStages),
+                'created_at' => $requestDate,
+                'updated_at' => $requestDate,
+            ]);
+        }
+
+        // Now create the remaining 90 request letters with random stages_id
+        for ($i = 0; $i < 90; $i++) {
+            // Get a random memo
+            $memoId = $memoIds[array_rand($memoIds)];
+            $memo = MemoLetter::find($memoId);
+
             $daysAfterMemo = rand(0, 3);
             $requestDate = Carbon::parse($memo->created_at)->addDays($daysAfterMemo);
 
@@ -104,18 +182,16 @@ class RequestLetterSeeder extends Seeder
                 $toStages[] = $currentStage;
             }
 
-            // Create progress stages - randomly select 1-3 stages
+            // Create progress stages
             $progressStages = [];
             $numProgressStages = min(3, count($stagesArray));
             $numProgressStages = rand(1, $numProgressStages);
 
-            // If there's only one stage, array_rand returns the index directly, not in an array
             if (count($stagesArray) === 1) {
                 $progressStages[] = $stagesArray[0];
             } else {
                 $progressIndices = array_rand($stagesArray, $numProgressStages);
 
-                // Make sure progressIndices is always an array
                 if (!is_array($progressIndices)) {
                     $progressIndices = [$progressIndices];
                 }
@@ -125,15 +201,18 @@ class RequestLetterSeeder extends Seeder
                 }
             }
 
-            // For rejected_stages, sometimes add a rejected stage (but always provide a value)
-            $rejectedStages = [];  // Default to empty array, not null
-            if (rand(0, 3) === 0) { // 25% chance of rejection
+            // For rejected_stages
+            $rejectedStages = [];
+            if (rand(0, 3) === 0) {
                 $rejectedIndex = array_rand($stagesArray);
                 $rejectedStages[] = $stagesArray[$rejectedIndex];
             }
 
             // Get a random request name
-            $requestName = $requestNames[array_rand($requestNames)] . ' ' . ($i + 1);
+            $requestName = $requestNames[array_rand($requestNames)] . ' ' . ($i + 11);
+
+            // Generate a random status_id between 1 and 5
+            $randomStatusId = rand(1, 5);
 
             RequestLetter::create([
                 'request_name' => $requestName,
@@ -143,6 +222,7 @@ class RequestLetterSeeder extends Seeder
                 'invitation_id' => null,
                 'letter_type_id' => $letterTypeId,
                 'summary_id' => null,
+                // 'status_id' => $randomStatusId, // Random status_id between 1-5
                 'to_stages' => json_encode($toStages),
                 'rejected_stages' => json_encode($rejectedStages),
                 'progress_stages' => json_encode($progressStages),
@@ -151,6 +231,6 @@ class RequestLetterSeeder extends Seeder
             ]);
         }
 
-        $this->command->info('100 RequestLetters seeded successfully with dates related to their associated memos!');
+        $this->command->info('100 RequestLetters seeded successfully: 10 with stages_id=14 and status_id=6, plus 90 with random values!');
     }
 }

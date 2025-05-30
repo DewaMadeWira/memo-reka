@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MemoLetter;
 use App\Models\InvitationLetter;
+use App\Models\RequestLetter;
 use App\Models\SummaryLetter;
 
 class DashboardController extends Controller
@@ -23,6 +24,18 @@ class DashboardController extends Controller
         $memoCount = MemoLetter::where('from_division', $userDivisionId)
             ->orWhere('to_division', $userDivisionId)
             ->count();
+
+        // Count rejected requests (with stages_id = 14) for user's division
+        $rejectedMemoCount = RequestLetter::whereHas('memo', function ($query) use ($userDivisionId) {
+            $query->where('from_division', $userDivisionId)
+                ->orWhere('to_division', $userDivisionId);
+        })
+            ->where('stages_id', 14)
+            ->where('letter_type_id', 1)
+            ->count();
+
+
+
 
         $invitationCount = InvitationLetter::where('from_division', $userDivisionId)
             ->orWhere('to_division', $userDivisionId)
@@ -76,6 +89,7 @@ class DashboardController extends Controller
         ));
         sort($allDates);
 
+
         // Build chart data in the required format
         $chartData = [];
         foreach ($allDates as $date) {
@@ -87,9 +101,12 @@ class DashboardController extends Controller
             ];
         }
 
+        // dd($rejectedMemoCount);
+
         return inertia('Dashboard', [
             'userDivision' => $userDivision,
             'memoCount' => $memoCount,
+            'rejectedMemoCount' => $rejectedMemoCount,
             'invitationCount' => $invitationCount,
             'summaryCount' => $summaryCount,
             'chartData' => $chartData,
