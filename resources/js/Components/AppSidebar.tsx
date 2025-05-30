@@ -46,6 +46,23 @@ import { title } from "process";
 import { User } from "@/types";
 import logo from "/public/assets/images/icon.png";
 
+// Existing types...
+
+// Add this to your existing types
+export interface AppSettings {
+    company_name: string;
+    company_logo: string;
+    company_logo_small: string;
+    company_code: string;
+}
+
+// Extend the Inertia PageProps interface
+declare module "@inertiajs/core" {
+    interface PageProps {
+        appSettings: AppSettings;
+    }
+}
+
 const items = [
     {
         title: "Dashboard",
@@ -121,6 +138,11 @@ const items = [
                 title: "Tipe Surat",
                 url: "/admin/manajemen-tipe-surat",
             },
+            { title: "Pengaturan Aplikasi", type: "separator" },
+            {
+                title: "Pengaturan Aplikasi",
+                url: "/admin/manajemen-pengaturan",
+            },
         ],
     },
 ];
@@ -128,16 +150,41 @@ export function AppSidebar() {
     const { url } = usePage();
     const { user } = usePage().props.auth as { user: User };
     const { open } = useSidebar();
+    // const { appSettings } = usePage().props;
+    const {
+        appSettings = {
+            company_name: "Memo-Reka",
+            company_logo: "/assets/images/logo_reka.png",
+            company_logo_small: "/assets/images/icon.png",
+            company_code: "MR",
+        },
+    } = usePage().props;
     // console.log(open);
     return (
         <Sidebar collapsible="icon" className="w-1/6 ">
             <SidebarHeader className="bg-white flex justify-center w-full items-center ">
                 {open ? (
-                    <ApplicationLogo width={150} height={150}></ApplicationLogo>
+                    <div className="flex flex-col items-center">
+                        <img
+                            src={appSettings.company_logo}
+                            alt={appSettings.company_name}
+                            width={150}
+                            height={150}
+                        />
+                        <span className="text-sm font-semibold mt-2">
+                            {appSettings.company_name}
+                        </span>
+                    </div>
                 ) : (
-                    <img src={logo} alt="" width={50} height={50} />
+                    <img
+                        src={appSettings.company_logo_small}
+                        alt={appSettings.company_name}
+                        width={50}
+                        height={50}
+                    />
                 )}
             </SidebarHeader>
+
             <SidebarContent className="bg-white">
                 <SidebarGroup />
                 <SidebarGroupLabel className="text-xs ml-1 text-black">

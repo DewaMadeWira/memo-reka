@@ -1,10 +1,31 @@
 import { SVGAttributes } from "react";
 
 import logo from "/public/assets/images/logo_reka.png";
+import { usePage } from "@inertiajs/react";
 
-export default function ApplicationLogo({width, height}:{width:number, height:number}) {
+export default function ApplicationLogo({
+    width,
+    height,
+}: {
+    width: number;
+    height: number;
+}) {
+    const {
+        appSettings = {
+            company_name: "Memo-Reka",
+            company_logo: "/assets/images/logo_reka.png",
+            company_logo_small: "/assets/images/icon.png",
+            company_code: "MR",
+        },
+    } = usePage().props;
+
     return (
-        <img src={logo} alt="" width={width} height={height} />
+        <img
+            src={appSettings.company_logo}
+            alt=""
+            width={width}
+            height={height}
+        />
         // <svg
         //     {...props}
         //     viewBox="0 0 316 316"
