@@ -3,6 +3,7 @@ import SidebarAuthenticated from "@/Layouts/SidebarAuthenticated";
 import { Head } from "@inertiajs/react";
 import { FileText, Calendar, FileCheck } from "lucide-react";
 import { LineChartComponent } from "./Charts/LineChart";
+import { PieChartComponent } from "./Charts/PieChart";
 
 export default function Dashboard({
     memoCount,
@@ -92,6 +93,13 @@ export default function Dashboard({
                             <LineChartComponent
                                 chartData={chartData}
                             ></LineChartComponent>
+                        </div>
+                        <div className="mt-5">
+                            <PieChartComponent
+                                memoCount={memoCount}
+                                summaryCount={summaryCount}
+                                invitationCount={invitationCount}
+                            ></PieChartComponent>
                         </div>
                     </div>
                 </div>
