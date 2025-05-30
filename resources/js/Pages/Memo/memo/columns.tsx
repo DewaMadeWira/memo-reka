@@ -10,7 +10,7 @@ import { ArrowUpDown } from "lucide-react";
 
 export const columns: ColumnDef<RequestLetter>[] = [
     {
-        accessorKey: "index",
+        id: "rowNumber",
         header: ({ column }) => {
             return (
                 <Button
@@ -24,10 +24,10 @@ export const columns: ColumnDef<RequestLetter>[] = [
                 </Button>
             );
         },
-        cell: ({ row }) => {
-            return row.index + 1; // Adding 1 to make it 1-based indexing instead of 0-based
-        },
+        accessorFn: (_, index) => index + 1,
+        cell: ({ getValue }) => getValue(),
     },
+
     {
         accessorKey: "request_name",
         header: ({ column }) => {
