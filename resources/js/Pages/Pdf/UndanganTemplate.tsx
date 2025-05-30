@@ -168,7 +168,7 @@ export default function UndanganTemplate({ data }: { data: any }) {
                                     }}
                                 >
                                     {/* {index + 1}. {user.user.name} */}
-                                    {index + 1}. {user.user.name}
+                                    {index + 1}. {user.user.nama_pengguna}
                                 </Text>
                             ))}
                             {/* <Text

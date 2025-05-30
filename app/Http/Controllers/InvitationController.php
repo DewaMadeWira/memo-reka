@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\InvitationService;
 use App\Models\Division;
 use App\Models\InvitationLetter;
+use App\Models\InvitedUser;
 use App\Models\Official;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class InvitationController extends Controller
         $official = Official::get();
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
-        $all_user = User::with("division")->get();
+        $all_user = InvitedUser::with("division")->get();
 
         return Inertia::render('Invitation/Index', [
             'request' => $data,

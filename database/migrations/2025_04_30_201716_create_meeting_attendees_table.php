@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('meeting_attendees', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id");
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('invited_users');
             $table->foreignId("invitation_letter_id");
             $table->foreign('invitation_letter_id')->references('id')->on('invitation_letters');
             $table->timestamps();

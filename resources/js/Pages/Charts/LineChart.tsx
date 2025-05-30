@@ -35,11 +35,11 @@ const chartConfig = {
         color: "hsl(var(--chart-1))",
     },
     invitation: {
-        label: "Invitation",
+        label: "Undangan Rapat",
         color: "hsl(var(--chart-2))",
     },
     summary: {
-        label: "Summary",
+        label: "Risalah Rapat",
         color: "hsl(var(--chart-3))",
     },
 } satisfies ChartConfig;
@@ -50,21 +50,23 @@ export function LineChartComponent({ chartData }: { chartData: any }) {
     const filteredData = useMemo(() => {
         // If there's no data, return empty array
         if (!chartData || chartData.length === 0) return [];
-        
+
         // Find the most recent date in the data
         const dates = chartData.map((item: any) => new Date(item.date));
-        const referenceDate = new Date(Math.max(...dates.map(d => d.getTime())));
-        
+        const referenceDate = new Date(
+            Math.max(...dates.map((d: any) => d.getTime()))
+        );
+
         let daysToSubtract = 90;
         if (timeRange === "30d") {
             daysToSubtract = 30;
         } else if (timeRange === "7d") {
             daysToSubtract = 7;
         }
-        
+
         const startDate = new Date(referenceDate);
         startDate.setDate(startDate.getDate() - daysToSubtract);
-        
+
         return chartData.filter((item: any) => {
             const date = new Date(item.date);
             return date >= startDate;
@@ -83,7 +85,8 @@ export function LineChartComponent({ chartData }: { chartData: any }) {
                 <div className="grid flex-1 gap-1 text-center sm:text-left">
                     <CardTitle>Line Chart - Jumlah Surat</CardTitle>
                     <CardDescription>
-                        Showing document statistics for the selected time period
+                        Menunjukkan jumlah surat yang dibuat dalam rentang waktu
+                        tertentu.
                     </CardDescription>
                 </div>
                 <Select value={timeRange} onValueChange={setTimeRange}>
@@ -95,13 +98,13 @@ export function LineChartComponent({ chartData }: { chartData: any }) {
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
                         <SelectItem value="90d" className="rounded-lg">
-                            Last 3 months
+                            3 Bulan Terakhir
                         </SelectItem>
                         <SelectItem value="30d" className="rounded-lg">
-                            Last 30 days
+                            30 Hari Terakhir
                         </SelectItem>
                         <SelectItem value="7d" className="rounded-lg">
-                            Last 7 days
+                            7 Hari Terakhir
                         </SelectItem>
                     </SelectContent>
                 </Select>
@@ -194,7 +197,7 @@ export function LineChartComponent({ chartData }: { chartData: any }) {
                                             ).toLocaleDateString("en-US", {
                                                 month: "short",
                                                 day: "numeric",
-                                                year: "numeric"
+                                                year: "numeric",
                                             });
                                         }}
                                         indicator="dot"
@@ -227,7 +230,9 @@ export function LineChartComponent({ chartData }: { chartData: any }) {
                     </ChartContainer>
                 ) : (
                     <div className="flex h-[250px] items-center justify-center">
-                        <p className="text-muted-foreground">No data available for the selected time period</p>
+                        <p className="text-muted-foreground">
+                            No data available for the selected time period
+                        </p>
                     </div>
                 )}
             </CardContent>

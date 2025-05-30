@@ -44,7 +44,8 @@ export default function Index({
     official: Official[];
     division: Division[];
     userData: any;
-    all_user: UserWithDivision[];
+    // all_user: UserWithDivision[];
+    all_user: any;
 }) {
     const { user } = usePage().props.auth as { user: User };
     const { toast } = useToast();
@@ -127,8 +128,10 @@ export default function Index({
     useEffect(() => {
         // First filter users based on search query
         let filtered = all_user.filter(
-            (user) =>
-                user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (user: any) =>
+                user.nama_pengguna
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
                 user.division.division_code
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase())
@@ -349,7 +352,7 @@ export default function Index({
 
                                             {filteredUsers
                                                 .slice(0, visibleUsers)
-                                                .map((user) => {
+                                                .map((user: any) => {
                                                     const isSelected =
                                                         formData.invited_users.includes(
                                                             user.id.toString()
@@ -372,7 +375,9 @@ export default function Index({
                                                                         : ""
                                                                 }`}
                                                             >
-                                                                {user.name}{" "}
+                                                                {
+                                                                    user.nama_pengguna
+                                                                }{" "}
                                                                 <span className="text-gray-500">
                                                                     (
                                                                     {
