@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 50, // or whatever default page size you want
+        pageSize: 30, // or whatever default page size you want
     });
 
     const setEdit = (data: any) => {
@@ -181,10 +181,15 @@ export function DataTable<TData, TValue>({
                                                 <AlertDialogContent>
                                                     <AlertDialogHeader>
                                                         <AlertDialogTitle className="">
-                                                            Buat Pengguna Baru
+                                                            Edit Pengguna{" "}
+                                                            {
+                                                                (
+                                                                    row.original as any
+                                                                ).name
+                                                            }
                                                         </AlertDialogTitle>
-                                                        <div className="flex flex-col gap-3">
-                                                            <div className="flex flex-col gap-2">
+                                                        <div className="flex flex-col gap-3 max-w-md">
+                                                            <div className="flex flex-col gap-2 ">
                                                                 <label htmlFor="name">
                                                                     Nama
                                                                 </label>
@@ -318,9 +323,9 @@ export function DataTable<TData, TValue>({
                                                             onClick={() =>
                                                                 handleUpdate(
                                                                     Number(
-                                                                        row
-                                                                            .original
-                                                                            .id
+                                                                        (
+                                                                            row.original as any
+                                                                        ).id
                                                                     )
                                                                 )
                                                             }
@@ -354,9 +359,9 @@ export function DataTable<TData, TValue>({
                                                             onClick={() =>
                                                                 handleDelete(
                                                                     Number(
-                                                                        row
-                                                                            .original
-                                                                            .id
+                                                                        (
+                                                                            row.original as any
+                                                                        ).id
                                                                     )
                                                                 )
                                                             }

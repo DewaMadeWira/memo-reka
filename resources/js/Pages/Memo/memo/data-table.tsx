@@ -175,7 +175,7 @@ DataTableProps<TData, TValue>) {
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 10, // or whatever default page size you want
+        pageSize: 30, // or whatever default page size you want
     });
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);

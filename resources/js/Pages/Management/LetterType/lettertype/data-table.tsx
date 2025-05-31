@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 2, // or whatever default page size you want
+        pageSize: 30, // or whatever default page size you want
     });
 
     const setEdit = (data: any) => {
