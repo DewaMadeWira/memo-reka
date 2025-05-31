@@ -65,7 +65,7 @@ import { useState } from "react";
 import { Memo } from "@/types/MemoType";
 import { RequestLetter } from "@/types/RequestType";
 import { User } from "@/types/UserType";
-import { PDFViewer } from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import Template from "@/Pages/Pdf/Template";
 import {
     Check,
@@ -1368,6 +1368,35 @@ DataTableProps<TData, TValue>) {
                                                             </div>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
+                                                            <PDFDownloadLink
+                                                                document={
+                                                                    <Template
+                                                                        data={
+                                                                            row
+                                                                                .original
+                                                                                .memo
+                                                                        }
+                                                                    />
+                                                                }
+                                                                fileName={`memo-${
+                                                                    row.original
+                                                                        .memo
+                                                                        ?.memo_number ||
+                                                                    "document"
+                                                                }.pdf`}
+                                                                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-center text-sm font-bold hover:bg-blue-600"
+                                                            >
+                                                                {({
+                                                                    blob,
+                                                                    url,
+                                                                    loading,
+                                                                    error,
+                                                                }) =>
+                                                                    loading
+                                                                        ? "Generating PDF..."
+                                                                        : "Download PDF"
+                                                                }
+                                                            </PDFDownloadLink>
                                                             <AlertDialogCancel className="bg-blue-500 text-white">
                                                                 Kembali
                                                             </AlertDialogCancel>
