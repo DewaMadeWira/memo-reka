@@ -85,7 +85,7 @@ export default function Index({ roles }: { roles: Role[] }) {
         // console.log(filteredData);
         // // console.log(formData);
         // console.log(id);
-        router.put(`/admin/manajemen-role/${id}`, formData,{
+        router.put(`/admin/manajemen-role/${id}`, formData, {
             onError: (errors) => {
                 toast({
                     title: "Terjadi Kesalahan !",
@@ -134,9 +134,9 @@ export default function Index({ roles }: { roles: Role[] }) {
                         </DropdownMenuContent>
                     </DropdownMenu> */}
                     <AlertDialog>
-                        <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
+                        {/* <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
                             + Tambah Role
-                        </AlertDialogTrigger>
+                        </AlertDialogTrigger> */}
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="">

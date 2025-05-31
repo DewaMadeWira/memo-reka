@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\InvitedUser;
 use App\Models\Official;
+use App\Models\OfficialInvited;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -17,7 +18,7 @@ class InvitedUserController extends Controller
     {
         $invitedUsers = InvitedUser::with(['division', 'official'])->get();
         $divisions = Division::all();
-        $officials = Official::all();
+        $officials = OfficialInvited::all();
 
         return Inertia::render('Management/InvitedUser/Index', [
             'invitedUsers' => $invitedUsers,
