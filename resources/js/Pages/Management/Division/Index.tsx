@@ -30,6 +30,7 @@ export default function Index({ divisions }: { divisions: Division[] }) {
 
     const [formData, setFormData] = useState({
         division_name: "",
+        division_code: "",
     });
     const handleChange = (
         e: React.ChangeEvent<
@@ -146,6 +147,16 @@ export default function Index({ divisions }: { divisions: Division[] }) {
                                             type="text"
                                             id="name"
                                             name="division_name"
+                                        />
+                                        <label htmlFor="name">
+                                            Kode Divisi
+                                        </label>
+                                        <input
+                                            onChange={handleChange}
+                                            className=" rounded-md"
+                                            type="text"
+                                            id="name"
+                                            name="division_code"
                                         />
                                     </div>
                                 </div>

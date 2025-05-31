@@ -47,9 +47,11 @@ interface DataTableProps<TData, TValue> {
     handleUpdate: (id: number) => void;
     formData: {
         division_name: string;
+        division_code: string;
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
+            division_code: string;
             division_name: string;
         }>
     >;
@@ -79,6 +81,7 @@ export function DataTable<TData, TValue>({
         // setFormData(data);
         setFormData({
             division_name: data.division_name,
+            division_code: data.division_code,
         });
         console.log(formData);
     };
@@ -174,7 +177,7 @@ export function DataTable<TData, TValue>({
                                                         <div className="flex flex-col gap-3">
                                                             <div className="flex flex-col gap-2">
                                                                 <label htmlFor="name">
-                                                                    Nama Role
+                                                                    Nama Divisi
                                                                 </label>
                                                                 <input
                                                                     onChange={
@@ -186,6 +189,21 @@ export function DataTable<TData, TValue>({
                                                                     name="division_name"
                                                                     value={
                                                                         formData.division_name
+                                                                    }
+                                                                />
+                                                                <label htmlFor="name">
+                                                                    Kode Divisi
+                                                                </label>
+                                                                <input
+                                                                    onChange={
+                                                                        handleChange
+                                                                    }
+                                                                    className=" rounded-md"
+                                                                    type="text"
+                                                                    id="division_code"
+                                                                    name="division_code"
+                                                                    value={
+                                                                        formData.division_code
                                                                     }
                                                                 />
                                                             </div>
