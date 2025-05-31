@@ -8,6 +8,6 @@ class AppSettings
         'company_name' => 'Memo-Reka',
         'company_logo' => '/assets/images/logo_reka.png',
         'company_logo_small' => '/assets/images/icon.png',
-        'company_code' => 'MR',
+        'company_code' => 'REKA',
     ];
 }
