@@ -25,7 +25,8 @@ interface ImagePreviewProps {
     onClose: () => void;
     images: MemoImage[];
     initialIndex?: number;
-    onImagesDeleted?: (imageIds: number[]) => void; // Updated to handle multiple deletions
+    onImagesDeleted?: (imageIds: number[]) => void;
+    allowEdit?: boolean;
 }
 
 export function ImagePreview({
@@ -34,6 +35,7 @@ export function ImagePreview({
     images,
     initialIndex = 0,
     onImagesDeleted,
+    allowEdit = false,
 }: ImagePreviewProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(initialIndex);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -42,9 +44,17 @@ export function ImagePreview({
     );
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [multiSelectMode, setMultiSelectMode] = useState(false);
+    const [imageLoading, setImageLoading] = useState(true); // Add loading state
+    const [imageError, setImageError] = useState(false); // Add error state
 
     const imagesCount = images.length;
     const currentImage = images[currentImageIndex];
+
+    // Reset states when image changes
+    useEffect(() => {
+        setImageLoading(true);
+        setImageError(false);
+    }, [currentImageIndex, images]);
 
     // Reset selected images when component mounts or images change
     useEffect(() => {
@@ -61,7 +71,7 @@ export function ImagePreview({
     };
 
     const toggleImageSelection = (imageId: number | undefined) => {
-        if (!imageId) return;
+        if (!imageId || !allowEdit) return;
 
         const newSelection = new Set(selectedImages);
         if (newSelection.has(imageId)) {
@@ -73,27 +83,26 @@ export function ImagePreview({
     };
 
     const toggleCurrentImageSelection = () => {
-        if (!currentImage.id) return;
+        if (!currentImage.id || !allowEdit) return;
         toggleImageSelection(currentImage.id);
     };
 
     const handleDeleteSingleImage = async (imageId: number) => {
+        if (!allowEdit) return;
+
         try {
             setIsDeleting(true);
             await axios.delete(`/memo-image/${imageId}`);
 
-            // Call the callback if provided
             if (onImagesDeleted) {
                 onImagesDeleted([imageId]);
             }
 
-            // If we're deleting the last image, close the preview
             if (imagesCount === 1) {
                 onClose();
                 return;
             }
 
-            // Navigate to previous image if available, or next if not
             if (currentImageIndex > 0) {
                 navigatePrev();
             } else if (imagesCount > 1) {
@@ -108,38 +117,31 @@ export function ImagePreview({
     };
 
     const handleDeleteSelectedImages = async () => {
-        if (selectedImages.size === 0) return;
+        if (selectedImages.size === 0 || !allowEdit) return;
 
         try {
             setIsDeleting(true);
             setShowDeleteConfirm(false);
 
-            // Convert Set to Array for the API call
             const imageIdsToDelete = Array.from(selectedImages);
 
-            // Send the request to delete multiple images
             router.post("/delete-evidence-multiple", {
                 imageIds: imageIdsToDelete,
             });
 
-            // Call the callback if provided
             if (onImagesDeleted) {
                 onImagesDeleted(imageIdsToDelete);
             }
 
-            // If we deleted all images, close the preview
             if (selectedImages.size >= imagesCount) {
                 onClose();
                 return;
             }
 
-            // Reset selection and determine which image to show next
             setSelectedImages(new Set());
             setMultiSelectMode(false);
 
-            // If current image was deleted, navigate to a new one
             if (currentImage.id && selectedImages.has(currentImage.id)) {
-                // Find the first non-deleted image
                 const remainingImageIndex = images.findIndex(
                     (img) => img.id && !selectedImages.has(img.id)
                 );
@@ -158,6 +160,16 @@ export function ImagePreview({
         }
     };
 
+    const handleImageLoad = () => {
+        setImageLoading(false);
+        setImageError(false);
+    };
+
+    const handleImageError = () => {
+        setImageLoading(false);
+        setImageError(true);
+    };
+
     const isCurrentImageSelected = currentImage.id
         ? selectedImages.has(currentImage.id)
         : false;
@@ -170,67 +182,67 @@ export function ImagePreview({
                         <AlertDialogTitle>
                             Preview File{imagesCount > 1 ? "s" : ""}
                         </AlertDialogTitle>
-                        {/* {imagesCount > 1 && (
-                            <div className="flex items-center gap-3">
-                                <button
-                                    className={`px-3 py-1 ${
-                                        multiSelectMode
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-gray-200 text-gray-700"
-                                    } rounded-md text-sm transition-colors duration-200`}
-                                    onClick={() =>
-                                        setMultiSelectMode(!multiSelectMode)
-                                    }
-                                >
-                                    {multiSelectMode
-                                        ? "Exit Selection Mode"
-                                        : "Select Multiple"}
-                                </button>
-                                {multiSelectMode && selectedImages.size > 0 && (
-                                    <button
-                                        className="px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-colors duration-200"
-                                        onClick={() =>
-                                            setShowDeleteConfirm(true)
-                                        }
-                                        disabled={isDeleting}
-                                    >
-                                        Delete Selected ({selectedImages.size})
-                                    </button>
-                                )}
-                            </div>
-                        )} */}
                     </div>
                     <div className="flex flex-col w-full">
                         <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
                             {/* Loading indicator */}
-                            <div
-                                className="absolute inset-0 flex items-center justify-center z-10 bg-white/50"
-                                id={`loading-indicator-${currentImageIndex}`}
-                            >
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                            </div>
-
-                            {/* Selection checkbox for current image */}
-                            {currentImage.id && (
-                                <div className="absolute top-3 left-3 z-30">
-                                    <label className="flex items-center space-x-2 bg-white/80 p-2 rounded-md backdrop-blur">
-                                        <input
-                                            type="checkbox"
-                                            checked={isCurrentImageSelected}
-                                            onChange={
-                                                toggleCurrentImageSelection
-                                            }
-                                            className="w-4 h-4 accent-blue-500"
-                                        />
-                                        <span className="text-sm font-medium">
-                                            Pilih Gambar
-                                        </span>
-                                    </label>
+                            {imageLoading && (
+                                <div className="absolute inset-0 flex items-center justify-center z-10 bg-white/50">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                                 </div>
                             )}
 
+                            {/* Error indicator */}
+                            {imageError && (
+                                <div className="absolute inset-0 flex items-center justify-center z-10 bg-white/50">
+                                    <div className="text-center">
+                                        <div className="w-24 h-24 mx-auto mb-4 opacity-60">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                className="w-full h-full text-red-500"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <p className="text-red-500 text-sm">
+                                            Failed to load image
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Selection checkbox for current image - Only show if allowEdit is true */}
+                            {allowEdit &&
+                                currentImage.id &&
+                                !imageLoading &&
+                                !imageError && (
+                                    <div className="absolute top-3 left-3 z-30">
+                                        <label className="flex items-center space-x-2 bg-white/80 p-2 rounded-md backdrop-blur">
+                                            <input
+                                                type="checkbox"
+                                                checked={isCurrentImageSelected}
+                                                onChange={
+                                                    toggleCurrentImageSelection
+                                                }
+                                                className="w-4 h-4 accent-blue-500"
+                                            />
+                                            <span className="text-sm font-medium">
+                                                Pilih Gambar
+                                            </span>
+                                        </label>
+                                    </div>
+                                )}
+
                             {/* Navigation buttons for multiple images */}
-                            {imagesCount > 1 && (
+                            {imagesCount > 1 && !imageLoading && (
                                 <>
                                     <button
                                         onClick={navigatePrev}
@@ -273,45 +285,26 @@ export function ImagePreview({
                                 </>
                             )}
 
-                            {/* Actual image with zoom functionality */}
+                            {/* Actual image */}
                             <div className="w-full h-full flex items-center justify-center overflow-auto">
                                 <img
-                                    src={`memo-file/${currentImage?.file_path}`}
+                                    key={`${currentImage?.file_path}-${currentImageIndex}`} // Force re-render on image change
+                                    src={`/memo-file/${currentImage?.file_path}`}
                                     className={`max-w-full max-h-full object-contain transition-transform duration-200 hover:scale-105 ${
                                         isCurrentImageSelected
                                             ? "ring-4 ring-blue-500 ring-opacity-70"
                                             : ""
+                                    } ${
+                                        imageLoading
+                                            ? "opacity-0"
+                                            : "opacity-100"
                                     }`}
                                     alt="Document preview"
-                                    onLoad={(e) => {
-                                        // Hide loading indicator when image loads
-                                        const loadingEl =
-                                            document.getElementById(
-                                                `loading-indicator-${currentImageIndex}`
-                                            );
-                                        if (loadingEl)
-                                            loadingEl.style.display = "none";
-                                    }}
-                                    onError={(e) => {
-                                        // Show error message if image fails to load
-                                        e.currentTarget.src =
-                                            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMiAwYzYuNjIzIDAgMTIgNS4zNzcgMTIgMTJzLTUuMzc3IDEyLTEyIDEyLTEyLTUuMzc3LTEyLTEyIDUuMzc3LTEyIDEyLTEyem0wIDFjNi4wNzEgMCAxMSA0LjkyOSAxMSAxMXMtNC45MjkgMTEtMTEgMTEtMTEtNC45MjktMTEtMTEgNC45MjktMTEgMTEtMTF6bS41IDEyaC0ydi02aDJ2NnptLTEtNi43NWMtLjY5IDAtMS4yNS0uNTYtMS4yNS0xLjI1cy41Ni0xLjI1IDEuMjUtMS4yNSAxLjI1LjU2IDEuMjUgMS4yNS0uNTYgMS4yNS0xLjI1IDEuMjV6Ii8+PC9zdmc+";
-                                        e.currentTarget.className =
-                                            "w-24 h-24 opacity-60";
-                                        const loadingEl =
-                                            document.getElementById(
-                                                `loading-indicator-${currentImageIndex}`
-                                            );
-                                        if (loadingEl) {
-                                            loadingEl.innerHTML =
-                                                '<p class="text-red-500">Failed to load image</p>';
-                                            loadingEl.classList.remove(
-                                                "bg-white/50"
-                                            );
-                                        }
-                                    }}
+                                    onLoad={handleImageLoad}
+                                    onError={handleImageError}
                                     onClick={() => {
                                         if (
+                                            allowEdit &&
                                             multiSelectMode &&
                                             currentImage.id
                                         ) {
@@ -335,7 +328,8 @@ export function ImagePreview({
                                 </div>
                             )}
                             <div className="flex gap-2">
-                                {selectedImages.size > 0 && (
+                                {/* Only show delete button if allowEdit is true */}
+                                {allowEdit && selectedImages.size > 0 && (
                                     <button
                                         className="px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-colors duration-200"
                                         onClick={() =>
@@ -351,7 +345,7 @@ export function ImagePreview({
                                     className="px-3 py-1 bg-gray-200 rounded-md text-sm hover:bg-gray-300 transition-colors duration-200"
                                     onClick={() =>
                                         window.open(
-                                            `memo-file/${currentImage?.file_path}`,
+                                            `/memo-file/${currentImage?.file_path}`,
                                             "_blank"
                                         )
                                     }
@@ -364,7 +358,7 @@ export function ImagePreview({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel
-                        className="bg-blue-500 text-white"
+                        className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
                         onClick={onClose}
                     >
                         Kembali
@@ -372,8 +366,8 @@ export function ImagePreview({
                 </AlertDialogFooter>
             </AlertDialogContent>
 
-            {/* Confirmation dialog for deleting multiple images */}
-            {showDeleteConfirm && (
+            {/* Confirmation dialog for deleting multiple images - Only show if allowEdit is true */}
+            {allowEdit && showDeleteConfirm && (
                 <AlertDialog
                     open={showDeleteConfirm}
                     onOpenChange={setShowDeleteConfirm}
