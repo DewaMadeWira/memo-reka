@@ -10,6 +10,7 @@ use App\Models\MemoLetter;
 use App\Models\Official;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -352,15 +353,28 @@ class InvitationService
                 $newMonthlyCounter = $lastMonthlyCounter + 1;
             }
         }
+
+        $companyCode = Setting::get('company_code', 'REKA');
         $invitationNumber = sprintf(
-            "%02d.%02d/REKA%s/GEN/%s/%s/%s",
+            "%02d.%02d/%s%s/GEN/%s/%s/%s",
             $newYearlyCounter,
             $newMonthlyCounter,
+            $companyCode,
             $official->official_code,
             $user->division->division_code,
             $this->convertToRoman($currentMonth),
             $currentYear
         );
+
+        // $invitationNumber = sprintf(
+        //     "%02d.%02d/REKA%s/GEN/%s/%s/%s",
+        //     $newYearlyCounter,
+        //     $newMonthlyCounter,
+        //     $official->official_code,
+        //     $user->division->division_code,
+        //     $this->convertToRoman($currentMonth),
+        //     $currentYear
+        // );
         return [
             'invitation_number' => $invitationNumber,
             'yearly_counter' => $newYearlyCounter,

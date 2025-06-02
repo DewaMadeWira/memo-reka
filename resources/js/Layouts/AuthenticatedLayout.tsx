@@ -34,15 +34,26 @@ PropsWithChildren<{ header?: ReactNode }>) {
     }
 
     // Filter notifications based on search query
-    const filteredNotifications = notifications.filter(
-        (notification: any) =>
-            notification.title
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-            notification.message
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase())
-    );
+    // const filteredNotifications = notifications.filter(
+    //     (notification: any) =>
+    //         notification.title
+    //             .toLowerCase()
+    //             .includes(searchQuery.toLowerCase()) ||
+    //         notification.message
+    //             .toLowerCase()
+    //             .includes(searchQuery.toLowerCase())
+    // );
+    const filteredNotifications = notifications
+        ? notifications.filter(
+              (notification: any) =>
+                  notification.title
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase()) ||
+                  notification.message
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())
+          )
+        : [];
 
     console.log(notifications);
     return (
@@ -82,7 +93,7 @@ PropsWithChildren<{ header?: ReactNode }>) {
                                             className="relative"
                                         >
                                             <Bell className="h-5 w-5" />
-                                            {notifications.length > 0 && (
+                                            {notifications?.length > 0 && (
                                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
                                                     {notifications.length}
                                                 </span>

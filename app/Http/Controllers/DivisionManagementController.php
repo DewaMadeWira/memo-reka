@@ -38,14 +38,31 @@ class DivisionManagementController extends Controller
             // Validate the request
             $validated = $request->validate([
                 'division_name' => 'required|string|max:255|unique:divisions,division_name',
+                'division_code' => 'required|string|max:255|unique:divisions,division_code',
             ]);
 
             // Create the role
             $role = Division::create([
                 'division_name' => $validated['division_name'],
+                'division_code' => $validated['division_code'],
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors, specifically for duplicates
+            // if (isset($e->validator->failed()['division_name']['Unique'])) {
+            //     return redirect()->back()
+            //         ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])
+            //         ->withInput();
+            // }
+            if (isset($e->validator->failed()['division_code']['Unique'])) {
+                return redirect()->back()
+                    ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])
+                    ->withInput();
+            }
+            if (isset($e->validator->failed()['division_code']['Required'])) {
+                return redirect()->back()
+                    ->withErrors(['message' => 'Kode divisi tidak boleh kosong'])
+                    ->withInput();
+            }
             if (isset($e->validator->failed()['division_name']['Unique'])) {
                 return redirect()->back()
                     ->withErrors(['message' => 'Terjadi duplikasi data, silahkan coba lagi'])

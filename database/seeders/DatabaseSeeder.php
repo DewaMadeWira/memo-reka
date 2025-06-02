@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             RequestLetterSeederInvite::class,
             SummaryLetterSeeder::class,
             RequestLetterWithSummarySeeder::class,
+            SettingsSeeder::class,
             // MemoSeeder::class,
         ]);
     }

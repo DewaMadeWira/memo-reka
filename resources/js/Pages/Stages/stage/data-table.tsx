@@ -130,7 +130,7 @@ DataTableProps<TData, TValue>) {
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 10, // or whatever default page size you want
+        pageSize: 30, // or whatever default page size you want
     });
 
     const setEdit = (data: any) => {
@@ -276,27 +276,33 @@ DataTableProps<TData, TValue>) {
                                                 <AlertDialogTrigger
                                                     onClick={() =>
                                                         setFormData({
-                                                            approver_id:
+                                                            approver_id: String(
                                                                 row.original
-                                                                    .approver_id,
-                                                            letter_id:
+                                                                    .approver_id
+                                                            ),
+                                                            letter_id: String(
                                                                 row.original
-                                                                    .letter_id,
-                                                            rejected_id:
+                                                                    .letter_id
+                                                            ),
+                                                            rejected_id: String(
                                                                 row.original
-                                                                    .rejected_id,
-                                                            sequence:
+                                                                    .rejected_id
+                                                            ),
+                                                            sequence: String(
                                                                 row.original
-                                                                    .sequence,
+                                                                    .sequence
+                                                            ),
                                                             stage_name:
                                                                 row.original
                                                                     .stage_name,
-                                                            status_id:
+                                                            status_id: String(
                                                                 row.original
-                                                                    .status_id,
-                                                            to_stage_id:
+                                                                    .status_id
+                                                            ),
+                                                            to_stage_id: String(
                                                                 row.original
-                                                                    .to_stage_id,
+                                                                    .to_stage_id
+                                                            ),
                                                         })
                                                     }
                                                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg ${

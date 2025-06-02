@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionManagementController;
 use App\Http\Controllers\InvitationController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\ServeImageController;
+use App\Http\Controllers\SettingsController as ControllersSettingsController;
 use App\Http\Controllers\StagesController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\UserManagementController;
@@ -49,6 +51,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::middleware('can:admin-privilege')->group(function () {
+        Route::get('/admin/manajemen-pengaturan', [ControllersSettingsController::class, 'index'])->name('settings.index');
+        Route::post('/admin/manajemen-pengaturan', [ControllersSettingsController::class, 'update'])->name('settings.update');
         Route::resource('admin/manajemen-pengguna', UserManagementController::class);
         Route::resource('admin/manajemen-pejabat', OfficialManagementController::class);
         Route::resource('admin/manajemen-tahapan-surat', StagesController::class);
