@@ -6,4 +6,5 @@ start "" php artisan serve
 echo Starting npm development server...
 start "" npm run dev
 
-echo All servers started successfully.
+echo Starting queue worker...
+start "" php artisan queue:work
