@@ -479,38 +479,190 @@ DataTableProps<TData, TValue>) {
                                         <div className="flex gap-2 justify-center">
                                             <div className="flex gap-2">
                                                 <>
-                                                    {row.original.stages
-                                                        .is_external == 1
-                                                        ? row.original.memo!
-                                                              .to_division.id ==
-                                                              user.division_id && (
-                                                              <>
-                                                                  <TooltipProvider
-                                                                      delayDuration={
-                                                                          100
-                                                                      }
-                                                                      skipDelayDuration={
-                                                                          0
-                                                                      }
-                                                                  >
-                                                                      {/* Show the appropriate tooltip based on file upload status */}
-                                                                      <Tooltip>
-                                                                          <TooltipTrigger
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .to_stage_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : ""
-                                                                              }
-                                                                          >
+                                                    {/* PDF Preview Button */}
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger>
+                                                            <button
+                                                                className={
+                                                                    actionButtonClass
+                                                                }
+                                                            >
+                                                                <TooltipProvider
+                                                                    delayDuration={
+                                                                        100
+                                                                    }
+                                                                    skipDelayDuration={
+                                                                        0
+                                                                    }
+                                                                >
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger>
+                                                                            <FileText></FileText>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent
+                                                                            side="top"
+                                                                            sideOffset={
+                                                                                10
+                                                                            }
+                                                                        >
+                                                                            <p>
+                                                                                Preview
+                                                                                PDF
+                                                                            </p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                            </button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent className="w-full max-w-7xl">
+                                                            <AlertDialogHeader className="">
+                                                                <AlertDialogTitle>
+                                                                    Preview PDF
+                                                                </AlertDialogTitle>
+                                                                <div className="">
+                                                                    <PDFViewer className="w-full h-[80vh]">
+                                                                        <Template
+                                                                            data={
+                                                                                row
+                                                                                    .original
+                                                                                    .memo
+                                                                            }
+                                                                        />
+                                                                    </PDFViewer>
+                                                                </div>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                {/* All other action buttons moved here */}
+                                                                <div className="flex gap-2 mr-auto">
+                                                                    {/* Approve Button */}
+                                                                    {row
+                                                                        .original
+                                                                        .stages
+                                                                        .is_external ==
+                                                                    1
+                                                                        ? row
+                                                                              .original
+                                                                              .memo!
+                                                                              .to_division
+                                                                              .id ==
+                                                                              user.division_id && (
+                                                                              <TooltipProvider
+                                                                                  delayDuration={
+                                                                                      100
+                                                                                  }
+                                                                                  skipDelayDuration={
+                                                                                      0
+                                                                                  }
+                                                                              >
+                                                                                  <Tooltip>
+                                                                                      <TooltipTrigger
+                                                                                          className={
+                                                                                              user.role_id !=
+                                                                                                  row
+                                                                                                      .original
+                                                                                                      .stages
+                                                                                                      .approver_id ||
+                                                                                              row
+                                                                                                  .original
+                                                                                                  .stages
+                                                                                                  .to_stage_id ==
+                                                                                                  null
+                                                                                                  ? "hidden"
+                                                                                                  : ""
+                                                                                          }
+                                                                                      >
+                                                                                          <button
+                                                                                              onClick={() =>
+                                                                                                  handleApprove(
+                                                                                                      row
+                                                                                                          .original
+                                                                                                          .memo!
+                                                                                                          .id
+                                                                                                  )
+                                                                                              }
+                                                                                              className={
+                                                                                                  user.role_id !=
+                                                                                                      row
+                                                                                                          .original
+                                                                                                          .stages
+                                                                                                          .approver_id ||
+                                                                                                  row
+                                                                                                      .original
+                                                                                                      .stages
+                                                                                                      .to_stage_id ==
+                                                                                                      null
+                                                                                                      ? "hidden"
+                                                                                                      : `${approveButtonClass} ${
+                                                                                                            row
+                                                                                                                .original
+                                                                                                                .stages
+                                                                                                                .requires_file_upload ==
+                                                                                                                1 &&
+                                                                                                            row
+                                                                                                                .original
+                                                                                                                .memo!
+                                                                                                                .images
+                                                                                                                .length ==
+                                                                                                                0
+                                                                                                                ? "opacity-50 cursor-not-allowed"
+                                                                                                                : ""
+                                                                                                        }`
+                                                                                              }
+                                                                                              disabled={
+                                                                                                  row
+                                                                                                      .original
+                                                                                                      .stages
+                                                                                                      .requires_file_upload ==
+                                                                                                      1 &&
+                                                                                                  row
+                                                                                                      .original
+                                                                                                      .memo!
+                                                                                                      .images
+                                                                                                      .length ==
+                                                                                                      0
+                                                                                              }
+                                                                                          >
+                                                                                              <Check />
+                                                                                          </button>
+                                                                                      </TooltipTrigger>
+                                                                                      <TooltipContent
+                                                                                          side="top"
+                                                                                          sideOffset={
+                                                                                              10
+                                                                                          }
+                                                                                      >
+                                                                                          {row
+                                                                                              .original
+                                                                                              .stages
+                                                                                              .requires_file_upload ==
+                                                                                              1 &&
+                                                                                          row
+                                                                                              .original
+                                                                                              .memo!
+                                                                                              .images
+                                                                                              .length ==
+                                                                                              0 ? (
+                                                                                              <p>
+                                                                                                  File
+                                                                                                  Belum
+                                                                                                  Diupload.
+                                                                                              </p>
+                                                                                          ) : (
+                                                                                              <p>
+                                                                                                  Setujui
+                                                                                                  Memo
+                                                                                              </p>
+                                                                                          )}
+                                                                                      </TooltipContent>
+                                                                                  </Tooltip>
+                                                                              </TooltipProvider>
+                                                                          )
+                                                                        : row
+                                                                              .original
+                                                                              .memo!
+                                                                              .from_division
+                                                                              .id ==
+                                                                              user.division_id && (
                                                                               <button
                                                                                   onClick={() =>
                                                                                       handleApprove(
@@ -532,1292 +684,811 @@ DataTableProps<TData, TValue>) {
                                                                                           .to_stage_id ==
                                                                                           null
                                                                                           ? "hidden"
-                                                                                          : `${approveButtonClass} ${
-                                                                                                row
-                                                                                                    .original
-                                                                                                    .stages
-                                                                                                    .requires_file_upload ==
-                                                                                                    1 &&
-                                                                                                row
-                                                                                                    .original
-                                                                                                    .memo!
-                                                                                                    .images
-                                                                                                    .length ==
-                                                                                                    0
-                                                                                                    ? "opacity-50 cursor-not-allowed"
-                                                                                                    : ""
-                                                                                            }`
+                                                                                          : `${approveButtonClass}`
                                                                                   }
-                                                                                  disabled={
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .requires_file_upload ==
-                                                                                          1 &&
-                                                                                      row
-                                                                                          .original
-                                                                                          .memo!
-                                                                                          .images
-                                                                                          .length ==
+                                                                              >
+                                                                                  <TooltipProvider
+                                                                                      delayDuration={
+                                                                                          100
+                                                                                      }
+                                                                                      skipDelayDuration={
                                                                                           0
-                                                                                  }
-                                                                              >
-                                                                                  <Check />
-                                                                              </button>
-                                                                          </TooltipTrigger>
-                                                                          <TooltipContent
-                                                                              side="top"
-                                                                              sideOffset={
-                                                                                  10
-                                                                              }
-                                                                          >
-                                                                              {row
-                                                                                  .original
-                                                                                  .stages
-                                                                                  .requires_file_upload ==
-                                                                                  1 &&
-                                                                              row
-                                                                                  .original
-                                                                                  .memo!
-                                                                                  .images
-                                                                                  .length ==
-                                                                                  0 ? (
-                                                                                  <p>
-                                                                                      File
-                                                                                      Belum
-                                                                                      Diupload.
-                                                                                  </p>
-                                                                              ) : (
-                                                                                  <p>
-                                                                                      Setujui
-                                                                                      Memo
-                                                                                  </p>
-                                                                              )}
-                                                                          </TooltipContent>
-                                                                      </Tooltip>
-                                                                  </TooltipProvider>
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              className={
-                                                                                  row
-                                                                                      .original
-                                                                                      .memo!
-                                                                                      .rejection_reason
-                                                                                      ? `${actionButtonClass} bg-yellow-500`
-                                                                                      : "hidden"
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <Info
-                                                                                          //   size={
-                                                                                          //       18
-                                                                                          //   }
-                                                                                          />
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Lihat
-                                                                                              Alasan
-                                                                                              Penolakan
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                                  Memo
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Ditolak
-                                                                                          pada
-                                                                                          tahap:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .stages
-                                                                                              .stage_name ||
-                                                                                              "Tidak diketahui"}
-                                                                                      </p>
-
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Alasan
-                                                                                          penolakan:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .memo!
-                                                                                              .rejection_reason ||
-                                                                                              "Tidak ada alasan yang diberikan"}
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </AlertDialogDescription>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
-                                                                                  Tutup
-                                                                              </AlertDialogCancel>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              //   onClick={() =>
-                                                                              //       handleReject(
-                                                                              //           row
-                                                                              //               .original
-                                                                              //               .memo
-                                                                              //               .id
-                                                                              //       )
-                                                                              //   }
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .rejected_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : `${rejectButtonClass}
-                                                                                            `
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <X></X>
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Tolak
-                                                                                              Memo
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                              {/* Reject */}
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  Mohon
-                                                                                  berikan
-                                                                                  alasan
-                                                                                  penolakan
-                                                                                  memo
-                                                                                  ini.
-                                                                              </AlertDialogDescription>
-                                                                              <div className="mt-4">
-                                                                                  <Textarea
-                                                                                      placeholder="Alasan penolakan..."
-                                                                                      value={
-                                                                                          rejectionReason
                                                                                       }
-                                                                                      onChange={(
-                                                                                          e
-                                                                                      ) =>
-                                                                                          setRejectionReason(
-                                                                                              e
-                                                                                                  .target
-                                                                                                  .value
-                                                                                          )
-                                                                                      }
-                                                                                      className="w-full min-h-[100px]"
-                                                                                  />
-                                                                              </div>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel
-                                                                                  onClick={() => {
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                  }}
-                                                                              >
-                                                                                  Batal
-                                                                              </AlertDialogCancel>
-                                                                              <AlertDialogAction
-                                                                                  onClick={() => {
-                                                                                      // if (
-                                                                                      //     memoToReject
-                                                                                      // ) {
-                                                                                      handleReject(
-                                                                                          row
-                                                                                              .original
-                                                                                              .memo!
-                                                                                              .id,
-                                                                                          rejectionReason
-                                                                                      );
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                      // }
-                                                                                  }}
-                                                                                  className="bg-red-500 hover:bg-red-600"
-                                                                                  disabled={
-                                                                                      rejectionReason.trim() ===
-                                                                                      ""
-                                                                                  }
-                                                                              >
-                                                                                  Tolak
-                                                                                  Memo
-                                                                              </AlertDialogAction>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                              </>
-                                                          )
-                                                        : row.original.memo!
-                                                              .from_division
-                                                              .id ==
-                                                              user.division_id && (
-                                                              <>
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .to_stage_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : `${approveButtonClass}`
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <Check></Check>
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Setujui
-                                                                                              Memo
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                              {/* {user.role_id ==
-                                                                              1
-                                                                                  ? "Approve"
-                                                                                  : "Perbaiki"} */}
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Apakah
-                                                                                  Anda
-                                                                                  Yakin
-                                                                                  ?
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  {row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .is_fixable ==
-                                                                                  0 ? (
-                                                                                      <>
-                                                                                          Memo
-                                                                                          akan
-                                                                                          dikirimkan
-                                                                                          ke
-                                                                                          manajer
-                                                                                          divisi{" "}
-                                                                                          <span className="font-bold">
-                                                                                              {
-                                                                                                  row
-                                                                                                      .original
-                                                                                                      .memo!
-                                                                                                      .to_division
-                                                                                                      .division_name
+                                                                                  >
+                                                                                      <Tooltip>
+                                                                                          <TooltipTrigger>
+                                                                                              <Check></Check>
+                                                                                          </TooltipTrigger>
+                                                                                          <TooltipContent
+                                                                                              side="top"
+                                                                                              sideOffset={
+                                                                                                  10
                                                                                               }
-                                                                                          </span>{" "}
-                                                                                          apakah
-                                                                                          anda
-                                                                                          yakin
-                                                                                          ?
-                                                                                      </>
-                                                                                  ) : (
-                                                                                      `
-                                                                                      
-                                                                                  Memo
-                                                                                  akan
-                                                                                  dikirimkan
-                                                                                  ke
-                                                                                  manajer.
-                                                                                  Apakah
-                                                                                  anda
-                                                                                  yakin
-                                                                                  dengan
-                                                                                  perubahan
-                                                                                  yang
-                                                                                  sudah
-                                                                                  dibuat
-                                                                                  ?
-                                                                                      `
-                                                                                  )}
-                                                                              </AlertDialogDescription>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel>
-                                                                                  Kembali
-                                                                              </AlertDialogCancel>
-                                                                              <AlertDialogAction
-                                                                                  onClick={() => {
-                                                                                      handleApprove(
-                                                                                          row
-                                                                                              .original
-                                                                                              .memo!
-                                                                                              .id
-                                                                                      );
-                                                                                  }}
-                                                                                  className="bg-blue-500 font-normal hover:bg-blue-600"
-                                                                              >
-                                                                                  Kirim
-                                                                                  Memo
-                                                                                  ke
-                                                                                  Manajer
-                                                                              </AlertDialogAction>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              className={
-                                                                                  row
-                                                                                      .original
-                                                                                      .memo!
-                                                                                      .rejection_reason
-                                                                                      ? `${actionButtonClass} bg-yellow-500`
-                                                                                      : "hidden"
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <Info
-                                                                                          //   size={
-                                                                                          //       18
-                                                                                          //   }
-                                                                                          />
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Lihat
-                                                                                              Alasan
-                                                                                              Penolakan
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                                  Memo
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Ditolak
-                                                                                          pada
-                                                                                          tahap:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .stages
-                                                                                              .stage_name ||
-                                                                                              "Tidak diketahui"}
-                                                                                      </p>
+                                                                                          >
+                                                                                              <p>
+                                                                                                  Setujui
+                                                                                                  Memo
+                                                                                              </p>
+                                                                                          </TooltipContent>
+                                                                                      </Tooltip>
+                                                                                  </TooltipProvider>
+                                                                              </button>
+                                                                          )}
 
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Alasan
-                                                                                          penolakan:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .memo!
-                                                                                              .rejection_reason ||
-                                                                                              "Tidak ada alasan yang diberikan"}
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </AlertDialogDescription>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
-                                                                                  Tutup
-                                                                              </AlertDialogCancel>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              //   onClick={() =>
-                                                                              //       handleReject(
-                                                                              //           row
-                                                                              //               .original
-                                                                              //               .memo
-                                                                              //               .id
-                                                                              //       )
-                                                                              //   }
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .rejected_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : `${rejectButtonClass}
-                                                                                            `
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <X></X>
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Tolak
-                                                                                              Memo
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                              {/* Reject */}
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  Mohon
-                                                                                  berikan
-                                                                                  alasan
-                                                                                  penolakan
-                                                                                  memo
-                                                                                  ini.
-                                                                              </AlertDialogDescription>
-                                                                              <div className="mt-4">
-                                                                                  <Textarea
-                                                                                      placeholder="Alasan penolakan..."
-                                                                                      value={
-                                                                                          rejectionReason
-                                                                                      }
-                                                                                      onChange={(
-                                                                                          e
-                                                                                      ) =>
-                                                                                          setRejectionReason(
-                                                                                              e
-                                                                                                  .target
-                                                                                                  .value
-                                                                                          )
-                                                                                      }
-                                                                                      className="w-full min-h-[100px]"
-                                                                                  />
-                                                                              </div>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel
-                                                                                  onClick={() => {
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                  }}
-                                                                              >
-                                                                                  Batal
-                                                                              </AlertDialogCancel>
-                                                                              <AlertDialogAction
-                                                                                  onClick={() => {
-                                                                                      // if (
-                                                                                      //     memoToReject
-                                                                                      // ) {
-                                                                                      handleReject(
-                                                                                          row
-                                                                                              .original
-                                                                                              .memo!
-                                                                                              .id,
-                                                                                          rejectionReason
-                                                                                      );
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                      // }
-                                                                                  }}
-                                                                                  className="bg-red-500 hover:bg-red-600"
-                                                                                  disabled={
-                                                                                      rejectionReason.trim() ===
-                                                                                      ""
-                                                                                  }
-                                                                              >
-                                                                                  Tolak
-                                                                                  Memo
-                                                                              </AlertDialogAction>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                              </>
-                                                          )}
-                                                </>
-                                                <AlertDialog
-                                                    open={editDialogOpen}
-                                                    onOpenChange={
-                                                        setEditDialogOpen
-                                                    }
-                                                >
-                                                    <AlertDialogTrigger
-                                                        //   onClick={() =>
-                                                        //       setFormData(
-                                                        //           {
-                                                        //               perihal:
-                                                        //                   row
-                                                        //                       .original
-                                                        //                       .memo
-                                                        //                       .perihal,
-                                                        //               content:
-                                                        //                   row
-                                                        //                       .original
-                                                        //                       .memo
-                                                        //                       .content,
-                                                        //           }
-                                                        //       )
-                                                        //   }
-                                                        onClick={() =>
-                                                            setFormData({
-                                                                official: "",
-                                                                request_name:
-                                                                    "",
-                                                                to_division:
-                                                                    null,
-                                                                perihal:
-                                                                    row.original
-                                                                        .memo!
-                                                                        .perihal,
-                                                                content:
-                                                                    row.original
-                                                                        .memo!
-                                                                        .content,
-                                                                previous_memo:
-                                                                    null,
-                                                            })
-                                                        }
-                                                        // onClick={() =>
-                                                        //     alert(
-                                                        //         row.original
-                                                        //             .memo
-                                                        //             .perihal
-                                                        //     )
-                                                        // }
-                                                        className={`${actionButtonClass} ${
-                                                            row.original.stages
-                                                                .is_fixable ==
-                                                                1 &&
-                                                            row.original.stages
-                                                                .approver_id ==
-                                                                user.role_id
-                                                                ? ""
-                                                                : "hidden"
-                                                        }`}
-                                                    >
-                                                        <Pencil></Pencil>
-                                                        {/* Edit Memo */}
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent className="w-[300rem]">
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle className="font-medium">
-                                                                Edit Memo{" "}
-                                                                {
-                                                                    row.original
-                                                                        .memo!
-                                                                        .memo_number
-                                                                }
-                                                            </AlertDialogTitle>
-                                                            <div className="">
-                                                                <label
-                                                                    htmlFor="perihal"
-                                                                    className="block mb-2"
-                                                                >
-                                                                    Perihal
-                                                                </label>
-                                                                <input
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    type="text"
-                                                                    name="perihal"
-                                                                    id=""
-                                                                    className="w-full p-2 border rounded-lg"
-                                                                    value={
-                                                                        formData.perihal
-                                                                    }
-                                                                />
-                                                                <label
-                                                                    htmlFor="content"
-                                                                    className="block mb-2"
-                                                                >
-                                                                    Isi
-                                                                </label>
-                                                                <textarea
-                                                                    onChange={
-                                                                        handleChange
-                                                                    }
-                                                                    rows={10}
-                                                                    name="content"
-                                                                    id=""
-                                                                    className="w-full p-2 border rounded-lg"
-                                                                    value={
-                                                                        formData.content
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Kembali
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                onClick={() =>
-                                                                    handleUpdate(
-                                                                        row
-                                                                            .original
-                                                                            .memo!
-                                                                            .id
-                                                                    )
-                                                                }
-                                                                className="bg-blue-500 font-normal hover:bg-blue-600"
-                                                            >
-                                                                Simpan Perubahan
-                                                                Memo
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger>
-                                                        <button
-                                                            // onClick={() =>
-                                                            //     handleApprove(
-                                                            //         row.original.memo.id
-                                                            //     )
-                                                            // }
-                                                            //                     className={`bg-blue-500 p-2 mt-2 text-white rounded-lg
-                                                            // `}
-                                                            className={
-                                                                actionButtonClass
-                                                            }
-                                                        >
-                                                            <TooltipProvider
-                                                                delayDuration={
-                                                                    100
-                                                                }
-                                                                skipDelayDuration={
-                                                                    0
-                                                                }
-                                                            >
-                                                                <Tooltip>
-                                                                    <TooltipTrigger>
-                                                                        <FileText></FileText>
-                                                                    </TooltipTrigger>
-                                                                    <TooltipContent
-                                                                        side="top"
-                                                                        sideOffset={
-                                                                            10
-                                                                        }
-                                                                    >
-                                                                        <p>
-                                                                            Preview
-                                                                            PDF
-                                                                        </p>
-                                                                    </TooltipContent>
-                                                                </Tooltip>
-                                                            </TooltipProvider>
-                                                            {/* Lihat PDF */}
-                                                        </button>{" "}
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent className="w-full max-w-7xl">
-                                                        <AlertDialogHeader className="">
-                                                            <AlertDialogTitle>
-                                                                Preview PDF
-                                                            </AlertDialogTitle>
-                                                            <div className="">
-                                                                <PDFViewer className="w-full h-[80vh]">
-                                                                    <Template
-                                                                        data={
-                                                                            row
-                                                                                .original
-                                                                                .memo
-                                                                        }
-                                                                    />
-                                                                </PDFViewer>
-                                                            </div>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <PDFDownloadLink
-                                                                document={
-                                                                    <Template
-                                                                        data={
-                                                                            row
-                                                                                .original
-                                                                                .memo
-                                                                        }
-                                                                    />
-                                                                }
-                                                                fileName={`memo-${
-                                                                    row.original
-                                                                        .memo
-                                                                        ?.memo_number ||
-                                                                    "document"
-                                                                }.pdf`}
-                                                                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-center text-sm font-bold hover:bg-blue-600"
-                                                            >
-                                                                {({
-                                                                    blob,
-                                                                    url,
-                                                                    loading,
-                                                                    error,
-                                                                }) =>
-                                                                    loading
-                                                                        ? "Generating PDF..."
-                                                                        : "Download PDF"
-                                                                }
-                                                            </PDFDownloadLink>
-                                                            <AlertDialogCancel className="bg-blue-500 text-white">
-                                                                Kembali
-                                                            </AlertDialogCancel>
-                                                            {/* <AlertDialogAction>
-                                                                Continue
-                                                            </AlertDialogAction> */}
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                                {/* View Files Button */}
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger
-                                                        onClick={() => {
-                                                            setPreviewImages(
-                                                                row.original
-                                                                    .memo!
-                                                                    .images
-                                                            );
-                                                            setImagePreviewOpen(
-                                                                true
-                                                            );
-                                                        }}
-                                                    >
-                                                        {row.original.memo!
-                                                            .images.length >
-                                                            0 && (
-                                                            <button
-                                                                className={
-                                                                    row.original
-                                                                        .stages
-                                                                        .requires_file_upload !=
-                                                                    1
-                                                                        ? "hidden"
-                                                                        : `${actionButtonClass}`
-                                                                }
-                                                            >
-                                                                <TooltipProvider
-                                                                    delayDuration={
-                                                                        100
-                                                                    }
-                                                                    skipDelayDuration={
-                                                                        0
-                                                                    }
-                                                                >
-                                                                    <Tooltip>
-                                                                        <TooltipTrigger>
-                                                                            <FileSearch />
-                                                                        </TooltipTrigger>
-                                                                        <TooltipContent
-                                                                            side="top"
-                                                                            sideOffset={
-                                                                                10
-                                                                            }
-                                                                        >
-                                                                            <p>
-                                                                                Lihat
-                                                                                File
-                                                                            </p>
-                                                                        </TooltipContent>
-                                                                    </Tooltip>
-                                                                </TooltipProvider>
-                                                            </button>
-                                                        )}
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent className="w-full max-w-7xl">
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Preview File
-                                                                {row.original
-                                                                    .memo!
-                                                                    .images
-                                                                    .length > 1
-                                                                    ? "s"
-                                                                    : ""}
-                                                            </AlertDialogTitle>
-                                                            {imagePreviewOpen && (
-                                                                <ImagePreview
-                                                                    isOpen={
-                                                                        imagePreviewOpen
-                                                                    }
-                                                                    onClose={() =>
-                                                                        setImagePreviewOpen(
-                                                                            false
-                                                                        )
-                                                                    }
-                                                                    images={
-                                                                        previewImages
-                                                                    }
-                                                                />
-                                                            )}
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel className="bg-blue-500 text-white">
-                                                                Kembali
-                                                            </AlertDialogCancel>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-
-                                                {/* Upload Files Button */}
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger>
-                                                        {user.role_id != 1 && (
-                                                            <button
-                                                                className={
-                                                                    row.original
-                                                                        .stages
-                                                                        .requires_file_upload !=
-                                                                        1 ||
-                                                                    row.original
-                                                                        .memo!
-                                                                        .to_division
-                                                                        .id !=
-                                                                        user.division_id
-                                                                        ? "hidden"
-                                                                        : `${actionButtonClass}`
-                                                                }
-                                                            >
-                                                                <TooltipProvider
-                                                                    delayDuration={
-                                                                        100
-                                                                    }
-                                                                    skipDelayDuration={
-                                                                        0
-                                                                    }
-                                                                >
-                                                                    <Tooltip>
-                                                                        <TooltipTrigger>
-                                                                            <FileUp />
-                                                                        </TooltipTrigger>
-                                                                        <TooltipContent
-                                                                            side="top"
-                                                                            sideOffset={
-                                                                                10
-                                                                            }
-                                                                        >
-                                                                            <p>
-                                                                                Upload
-                                                                                File
-                                                                            </p>
-                                                                        </TooltipContent>
-                                                                    </Tooltip>
-                                                                </TooltipProvider>
-                                                            </button>
-                                                        )}
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent className="w-full">
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Upload File
-                                                            </AlertDialogTitle>
-                                                            <div>
-                                                                <div>
-                                                                    {/* File Upload Section */}
-                                                                    <div className="mt-4">
-                                                                        <label
-                                                                            htmlFor="file-upload"
-                                                                            className="block text-sm font-medium text-gray-700"
-                                                                        >
-                                                                            Upload
-                                                                            Bukti
-                                                                        </label>
-                                                                        <input
-                                                                            type="file"
-                                                                            id="file-upload"
-                                                                            multiple
-                                                                            className="mt-1 block w-full text-sm text-gray-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-md file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-blue-50 file:text-blue-700
-                                hover:file:bg-blue-100"
-                                                                            onChange={(
-                                                                                e
-                                                                            ) =>
-                                                                                handleFileSelection(
-                                                                                    e
-                                                                                        .target
-                                                                                        .files,
+                                                                    {/* Rejection Info Button */}
+                                                                    <AlertDialog>
+                                                                        <AlertDialogTrigger>
+                                                                            <button
+                                                                                className={
                                                                                     row
                                                                                         .original
                                                                                         .memo!
-                                                                                        .id
+                                                                                        .rejection_reason
+                                                                                        ? `${actionButtonClass} bg-yellow-500`
+                                                                                        : "hidden"
+                                                                                }
+                                                                            >
+                                                                                <TooltipProvider
+                                                                                    delayDuration={
+                                                                                        100
+                                                                                    }
+                                                                                    skipDelayDuration={
+                                                                                        0
+                                                                                    }
+                                                                                >
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger>
+                                                                                            <Info />
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent
+                                                                                            side="top"
+                                                                                            sideOffset={
+                                                                                                10
+                                                                                            }
+                                                                                        >
+                                                                                            <p>
+                                                                                                Lihat
+                                                                                                Alasan
+                                                                                                Penolakan
+                                                                                            </p>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                </TooltipProvider>
+                                                                            </button>
+                                                                        </AlertDialogTrigger>
+                                                                        <AlertDialogContent>
+                                                                            <AlertDialogHeader>
+                                                                                <AlertDialogTitle>
+                                                                                    Alasan
+                                                                                    Penolakan
+                                                                                    Memo
+                                                                                </AlertDialogTitle>
+                                                                                <AlertDialogDescription>
+                                                                                    <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                                                                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                            Ditolak
+                                                                                            pada
+                                                                                            tahap:
+                                                                                        </p>
+                                                                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                                                                            {row
+                                                                                                .original
+                                                                                                .stages
+                                                                                                .stage_name ||
+                                                                                                "Tidak diketahui"}
+                                                                                        </p>
+                                                                                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                            Alasan
+                                                                                            penolakan:
+                                                                                        </p>
+                                                                                        <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                                                                                            {row
+                                                                                                .original
+                                                                                                .memo!
+                                                                                                .rejection_reason ||
+                                                                                                "Tidak ada alasan yang diberikan"}
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </AlertDialogDescription>
+                                                                            </AlertDialogHeader>
+                                                                            <AlertDialogFooter>
+                                                                                <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
+                                                                                    Tutup
+                                                                                </AlertDialogCancel>
+                                                                            </AlertDialogFooter>
+                                                                        </AlertDialogContent>
+                                                                    </AlertDialog>
+
+                                                                    {/* Reject Button */}
+                                                                    <AlertDialog>
+                                                                        <AlertDialogTrigger>
+                                                                            <button
+                                                                                className={
+                                                                                    user.role_id !=
+                                                                                        row
+                                                                                            .original
+                                                                                            .stages
+                                                                                            .approver_id ||
+                                                                                    row
+                                                                                        .original
+                                                                                        .stages
+                                                                                        .rejected_id ==
+                                                                                        null
+                                                                                        ? "hidden"
+                                                                                        : `${rejectButtonClass}`
+                                                                                }
+                                                                            >
+                                                                                <TooltipProvider
+                                                                                    delayDuration={
+                                                                                        100
+                                                                                    }
+                                                                                    skipDelayDuration={
+                                                                                        0
+                                                                                    }
+                                                                                >
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger>
+                                                                                            <X></X>
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent
+                                                                                            side="top"
+                                                                                            sideOffset={
+                                                                                                10
+                                                                                            }
+                                                                                        >
+                                                                                            <p>
+                                                                                                Tolak
+                                                                                                Memo
+                                                                                            </p>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                </TooltipProvider>
+                                                                            </button>
+                                                                        </AlertDialogTrigger>
+                                                                        <AlertDialogContent>
+                                                                            <AlertDialogHeader>
+                                                                                <AlertDialogTitle>
+                                                                                    Alasan
+                                                                                    Penolakan
+                                                                                </AlertDialogTitle>
+                                                                                <AlertDialogDescription>
+                                                                                    Mohon
+                                                                                    berikan
+                                                                                    alasan
+                                                                                    penolakan
+                                                                                    memo
+                                                                                    ini.
+                                                                                </AlertDialogDescription>
+                                                                                <div className="mt-4">
+                                                                                    <Textarea
+                                                                                        placeholder="Alasan penolakan..."
+                                                                                        value={
+                                                                                            rejectionReason
+                                                                                        }
+                                                                                        onChange={(
+                                                                                            e
+                                                                                        ) =>
+                                                                                            setRejectionReason(
+                                                                                                e
+                                                                                                    .target
+                                                                                                    .value
+                                                                                            )
+                                                                                        }
+                                                                                        className="w-full min-h-[100px]"
+                                                                                    />
+                                                                                </div>
+                                                                            </AlertDialogHeader>
+                                                                            <AlertDialogFooter>
+                                                                                <AlertDialogCancel
+                                                                                    onClick={() =>
+                                                                                        setRejectionReason(
+                                                                                            ""
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    Batal
+                                                                                </AlertDialogCancel>
+                                                                                <AlertDialogAction
+                                                                                    onClick={() => {
+                                                                                        handleReject(
+                                                                                            row
+                                                                                                .original
+                                                                                                .memo!
+                                                                                                .id,
+                                                                                            rejectionReason
+                                                                                        );
+                                                                                        setRejectionReason(
+                                                                                            ""
+                                                                                        );
+                                                                                    }}
+                                                                                    className="bg-red-500 hover:bg-red-600"
+                                                                                    disabled={
+                                                                                        rejectionReason.trim() ===
+                                                                                        ""
+                                                                                    }
+                                                                                >
+                                                                                    Tolak
+                                                                                    Memo
+                                                                                </AlertDialogAction>
+                                                                            </AlertDialogFooter>
+                                                                        </AlertDialogContent>
+                                                                    </AlertDialog>
+
+                                                                    {/* Edit Button */}
+                                                                    <AlertDialog
+                                                                        open={
+                                                                            editDialogOpen
+                                                                        }
+                                                                        onOpenChange={
+                                                                            setEditDialogOpen
+                                                                        }
+                                                                    >
+                                                                        <AlertDialogTrigger
+                                                                            onClick={() =>
+                                                                                setFormData(
+                                                                                    {
+                                                                                        official:
+                                                                                            "",
+                                                                                        request_name:
+                                                                                            "",
+                                                                                        to_division:
+                                                                                            null,
+                                                                                        perihal:
+                                                                                            row
+                                                                                                .original
+                                                                                                .memo!
+                                                                                                .perihal,
+                                                                                        content:
+                                                                                            row
+                                                                                                .original
+                                                                                                .memo!
+                                                                                                .content,
+                                                                                        previous_memo:
+                                                                                            null,
+                                                                                    }
                                                                                 )
                                                                             }
-                                                                        />
-
-                                                                        {/* Preview area */}
-                                                                        {filePreview.length >
-                                                                            0 && (
-                                                                            <ScrollArea>
-                                                                                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                                                                    {filePreview.map(
-                                                                                        (
-                                                                                            preview,
-                                                                                            index
-                                                                                        ) => (
-                                                                                            <div
-                                                                                                key={
-                                                                                                    index
-                                                                                                }
-                                                                                                className="relative"
-                                                                                            >
-                                                                                                {preview ? (
-                                                                                                    <img
-                                                                                                        src={
-                                                                                                            preview
-                                                                                                        }
-                                                                                                        alt={`Preview ${
-                                                                                                            index +
-                                                                                                            1
-                                                                                                        }`}
-                                                                                                        className="h-24 w-full object-cover rounded-md"
-                                                                                                    />
-                                                                                                ) : (
-                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
-                                                                                                        <span className="text-gray-500">
-                                                                                                            Non-image
-                                                                                                            file
-                                                                                                        </span>
-                                                                                                    </div>
-                                                                                                )}
-                                                                                                <button
-                                                                                                    type="button"
-                                                                                                    className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1"
-                                                                                                    onClick={() => {
-                                                                                                        // Remove this file from preview and fileData
-                                                                                                        if (
-                                                                                                            fileData
-                                                                                                        ) {
-                                                                                                            const newFiles =
-                                                                                                                [
-                                                                                                                    ...fileData.files,
-                                                                                                                ];
-                                                                                                            const newFileNames =
-                                                                                                                [
-                                                                                                                    ...fileData.fileNames,
-                                                                                                                ];
-                                                                                                            const newPreviews =
-                                                                                                                [
-                                                                                                                    ...filePreview,
-                                                                                                                ];
-                                                                                                            newFiles.splice(
-                                                                                                                index,
-                                                                                                                1
-                                                                                                            );
-                                                                                                            newFileNames.splice(
-                                                                                                                index,
-                                                                                                                1
-                                                                                                            );
-                                                                                                            newPreviews.splice(
-                                                                                                                index,
-                                                                                                                1
-                                                                                                            );
-                                                                                                            if (
-                                                                                                                newFiles.length ===
-                                                                                                                0
-                                                                                                            ) {
-                                                                                                                setFileData(
-                                                                                                                    null
-                                                                                                                );
-                                                                                                                setFilePreview(
-                                                                                                                    []
-                                                                                                                );
-                                                                                                            } else {
-                                                                                                                setFileData(
-                                                                                                                    {
-                                                                                                                        ...fileData,
-                                                                                                                        files: newFiles,
-                                                                                                                        fileNames:
-                                                                                                                            newFileNames,
-                                                                                                                    }
-                                                                                                                );
-                                                                                                                setFilePreview(
-                                                                                                                    newPreviews
-                                                                                                                );
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }}
-                                                                                                >
-                                                                                                    <svg
-                                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                                        className="h-4 w-4"
-                                                                                                        fill="none"
-                                                                                                        viewBox="0 0 24 24"
-                                                                                                        stroke="currentColor"
-                                                                                                    >
-                                                                                                        <path
-                                                                                                            strokeLinecap="round"
-                                                                                                            strokeLinejoin="round"
-                                                                                                            strokeWidth={
-                                                                                                                2
-                                                                                                            }
-                                                                                                            d="M6 18L18 6M6 6l12 12"
-                                                                                                        />
-                                                                                                    </svg>
-                                                                                                </button>
-                                                                                            </div>
+                                                                            className={`${actionButtonClass} ${
+                                                                                row
+                                                                                    .original
+                                                                                    .stages
+                                                                                    .is_fixable ==
+                                                                                    1 &&
+                                                                                row
+                                                                                    .original
+                                                                                    .stages
+                                                                                    .approver_id ==
+                                                                                    user.role_id
+                                                                                    ? ""
+                                                                                    : "hidden"
+                                                                            }`}
+                                                                        >
+                                                                            <Pencil></Pencil>
+                                                                        </AlertDialogTrigger>
+                                                                        <AlertDialogContent className="w-[300rem]">
+                                                                            <AlertDialogHeader>
+                                                                                <AlertDialogTitle className="font-medium">
+                                                                                    Edit
+                                                                                    Memo{" "}
+                                                                                    {
+                                                                                        row
+                                                                                            .original
+                                                                                            .memo!
+                                                                                            .memo_number
+                                                                                    }
+                                                                                </AlertDialogTitle>
+                                                                                <div className="">
+                                                                                    <label
+                                                                                        htmlFor="perihal"
+                                                                                        className="block mb-2"
+                                                                                    >
+                                                                                        Perihal
+                                                                                    </label>
+                                                                                    <input
+                                                                                        onChange={
+                                                                                            handleChange
+                                                                                        }
+                                                                                        type="text"
+                                                                                        name="perihal"
+                                                                                        className="w-full p-2 border rounded-lg"
+                                                                                        value={
+                                                                                            formData.perihal
+                                                                                        }
+                                                                                    />
+                                                                                    <label
+                                                                                        htmlFor="content"
+                                                                                        className="block mb-2"
+                                                                                    >
+                                                                                        Isi
+                                                                                    </label>
+                                                                                    <textarea
+                                                                                        onChange={
+                                                                                            handleChange
+                                                                                        }
+                                                                                        rows={
+                                                                                            10
+                                                                                        }
+                                                                                        name="content"
+                                                                                        className="w-full p-2 border rounded-lg"
+                                                                                        value={
+                                                                                            formData.content
+                                                                                        }
+                                                                                    />
+                                                                                </div>
+                                                                            </AlertDialogHeader>
+                                                                            <AlertDialogFooter>
+                                                                                <AlertDialogCancel>
+                                                                                    Kembali
+                                                                                </AlertDialogCancel>
+                                                                                <AlertDialogAction
+                                                                                    onClick={() =>
+                                                                                        handleUpdate(
+                                                                                            row
+                                                                                                .original
+                                                                                                .memo!
+                                                                                                .id
                                                                                         )
-                                                                                    )}
-                                                                                </div>
-                                                                            </ScrollArea>
-                                                                        )}
+                                                                                    }
+                                                                                    className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                                >
+                                                                                    Simpan
+                                                                                    Perubahan
+                                                                                    Memo
+                                                                                </AlertDialogAction>
+                                                                            </AlertDialogFooter>
+                                                                        </AlertDialogContent>
+                                                                    </AlertDialog>
 
-                                                                        {/* File names display */}
-                                                                        {fileData &&
-                                                                            fileData.fileNames &&
-                                                                            fileData
-                                                                                .fileNames
-                                                                                .length >
-                                                                                0 && (
-                                                                                <div className="mt-2">
-                                                                                    <p className="text-sm font-medium text-gray-700">
-                                                                                        Selected
-                                                                                        files:
-                                                                                    </p>
-                                                                                    <ul className="mt-1 text-sm text-gray-500 list-disc list-inside">
-                                                                                        {fileData.fileNames.map(
-                                                                                            (
-                                                                                                name,
-                                                                                                index
-                                                                                            ) => (
-                                                                                                <li
-                                                                                                    key={
-                                                                                                        index
-                                                                                                    }
-                                                                                                >
-                                                                                                    {
-                                                                                                        name
-                                                                                                    }
-                                                                                                </li>
-                                                                                            )
-                                                                                        )}
-                                                                                    </ul>
-                                                                                </div>
-                                                                            )}
-                                                                    </div>
-
-                                                                    {filePreview.length >
-                                                                        0 && (
-                                                                        <div className="mt-4 mb-4">
-                                                                            <h4 className="text-sm font-medium mb-2">
-                                                                                Preview:
-                                                                            </h4>
-                                                                            <ScrollArea className="h-36">
-                                                                                <div className="grid grid-cols-2 gap-4">
-                                                                                    {filePreview.map(
-                                                                                        (
-                                                                                            preview,
-                                                                                            index
-                                                                                        ) => (
-                                                                                            <div
-                                                                                                key={
-                                                                                                    index
+                                                                    {/* Upload Files Button */}
+                                                                    <AlertDialog>
+                                                                        <AlertDialogTrigger>
+                                                                            {user.role_id !=
+                                                                                1 && (
+                                                                                <button
+                                                                                    className={
+                                                                                        row
+                                                                                            .original
+                                                                                            .stages
+                                                                                            .requires_file_upload !=
+                                                                                            1 ||
+                                                                                        row
+                                                                                            .original
+                                                                                            .memo!
+                                                                                            .to_division
+                                                                                            .id !=
+                                                                                            user.division_id
+                                                                                            ? "hidden"
+                                                                                            : `${actionButtonClass}`
+                                                                                    }
+                                                                                >
+                                                                                    <TooltipProvider
+                                                                                        delayDuration={
+                                                                                            100
+                                                                                        }
+                                                                                        skipDelayDuration={
+                                                                                            0
+                                                                                        }
+                                                                                    >
+                                                                                        <Tooltip>
+                                                                                            <TooltipTrigger>
+                                                                                                <FileUp />
+                                                                                            </TooltipTrigger>
+                                                                                            <TooltipContent
+                                                                                                side="top"
+                                                                                                sideOffset={
+                                                                                                    10
                                                                                                 }
-                                                                                                className="border rounded-md p-2"
                                                                                             >
-                                                                                                {preview ? (
-                                                                                                    <img
-                                                                                                        src={
-                                                                                                            preview
-                                                                                                        }
-                                                                                                        alt={`File Preview ${
-                                                                                                            index +
-                                                                                                            1
-                                                                                                        }`}
-                                                                                                        className="max-h-48 max-w-full mx-auto"
-                                                                                                    />
-                                                                                                ) : (
-                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
-                                                                                                        <span className="text-gray-500">
-                                                                                                            Non-image
-                                                                                                            file
-                                                                                                        </span>
-                                                                                                    </div>
-                                                                                                )}
-                                                                                                <p className="text-xs text-center mt-2 text-gray-500">
-                                                                                                    {
-                                                                                                        fileData
-                                                                                                            ?.fileNames[
-                                                                                                            index
-                                                                                                        ]
-                                                                                                    }
+                                                                                                <p>
+                                                                                                    Upload
+                                                                                                    File
                                                                                                 </p>
-                                                                                            </div>
-                                                                                        )
+                                                                                            </TooltipContent>
+                                                                                        </Tooltip>
+                                                                                    </TooltipProvider>
+                                                                                </button>
+                                                                            )}
+                                                                        </AlertDialogTrigger>
+                                                                        <AlertDialogContent className="w-full">
+                                                                            <AlertDialogHeader>
+                                                                                <AlertDialogTitle>
+                                                                                    Upload
+                                                                                    File
+                                                                                </AlertDialogTitle>
+                                                                                <div>
+                                                                                    <div className="mt-4">
+                                                                                        <label
+                                                                                            htmlFor="file-upload"
+                                                                                            className="block text-sm font-medium text-gray-700"
+                                                                                        >
+                                                                                            Upload
+                                                                                            Bukti
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type="file"
+                                                                                            id="file-upload"
+                                                                                            multiple
+                                                                                            accept=".jpg,.jpeg,.png"
+                                                                                            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) =>
+                                                                                                handleFileSelection(
+                                                                                                    e
+                                                                                                        .target
+                                                                                                        .files,
+                                                                                                    row
+                                                                                                        .original
+                                                                                                        .memo!
+                                                                                                        .id
+                                                                                                )
+                                                                                            }
+                                                                                        />
+                                                                                        {/* Preview area */}
+                                                                                        {filePreview.length >
+                                                                                            0 && (
+                                                                                            <ScrollArea>
+                                                                                                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                                                                    {filePreview.map(
+                                                                                                        (
+                                                                                                            preview,
+                                                                                                            index
+                                                                                                        ) => (
+                                                                                                            <div
+                                                                                                                key={
+                                                                                                                    index
+                                                                                                                }
+                                                                                                                className="relative"
+                                                                                                            >
+                                                                                                                {preview ? (
+                                                                                                                    <img
+                                                                                                                        src={
+                                                                                                                            preview
+                                                                                                                        }
+                                                                                                                        alt={`Preview ${
+                                                                                                                            index +
+                                                                                                                            1
+                                                                                                                        }`}
+                                                                                                                        className="h-24 w-full object-cover rounded-md"
+                                                                                                                    />
+                                                                                                                ) : (
+                                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                                        <span className="text-gray-500">
+                                                                                                                            Non-image
+                                                                                                                            file
+                                                                                                                        </span>
+                                                                                                                    </div>
+                                                                                                                )}
+                                                                                                                <button
+                                                                                                                    type="button"
+                                                                                                                    className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1"
+                                                                                                                    onClick={() => {
+                                                                                                                        if (
+                                                                                                                            fileData
+                                                                                                                        ) {
+                                                                                                                            const newFiles =
+                                                                                                                                [
+                                                                                                                                    ...fileData.files,
+                                                                                                                                ];
+                                                                                                                            const newFileNames =
+                                                                                                                                [
+                                                                                                                                    ...fileData.fileNames,
+                                                                                                                                ];
+                                                                                                                            const newPreviews =
+                                                                                                                                [
+                                                                                                                                    ...filePreview,
+                                                                                                                                ];
+                                                                                                                            newFiles.splice(
+                                                                                                                                index,
+                                                                                                                                1
+                                                                                                                            );
+                                                                                                                            newFileNames.splice(
+                                                                                                                                index,
+                                                                                                                                1
+                                                                                                                            );
+                                                                                                                            newPreviews.splice(
+                                                                                                                                index,
+                                                                                                                                1
+                                                                                                                            );
+                                                                                                                            if (
+                                                                                                                                newFiles.length ===
+                                                                                                                                0
+                                                                                                                            ) {
+                                                                                                                                setFileData(
+                                                                                                                                    null
+                                                                                                                                );
+                                                                                                                                setFilePreview(
+                                                                                                                                    []
+                                                                                                                                );
+                                                                                                                            } else {
+                                                                                                                                setFileData(
+                                                                                                                                    {
+                                                                                                                                        ...fileData,
+                                                                                                                                        files: newFiles,
+                                                                                                                                        fileNames:
+                                                                                                                                            newFileNames,
+                                                                                                                                    }
+                                                                                                                                );
+                                                                                                                                setFilePreview(
+                                                                                                                                    newPreviews
+                                                                                                                                );
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }}
+                                                                                                                >
+                                                                                                                    <svg
+                                                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                                                        className="h-4 w-4"
+                                                                                                                        fill="none"
+                                                                                                                        viewBox="0 0 24 24"
+                                                                                                                        stroke="currentColor"
+                                                                                                                    >
+                                                                                                                        <path
+                                                                                                                            strokeLinecap="round"
+                                                                                                                            strokeLinejoin="round"
+                                                                                                                            strokeWidth={
+                                                                                                                                2
+                                                                                                                            }
+                                                                                                                            d="M6 18L18 6M6 6l12 12"
+                                                                                                                        />
+                                                                                                                    </svg>
+                                                                                                                </button>
+                                                                                                            </div>
+                                                                                                        )
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            </ScrollArea>
+                                                                                        )}
+
+                                                                                        {/* File names display */}
+                                                                                        {fileData &&
+                                                                                            fileData.fileNames &&
+                                                                                            fileData
+                                                                                                .fileNames
+                                                                                                .length >
+                                                                                                0 && (
+                                                                                                <div className="mt-2">
+                                                                                                    <p className="text-sm font-medium text-gray-700">
+                                                                                                        Selected
+                                                                                                        files:
+                                                                                                    </p>
+                                                                                                    <ul className="mt-1 text-sm text-gray-500 list-disc list-inside">
+                                                                                                        {fileData.fileNames.map(
+                                                                                                            (
+                                                                                                                name,
+                                                                                                                index
+                                                                                                            ) => (
+                                                                                                                <li
+                                                                                                                    key={
+                                                                                                                        index
+                                                                                                                    }
+                                                                                                                >
+                                                                                                                    {
+                                                                                                                        name
+                                                                                                                    }
+                                                                                                                </li>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </ul>
+                                                                                                </div>
+                                                                                            )}
+                                                                                    </div>
+
+                                                                                    {filePreview.length >
+                                                                                        0 && (
+                                                                                        <div className="mt-4 mb-4">
+                                                                                            <h4 className="text-sm font-medium mb-2">
+                                                                                                Preview:
+                                                                                            </h4>
+                                                                                            <ScrollArea className="h-36">
+                                                                                                <div className="grid grid-cols-2 gap-4">
+                                                                                                    {filePreview.map(
+                                                                                                        (
+                                                                                                            preview,
+                                                                                                            index
+                                                                                                        ) => (
+                                                                                                            <div
+                                                                                                                key={
+                                                                                                                    index
+                                                                                                                }
+                                                                                                                className="border rounded-md p-2"
+                                                                                                            >
+                                                                                                                {preview ? (
+                                                                                                                    <img
+                                                                                                                        src={
+                                                                                                                            preview
+                                                                                                                        }
+                                                                                                                        alt={`File Preview ${
+                                                                                                                            index +
+                                                                                                                            1
+                                                                                                                        }`}
+                                                                                                                        className="max-h-48 max-w-full mx-auto"
+                                                                                                                    />
+                                                                                                                ) : (
+                                                                                                                    <div className="h-24 w-full flex items-center justify-center bg-gray-100 rounded-md">
+                                                                                                                        <span className="text-gray-500">
+                                                                                                                            Non-image
+                                                                                                                            file
+                                                                                                                        </span>
+                                                                                                                    </div>
+                                                                                                                )}
+                                                                                                                <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                                                    {
+                                                                                                                        fileData
+                                                                                                                            ?.fileNames[
+                                                                                                                            index
+                                                                                                                        ]
+                                                                                                                    }
+                                                                                                                </p>
+                                                                                                            </div>
+                                                                                                        )
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            </ScrollArea>
+                                                                                        </div>
                                                                                     )}
                                                                                 </div>
-                                                                            </ScrollArea>
-                                                                        </div>
-                                                                    )}
+                                                                            </AlertDialogHeader>
+                                                                            <AlertDialogFooter>
+                                                                                <AlertDialogCancel>
+                                                                                    Kembali
+                                                                                </AlertDialogCancel>
+                                                                                <AlertDialogAction
+                                                                                    className="bg-blue-500 text-white"
+                                                                                    onClick={() =>
+                                                                                        handleUpload(
+                                                                                            row
+                                                                                                .original
+                                                                                                .memo!
+                                                                                                .id
+                                                                                        )
+                                                                                    }
+                                                                                    disabled={
+                                                                                        !fileData ||
+                                                                                        fileData
+                                                                                            .files
+                                                                                            .length ===
+                                                                                            0
+                                                                                    }
+                                                                                >
+                                                                                    Upload
+                                                                                </AlertDialogAction>
+                                                                            </AlertDialogFooter>
+                                                                        </AlertDialogContent>
+                                                                    </AlertDialog>
                                                                 </div>
-                                                            </div>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Kembali
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className="bg-blue-500 text-white"
-                                                                onClick={() =>
-                                                                    handleUpload(
+
+                                                                <PDFDownloadLink
+                                                                    document={
+                                                                        <Template
+                                                                            data={
+                                                                                row
+                                                                                    .original
+                                                                                    .memo
+                                                                            }
+                                                                        />
+                                                                    }
+                                                                    fileName={`memo-${
                                                                         row
                                                                             .original
-                                                                            .memo!
-                                                                            .id
-                                                                    )
-                                                                }
-                                                                disabled={
-                                                                    !fileData ||
-                                                                    fileData
-                                                                        .files
-                                                                        .length ===
-                                                                        0
-                                                                }
-                                                            >
-                                                                Upload
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
+                                                                            .memo
+                                                                            ?.memo_number ||
+                                                                        "document"
+                                                                    }.pdf`}
+                                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-center text-sm font-bold hover:bg-blue-600"
+                                                                >
+                                                                    {({
+                                                                        blob,
+                                                                        url,
+                                                                        loading,
+                                                                        error,
+                                                                    }) =>
+                                                                        loading
+                                                                            ? "Generating PDF..."
+                                                                            : "Download PDF"
+                                                                    }
+                                                                </PDFDownloadLink>
+
+                                                                <AlertDialogCancel className="bg-blue-500 text-white">
+                                                                    Kembali
+                                                                </AlertDialogCancel>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+
+                                                    {/* Keep only the File Preview Button outside */}
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger
+                                                            onClick={() => {
+                                                                setPreviewImages(
+                                                                    row.original
+                                                                        .memo!
+                                                                        .images
+                                                                );
+                                                                setImagePreviewOpen(
+                                                                    true
+                                                                );
+                                                            }}
+                                                        >
+                                                            {row.original.memo!
+                                                                .images.length >
+                                                                0 && (
+                                                                <button
+                                                                    className={
+                                                                        row
+                                                                            .original
+                                                                            .stages
+                                                                            .requires_file_upload !=
+                                                                        1
+                                                                            ? "hidden"
+                                                                            : `${actionButtonClass}`
+                                                                    }
+                                                                >
+                                                                    <TooltipProvider
+                                                                        delayDuration={
+                                                                            100
+                                                                        }
+                                                                        skipDelayDuration={
+                                                                            0
+                                                                        }
+                                                                    >
+                                                                        <Tooltip>
+                                                                            <TooltipTrigger>
+                                                                                <FileSearch />
+                                                                            </TooltipTrigger>
+                                                                            <TooltipContent
+                                                                                side="top"
+                                                                                sideOffset={
+                                                                                    10
+                                                                                }
+                                                                            >
+                                                                                <p>
+                                                                                    Lihat
+                                                                                    File
+                                                                                </p>
+                                                                            </TooltipContent>
+                                                                        </Tooltip>
+                                                                    </TooltipProvider>
+                                                                </button>
+                                                            )}
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent className="w-full max-w-7xl">
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Preview File
+                                                                    {row
+                                                                        .original
+                                                                        .memo!
+                                                                        .images
+                                                                        .length >
+                                                                    1
+                                                                        ? "s"
+                                                                        : ""}
+                                                                </AlertDialogTitle>
+                                                                {imagePreviewOpen && (
+                                                                    <ImagePreview
+                                                                        isOpen={
+                                                                            imagePreviewOpen
+                                                                        }
+                                                                        onClose={() =>
+                                                                            setImagePreviewOpen(
+                                                                                false
+                                                                            )
+                                                                        }
+                                                                        images={
+                                                                            previewImages
+                                                                        }
+                                                                    />
+                                                                )}
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel className="bg-blue-500 text-white">
+                                                                    Kembali
+                                                                </AlertDialogCancel>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </>
                                             </div>
                                             {/* <AlertDialog>
                                                 <AlertDialogTrigger
