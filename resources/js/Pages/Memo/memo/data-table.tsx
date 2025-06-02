@@ -222,11 +222,11 @@ DataTableProps<TData, TValue>) {
     const [rejectionReason, setRejectionReason] = useState<string>("");
 
     const actionButtonClass =
-        "bg-blue-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+        "bg-blue-500 p-2 text-white rounded-lg text-sm font-normal w-fit";
     const rejectButtonClass =
-        "bg-red-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+        "bg-red-500 p-2  text-white rounded-lg text-sm font-normal  w-fit";
     const approveButtonClass =
-        "bg-green-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+        "bg-green-500 p-2  text-white rounded-lg text-sm font-normal w-fit";
 
     return (
         <div>
@@ -477,41 +477,20 @@ DataTableProps<TData, TValue>) {
                                     // }
                                     >
                                         <div className="flex gap-2 justify-center">
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-3">
                                                 <>
                                                     {/* PDF Preview Button */}
                                                     <AlertDialog>
                                                         <AlertDialogTrigger>
                                                             <button
-                                                                className={
-                                                                    actionButtonClass
-                                                                }
+                                                                className={`${actionButtonClass} flex items-center gap-2`}
                                                             >
-                                                                <TooltipProvider
-                                                                    delayDuration={
-                                                                        100
-                                                                    }
-                                                                    skipDelayDuration={
-                                                                        0
-                                                                    }
-                                                                >
-                                                                    <Tooltip>
-                                                                        <TooltipTrigger>
-                                                                            <FileText></FileText>
-                                                                        </TooltipTrigger>
-                                                                        <TooltipContent
-                                                                            side="top"
-                                                                            sideOffset={
-                                                                                10
-                                                                            }
-                                                                        >
-                                                                            <p>
-                                                                                Preview
-                                                                                PDF
-                                                                            </p>
-                                                                        </TooltipContent>
-                                                                    </Tooltip>
-                                                                </TooltipProvider>
+                                                                <FileText
+                                                                // size={20}
+                                                                />
+                                                                {/* <span>
+                                                                    Preview PDF
+                                                                </span> */}
                                                             </button>
                                                         </AlertDialogTrigger>
                                                         <AlertDialogContent className="w-full max-w-7xl">
@@ -531,9 +510,9 @@ DataTableProps<TData, TValue>) {
                                                                     </PDFViewer>
                                                                 </div>
                                                             </AlertDialogHeader>
-                                                            <AlertDialogFooter>
+                                                            <AlertDialogFooter className=" items-center">
                                                                 {/* All other action buttons moved here */}
-                                                                <div className="flex gap-2 mr-auto">
+                                                                <div className="flex items-center justify-center gap-1 ">
                                                                     {/* Approve Button */}
                                                                     {row
                                                                         .original
@@ -592,7 +571,7 @@ DataTableProps<TData, TValue>) {
                                                                                                       .to_stage_id ==
                                                                                                       null
                                                                                                       ? "hidden"
-                                                                                                      : `${approveButtonClass} ${
+                                                                                                      : `${approveButtonClass} flex items-center gap-2 mr-1 ${
                                                                                                             row
                                                                                                                 .original
                                                                                                                 .stages
@@ -622,7 +601,14 @@ DataTableProps<TData, TValue>) {
                                                                                                       0
                                                                                               }
                                                                                           >
-                                                                                              <Check />
+                                                                                              <Check
+                                                                                                  size={
+                                                                                                      20
+                                                                                                  }
+                                                                                              />
+                                                                                              <span>
+                                                                                                  Setujui
+                                                                                              </span>
                                                                                           </button>
                                                                                       </TooltipTrigger>
                                                                                       <TooltipContent
@@ -684,7 +670,7 @@ DataTableProps<TData, TValue>) {
                                                                                           .to_stage_id ==
                                                                                           null
                                                                                           ? "hidden"
-                                                                                          : `${approveButtonClass}`
+                                                                                          : `${approveButtonClass} flex items-center gap-2`
                                                                                   }
                                                                               >
                                                                                   <TooltipProvider
@@ -696,8 +682,15 @@ DataTableProps<TData, TValue>) {
                                                                                       }
                                                                                   >
                                                                                       <Tooltip>
-                                                                                          <TooltipTrigger>
-                                                                                              <Check></Check>
+                                                                                          <TooltipTrigger className="flex items-center gap-2">
+                                                                                              <Check
+                                                                                                  size={
+                                                                                                      20
+                                                                                                  }
+                                                                                              />
+                                                                                              <span>
+                                                                                                  Setujui
+                                                                                              </span>
                                                                                           </TooltipTrigger>
                                                                                           <TooltipContent
                                                                                               side="top"
@@ -724,7 +717,7 @@ DataTableProps<TData, TValue>) {
                                                                                         .original
                                                                                         .memo!
                                                                                         .rejection_reason
-                                                                                        ? `${actionButtonClass} bg-yellow-500`
+                                                                                        ? `${actionButtonClass} bg-yellow-500 flex items-center `
                                                                                         : "hidden"
                                                                                 }
                                                                             >
@@ -737,8 +730,16 @@ DataTableProps<TData, TValue>) {
                                                                                     }
                                                                                 >
                                                                                     <Tooltip>
-                                                                                        <TooltipTrigger>
-                                                                                            <Info />
+                                                                                        <TooltipTrigger className="flex items-center gap-2">
+                                                                                            <Info
+                                                                                                size={
+                                                                                                    20
+                                                                                                }
+                                                                                            />
+                                                                                            <span>
+                                                                                                Lihat
+                                                                                                Alasan
+                                                                                            </span>
                                                                                         </TooltipTrigger>
                                                                                         <TooltipContent
                                                                                             side="top"
@@ -815,7 +816,7 @@ DataTableProps<TData, TValue>) {
                                                                                         .rejected_id ==
                                                                                         null
                                                                                         ? "hidden"
-                                                                                        : `${rejectButtonClass}`
+                                                                                        : `${rejectButtonClass} flex items-center gap-2`
                                                                                 }
                                                                             >
                                                                                 <TooltipProvider
@@ -827,8 +828,15 @@ DataTableProps<TData, TValue>) {
                                                                                     }
                                                                                 >
                                                                                     <Tooltip>
-                                                                                        <TooltipTrigger>
-                                                                                            <X></X>
+                                                                                        <TooltipTrigger className="flex items-center gap-2">
+                                                                                            <X
+                                                                                                size={
+                                                                                                    20
+                                                                                                }
+                                                                                            />
+                                                                                            <span>
+                                                                                                Tolak
+                                                                                            </span>
                                                                                         </TooltipTrigger>
                                                                                         <TooltipContent
                                                                                             side="top"
@@ -948,7 +956,7 @@ DataTableProps<TData, TValue>) {
                                                                                     }
                                                                                 )
                                                                             }
-                                                                            className={`${actionButtonClass} ${
+                                                                            className={`${actionButtonClass} flex items-center gap-2 ${
                                                                                 row
                                                                                     .original
                                                                                     .stages
@@ -963,7 +971,14 @@ DataTableProps<TData, TValue>) {
                                                                                     : "hidden"
                                                                             }`}
                                                                         >
-                                                                            <Pencil></Pencil>
+                                                                            <Pencil
+                                                                                size={
+                                                                                    20
+                                                                                }
+                                                                            />
+                                                                            <span>
+                                                                                Edit
+                                                                            </span>
                                                                         </AlertDialogTrigger>
                                                                         <AlertDialogContent className="w-[300rem]">
                                                                             <AlertDialogHeader>
@@ -1058,7 +1073,7 @@ DataTableProps<TData, TValue>) {
                                                                                             .id !=
                                                                                             user.division_id
                                                                                             ? "hidden"
-                                                                                            : `${actionButtonClass}`
+                                                                                            : `${actionButtonClass} flex items-center gap-2`
                                                                                     }
                                                                                 >
                                                                                     <TooltipProvider
@@ -1070,8 +1085,16 @@ DataTableProps<TData, TValue>) {
                                                                                         }
                                                                                     >
                                                                                         <Tooltip>
-                                                                                            <TooltipTrigger>
-                                                                                                <FileUp />
+                                                                                            <TooltipTrigger className="flex items-center gap-2">
+                                                                                                <FileUp
+                                                                                                    size={
+                                                                                                        20
+                                                                                                    }
+                                                                                                />
+                                                                                                <span>
+                                                                                                    Unggah
+                                                                                                    File
+                                                                                                </span>
                                                                                             </TooltipTrigger>
                                                                                             <TooltipContent
                                                                                                 side="top"
@@ -1124,7 +1147,6 @@ DataTableProps<TData, TValue>) {
                                                                                                 )
                                                                                             }
                                                                                         />
-                                                                                        {/* Preview area */}
                                                                                         {filePreview.length >
                                                                                             0 && (
                                                                                             <ScrollArea>
@@ -1358,40 +1380,58 @@ DataTableProps<TData, TValue>) {
                                                                     </AlertDialog>
                                                                 </div>
 
-                                                                <PDFDownloadLink
-                                                                    document={
-                                                                        <Template
-                                                                            data={
-                                                                                row
-                                                                                    .original
-                                                                                    .memo
+                                                                <div className="flex gap-3">
+                                                                    <PDFDownloadLink
+                                                                        document={
+                                                                            <Template
+                                                                                data={
+                                                                                    row
+                                                                                        .original
+                                                                                        .memo
+                                                                                }
+                                                                            />
+                                                                        }
+                                                                        fileName={`memo-${
+                                                                            row
+                                                                                .original
+                                                                                .memo
+                                                                                ?.memo_number ||
+                                                                            "document"
+                                                                        }.pdf`}
+                                                                        className="bg-blue-500 text-white px-4   rounded-lg text-center text-sm   hover:bg-blue-600 flex items-center gap-2"
+                                                                    >
+                                                                        {({
+                                                                            blob,
+                                                                            url,
+                                                                            loading,
+                                                                            error,
+                                                                        }) => (
+                                                                            <>
+                                                                                <FileText
+                                                                                    size={
+                                                                                        20
+                                                                                    }
+                                                                                />
+                                                                                <span>
+                                                                                    {loading
+                                                                                        ? "Generating PDF..."
+                                                                                        : "Download PDF"}
+                                                                                </span>
+                                                                            </>
+                                                                        )}
+                                                                    </PDFDownloadLink>
+
+                                                                    <AlertDialogCancel className="bg-gray-500 text-white hover:bg-gray-600 hover:text-white flex items-center gap-2">
+                                                                        <X
+                                                                            size={
+                                                                                20
                                                                             }
                                                                         />
-                                                                    }
-                                                                    fileName={`memo-${
-                                                                        row
-                                                                            .original
-                                                                            .memo
-                                                                            ?.memo_number ||
-                                                                        "document"
-                                                                    }.pdf`}
-                                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-center text-sm font-bold hover:bg-blue-600"
-                                                                >
-                                                                    {({
-                                                                        blob,
-                                                                        url,
-                                                                        loading,
-                                                                        error,
-                                                                    }) =>
-                                                                        loading
-                                                                            ? "Generating PDF..."
-                                                                            : "Download PDF"
-                                                                    }
-                                                                </PDFDownloadLink>
-
-                                                                <AlertDialogCancel className="bg-blue-500 text-white">
-                                                                    Kembali
-                                                                </AlertDialogCancel>
+                                                                        <span>
+                                                                            Tutup
+                                                                        </span>
+                                                                    </AlertDialogCancel>
+                                                                </div>
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     </AlertDialog>
@@ -1421,7 +1461,7 @@ DataTableProps<TData, TValue>) {
                                                                             .requires_file_upload !=
                                                                         1
                                                                             ? "hidden"
-                                                                            : `${actionButtonClass}`
+                                                                            : `${actionButtonClass} flex items-center gap-2`
                                                                     }
                                                                 >
                                                                     <TooltipProvider
@@ -1433,8 +1473,16 @@ DataTableProps<TData, TValue>) {
                                                                         }
                                                                     >
                                                                         <Tooltip>
-                                                                            <TooltipTrigger>
-                                                                                <FileSearch />
+                                                                            <TooltipTrigger className="flex items-center gap-2">
+                                                                                <FileSearch
+                                                                                    size={
+                                                                                        20
+                                                                                    }
+                                                                                />
+                                                                                <span>
+                                                                                    Lihat
+                                                                                    File
+                                                                                </span>
                                                                             </TooltipTrigger>
                                                                             <TooltipContent
                                                                                 side="top"
@@ -1482,8 +1530,15 @@ DataTableProps<TData, TValue>) {
                                                                 )}
                                                             </AlertDialogHeader>
                                                             <AlertDialogFooter>
-                                                                <AlertDialogCancel className="bg-blue-500 text-white">
-                                                                    Kembali
+                                                                <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white flex items-center gap-2">
+                                                                    <X
+                                                                        size={
+                                                                            20
+                                                                        }
+                                                                    />
+                                                                    <span>
+                                                                        Tutup
+                                                                    </span>
                                                                 </AlertDialogCancel>
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
