@@ -499,6 +499,23 @@ DataTableProps<TData, TValue>) {
                                                                     Preview PDF
                                                                 </AlertDialogTitle>
                                                                 <div className="">
+                                                                    <div className="mb-2">
+                                                                        <p className="text-sm">
+                                                                            Tahapan
+                                                                            surat
+                                                                            saat
+                                                                            ini
+                                                                            :{" "}
+                                                                        </p>
+                                                                        <p className=" ">
+                                                                            {
+                                                                                row
+                                                                                    .original
+                                                                                    .stages
+                                                                                    .stage_name
+                                                                            }
+                                                                        </p>
+                                                                    </div>
                                                                     <PDFViewer className="w-full h-[80vh]">
                                                                         <Template
                                                                             data={
