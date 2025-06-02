@@ -1471,15 +1471,7 @@ DataTableProps<TData, TValue>) {
                                                                 .images.length >
                                                                 0 && (
                                                                 <button
-                                                                    className={
-                                                                        row
-                                                                            .original
-                                                                            .stages
-                                                                            .requires_file_upload !=
-                                                                        1
-                                                                            ? "hidden"
-                                                                            : `${actionButtonClass} flex items-center gap-2`
-                                                                    }
+                                                                    className={`${actionButtonClass} flex items-center gap-2`}
                                                                 >
                                                                     <TooltipProvider
                                                                         delayDuration={
@@ -1491,15 +1483,7 @@ DataTableProps<TData, TValue>) {
                                                                     >
                                                                         <Tooltip>
                                                                             <TooltipTrigger className="flex items-center gap-2">
-                                                                                <FileSearch
-                                                                                    size={
-                                                                                        20
-                                                                                    }
-                                                                                />
-                                                                                <span>
-                                                                                    Lihat
-                                                                                    File
-                                                                                </span>
+                                                                                <FileSearch />
                                                                             </TooltipTrigger>
                                                                             <TooltipContent
                                                                                 side="top"
@@ -1517,6 +1501,55 @@ DataTableProps<TData, TValue>) {
                                                                 </button>
                                                             )}
                                                         </AlertDialogTrigger>
+                                                        <AlertDialogContent className="w-full max-w-7xl">
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Preview File
+                                                                    {row
+                                                                        .original
+                                                                        .memo!
+                                                                        .images
+                                                                        .length >
+                                                                    1
+                                                                        ? "s"
+                                                                        : ""}
+                                                                </AlertDialogTitle>
+                                                                {imagePreviewOpen && (
+                                                                    <ImagePreview
+                                                                        isOpen={
+                                                                            imagePreviewOpen
+                                                                        }
+                                                                        onClose={() =>
+                                                                            setImagePreviewOpen(
+                                                                                false
+                                                                            )
+                                                                        }
+                                                                        images={
+                                                                            previewImages
+                                                                        }
+                                                                        allowEdit={
+                                                                            row
+                                                                                .original
+                                                                                .stages
+                                                                                .requires_file_upload ===
+                                                                            1
+                                                                        }
+                                                                    />
+                                                                )}
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white flex items-center gap-2">
+                                                                    <X
+                                                                        size={
+                                                                            20
+                                                                        }
+                                                                    />
+                                                                    <span>
+                                                                        Tutup
+                                                                    </span>
+                                                                </AlertDialogCancel>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
                                                         <AlertDialogContent className="w-full max-w-7xl">
                                                             <AlertDialogHeader>
                                                                 <AlertDialogTitle>
