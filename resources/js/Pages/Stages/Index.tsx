@@ -545,7 +545,7 @@ export default function Index({
                                                 onChange={handleChange}
                                             >
                                                 <option value="-1">
-                                                    🏁 End Process
+                                                    ❌ Tahapan Akhir
                                                 </option>
                                                 {data.map((stage: any) => (
                                                     <option
@@ -572,7 +572,7 @@ export default function Index({
                                                 onChange={handleChange}
                                             >
                                                 <option value="-1">
-                                                    ❌ End Process
+                                                    ❌ Tahapan Akhir
                                                 </option>
                                                 {data.map((stage: any) => (
                                                     <option
@@ -625,22 +625,21 @@ export default function Index({
 
                 {/* Flow-Based Timeline View with Rejected Stages */}
                 <div className="mt-8">
-                    <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="mb-4 p-4 ">
                         <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                            <ArrowRight className="text-blue-600" size={20} />
-                            Complete Flow Timeline
+                            {/* <ArrowRight className="text-blue-600" size={20} /> */}
+                            Alur Tahapan dari surat.
                         </h3>
                         <p className="text-sm text-blue-600">
-                            This shows the complete document flow including both
-                            approval and rejection paths.
+                            Tampilan menunjukkan tahapan dari surat dimana warna
                             <span className="inline-block mx-2 px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
-                                Green
+                                Hijau
                             </span>
-                            indicates approval flow,
+                            menunjukkan alur persetujuan dan warna
                             <span className="inline-block mx-2 px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs font-medium">
                                 Orange
                             </span>
-                            indicates rejection flow.
+                            menunjukkan alur penolakan.
                         </p>
                     </div>
 
@@ -683,16 +682,16 @@ export default function Index({
                                             )}
 
                                         {/* Flow Connection Indicator */}
-                                        {isRejectedFlow && (
+                                        {/* {isRejectedFlow && (
                                             <div className="absolute -top-3 left-0 transform translate-x-1">
                                                 <div className="bg-orange-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 shadow-sm">
                                                     <XCircle size={12} />
                                                     Rejection Handler
                                                 </div>
                                             </div>
-                                        )}
+                                        )} */}
 
-                                        {!isRejectedFlow &&
+                                        {/* {!isRejectedFlow &&
                                             index > 0 &&
                                             !flowOrderedStages[index - 1]
                                                 ?.isRejectedFlow && (
@@ -704,20 +703,20 @@ export default function Index({
                                                         Approval Flow
                                                     </div>
                                                 </div>
-                                            )}
+                                            )} */}
 
                                         {/* Stage Card */}
                                         <div className="flex items-start space-x-4">
                                             {/* Timeline Dot */}
                                             <div
-                                                className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-lg border-2 ${
+                                                className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold  border-2 ${
                                                     isRejectedFlow
-                                                        ? "bg-gradient-to-br from-orange-400 to-orange-600 border-orange-300"
+                                                        ? "bg-gradient-to-br bg-orange-400"
                                                         : isStartingStage
-                                                        ? "bg-gradient-to-br from-green-400 to-green-600 border-green-300"
+                                                        ? "bg-gradient-to-br bg-green-500"
                                                         : isEndStage
-                                                        ? "bg-gradient-to-br from-gray-400 to-gray-600 border-gray-300"
-                                                        : "bg-gradient-to-br from-blue-400 to-blue-600 border-blue-300"
+                                                        ? "bg-gradient-to-br bg-gray-500"
+                                                        : "bg-gradient-to-br bg-green-500 "
                                                 }`}
                                             >
                                                 {isRejectedFlow ? (
@@ -759,30 +758,31 @@ export default function Index({
 
                                                             {isRejectedFlow && (
                                                                 <span className="bg-orange-200 text-orange-800 text-xs px-2 py-1 rounded-full font-medium flex items-center gap-1">
-                                                                    <AlertTriangle
+                                                                    {/* <AlertTriangle
                                                                         size={
                                                                             10
                                                                         }
-                                                                    />
-                                                                    REJECTION
-                                                                    HANDLER
+                                                                    /> */}
+                                                                    Tahapan
+                                                                    Ditolak
                                                                 </span>
                                                             )}
 
                                                             {isStartingStage && (
                                                                 <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium flex items-center gap-1">
-                                                                    <CheckCircle
+                                                                    {/* <CheckCircle
                                                                         size={
                                                                             10
                                                                         }
-                                                                    />
-                                                                    START
+                                                                    /> */}
+                                                                    Awal Tahapan
                                                                 </span>
                                                             )}
 
                                                             {isEndStage && (
                                                                 <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">
-                                                                    END
+                                                                    Tahapan
+                                                                    Akhir
                                                                 </span>
                                                             )}
                                                         </div>
@@ -806,7 +806,59 @@ export default function Index({
                                                                                 ?.letter_name
                                                                         }
                                                                     </p>
-                                                                    <p>
+                                                                    <div className="mt-4">
+                                                                        <p>
+                                                                            <span className="font-medium">
+                                                                                Status:
+                                                                            </span>
+                                                                            <span
+                                                                                className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                                                                                    stage
+                                                                                        .status
+                                                                                        ?.status_name ===
+                                                                                    "Active"
+                                                                                        ? isRejectedFlow
+                                                                                            ? "bg-orange-100 text-orange-800"
+                                                                                            : "bg-green-100 text-green-800"
+                                                                                        : "bg-gray-100 text-gray-800"
+                                                                                }`}
+                                                                            >
+                                                                                {
+                                                                                    stage
+                                                                                        .status
+                                                                                        ?.status_name
+                                                                                }
+                                                                            </span>
+                                                                        </p>
+                                                                        {/* <p>
+                                                                            <span className="font-medium">
+                                                                                Posisi Tahapan :
+                                                                            </span>
+                                                                            <span className="ml-1">
+                                                                                {isRejectedFlow
+                                                                                    ? "Exception Handler"
+                                                                                    : isStartingStage
+                                                                                    ? "Awal "
+                                                                                    : `Step ${
+                                                                                          index +
+                                                                                          1 -
+                                                                                          flowOrderedStages
+                                                                                              .slice(
+                                                                                                  0,
+                                                                                                  index
+                                                                                              )
+                                                                                              .filter(
+                                                                                                  (
+                                                                                                      fs
+                                                                                                  ) =>
+                                                                                                      fs.isRejectedFlow
+                                                                                              )
+                                                                                              .length
+                                                                                      }`}
+                                                                            </span>
+                                                                        </p> */}
+                                                                    </div>
+                                                                    {/* <p>
                                                                         <span className="font-medium">
                                                                             Approver:
                                                                         </span>{" "}
@@ -815,64 +867,11 @@ export default function Index({
                                                                                 .approver
                                                                                 ?.role_name
                                                                         }
-                                                                    </p>
-                                                                </div>
-                                                                <div>
-                                                                    <p>
-                                                                        <span className="font-medium">
-                                                                            Status:
-                                                                        </span>
-                                                                        <span
-                                                                            className={`ml-2 px-2 py-1 rounded-full text-xs ${
-                                                                                stage
-                                                                                    .status
-                                                                                    ?.status_name ===
-                                                                                "Active"
-                                                                                    ? isRejectedFlow
-                                                                                        ? "bg-orange-100 text-orange-800"
-                                                                                        : "bg-green-100 text-green-800"
-                                                                                    : "bg-gray-100 text-gray-800"
-                                                                            }`}
-                                                                        >
-                                                                            {
-                                                                                stage
-                                                                                    .status
-                                                                                    ?.status_name
-                                                                            }
-                                                                        </span>
-                                                                    </p>
-                                                                    <p>
-                                                                        <span className="font-medium">
-                                                                            Flow
-                                                                            Position:
-                                                                        </span>
-                                                                        <span className="ml-1">
-                                                                            {isRejectedFlow
-                                                                                ? "Exception Handler"
-                                                                                : isStartingStage
-                                                                                ? "Entry Point"
-                                                                                : `Step ${
-                                                                                      index +
-                                                                                      1 -
-                                                                                      flowOrderedStages
-                                                                                          .slice(
-                                                                                              0,
-                                                                                              index
-                                                                                          )
-                                                                                          .filter(
-                                                                                              (
-                                                                                                  fs
-                                                                                              ) =>
-                                                                                                  fs.isRejectedFlow
-                                                                                          )
-                                                                                          .length
-                                                                                  }`}
-                                                                        </span>
-                                                                    </p>
+                                                                    </p> */}
                                                                 </div>
                                                             </div>
 
-                                                            {isRejectedFlow &&
+                                                            {/* {isRejectedFlow &&
                                                                 parentStageId && (
                                                                     <div className="mt-3 p-2 bg-orange-100 rounded border border-orange-200">
                                                                         <p className="text-xs text-orange-800">
@@ -893,7 +892,7 @@ export default function Index({
                                                                             </span>
                                                                         </p>
                                                                     </div>
-                                                                )}
+                                                                )} */}
                                                         </div>
                                                     </div>
 
@@ -951,12 +950,12 @@ export default function Index({
                                                     {/* Approved Path */}
                                                     <div className="space-y-3">
                                                         <div className="flex items-center gap-2 text-sm font-medium text-green-700">
-                                                            <CheckCircle
+                                                            {/* <CheckCircle
                                                                 size={16}
-                                                            />
+                                                            /> */}
                                                             {isRejectedFlow
-                                                                ? "After Processing (Approved):"
-                                                                : "If Approved:"}
+                                                                ? "Setelah tahapan disetujui:"
+                                                                : "Jika tahapan disetujui :"}
                                                         </div>
                                                         <select
                                                             className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
@@ -977,7 +976,7 @@ export default function Index({
                                                             }
                                                         >
                                                             <option value={-1}>
-                                                                🏁 End Process
+                                                                ❌ Tahapan Akhir
                                                             </option>
                                                             {data
                                                                 .filter(
@@ -1005,7 +1004,7 @@ export default function Index({
                                                                     )
                                                                 )}
                                                         </select>
-                                                        {stage.request_approved &&
+                                                        {/* {stage.request_approved &&
                                                             stage
                                                                 .request_approved
                                                                 .id !== -1 && (
@@ -1024,8 +1023,8 @@ export default function Index({
                                                                             .stage_name
                                                                     }
                                                                 </div>
-                                                            )}
-                                                        {(!stage.request_approved ||
+                                                            )} */}
+                                                        {/* {(!stage.request_approved ||
                                                             stage
                                                                 .request_approved
                                                                 .id === -1) && (
@@ -1038,18 +1037,18 @@ export default function Index({
                                                                     here
                                                                 </span>
                                                             </div>
-                                                        )}
+                                                        )} */}
                                                     </div>
 
                                                     {/* Rejected Path */}
                                                     <div className="space-y-3">
                                                         <div className="flex items-center gap-2 text-sm font-medium text-red-700">
-                                                            <XCircle
+                                                            {/* <XCircle
                                                                 size={16}
-                                                            />
+                                                            /> */}
                                                             {isRejectedFlow
-                                                                ? "If Further Rejected:"
-                                                                : "If Rejected:"}
+                                                                ? "Jika tahapan ditolak kembali:"
+                                                                : "Jika tahapan ditolak:"}
                                                         </div>
                                                         <select
                                                             className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white"
@@ -1070,7 +1069,7 @@ export default function Index({
                                                             }
                                                         >
                                                             <option value={-1}>
-                                                                ❌ End Process
+                                                                ❌ Tahapan Akhir
                                                             </option>
                                                             {data
                                                                 .filter(
@@ -1098,7 +1097,7 @@ export default function Index({
                                                                     )
                                                                 )}
                                                         </select>
-                                                        {stage.request_rejected &&
+                                                        {/* {stage.request_rejected &&
                                                             stage
                                                                 .request_rejected
                                                                 .id !== -1 && (
@@ -1135,12 +1134,12 @@ export default function Index({
                                                                     here
                                                                 </span>
                                                             </div>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </div>
 
                                                 {/* Additional Information for Rejected Stages */}
-                                                {isRejectedFlow && (
+                                                {/* {isRejectedFlow && (
                                                     <div className="mt-4 pt-4 border-t border-orange-200">
                                                         <div className="bg-orange-100 p-3 rounded-lg">
                                                             <div className="flex items-start gap-2 text-sm">
@@ -1150,9 +1149,7 @@ export default function Index({
                                                                 />
                                                                 <div>
                                                                     <p className="font-medium text-orange-800 mb-1">
-                                                                        Rejection
-                                                                        Handler
-                                                                        Stage
+                                                                        Tahapan Ditolak
                                                                     </p>
                                                                     <p className="text-xs text-orange-700 mb-3">
                                                                         This
@@ -1230,7 +1227,7 @@ export default function Index({
                                                             </div>
                                                         </div>
                                                     </div>
-                                                )}
+                                                )} */}
                                             </div>
                                         </div>
                                     </div>
@@ -1239,7 +1236,7 @@ export default function Index({
                         )}
 
                         {/* End of Process Indicator */}
-                        <div className="flex items-center space-x-4">
+                        {/* <div className="flex items-center space-x-4">
                             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center shadow-lg border-2 border-green-300">
                                 <CheckCircle className="text-white" size={20} />
                             </div>
@@ -1256,10 +1253,10 @@ export default function Index({
                                     workflow
                                 </p>
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Enhanced Legend */}
-                        <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                        {/* <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
                             <h4 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                 <div className="w-4 h-4 bg-blue-500 rounded"></div>
                                 Legend & Flow Guide
@@ -1359,7 +1356,7 @@ export default function Index({
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
