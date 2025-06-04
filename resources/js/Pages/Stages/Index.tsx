@@ -853,7 +853,7 @@ export default function Index({
                                                                             >
                                                                                 <div className="grid md:grid-cols-2 gap-4">
                                                                                     <div>
-                                                                                        <p>
+                                                                                        {/* <p>
                                                                                             <span className="font-medium">
                                                                                                 Approver:
                                                                                             </span>{" "}
@@ -861,7 +861,7 @@ export default function Index({
                                                                                                 .approver
                                                                                                 ?.role_name ||
                                                                                                 "Not Set"}
-                                                                                        </p>
+                                                                                        </p> */}
                                                                                         <div className="mt-2">
                                                                                             <p>
                                                                                                 <span className="font-medium">
