@@ -1,3 +1,4 @@
+import { LetterType } from "./LetterTypeType";
 import { Status } from "./StatusType";
 
 export type Stages = {
@@ -20,4 +21,5 @@ export type Stages = {
     requires_file_upload: number;
     is_external: number;
     is_fixable: number;
+    letter_type: LetterType;
 };

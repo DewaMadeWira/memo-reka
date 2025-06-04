@@ -1,6 +1,6 @@
 export type LetterType = {
     id: number;
-    letter_type_name: string;
+    letter_name: string;
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;
