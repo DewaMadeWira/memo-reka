@@ -159,6 +159,7 @@ export function AppSidebar() {
             company_code: "MR",
         },
     } = usePage().props;
+    
     // console.log(open);
     return (
         <Sidebar collapsible="icon" className="w-1/6 ">

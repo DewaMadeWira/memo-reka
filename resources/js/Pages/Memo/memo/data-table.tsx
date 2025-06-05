@@ -831,7 +831,18 @@ DataTableProps<TData, TValue>) {
                                                                                         .original
                                                                                         .stages
                                                                                         .rejected_id ==
-                                                                                        null
+                                                                                        null ||
+                                                                                    (row
+                                                                                        .original
+                                                                                        .stages
+                                                                                        .is_external ==
+                                                                                        1 &&
+                                                                                        row
+                                                                                            .original
+                                                                                            .memo!
+                                                                                            .from_division
+                                                                                            .id ==
+                                                                                            user.division_id)
                                                                                         ? "hidden"
                                                                                         : `${rejectButtonClass} flex items-center gap-2`
                                                                                 }
