@@ -26,6 +26,15 @@ class RequestStages extends Model
         'is_fixable',
         'requires_file_upload',
         'is_external',
+        'is_fixable',
+        'requires_rejection_reason',
+        'is_external',
+        'notify_internal_manager',
+        'notify_internal_user',
+        'notify_internal',
+        'notify_external',
+        'notify_external_manager',
+        'notify_external_user',
     ];
     protected $dates = ['deleted_at'];
     public function letter_type(): BelongsTo

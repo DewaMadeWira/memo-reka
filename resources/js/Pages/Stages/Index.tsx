@@ -81,7 +81,18 @@ export default function Index({
         letter_id: "",
         approver_id: "",
         status_id: "",
+        requires_rejection_reason: false,
+        is_fixable: false,
+        requires_file_upload: false,
+        is_external: false,
+        notify_internal_manager: false,
+        notify_internal_user: false,
+        notify_internal: false,
+        notify_external: false,
+        notify_external_manager: false,
+        notify_external_user: false,
     });
+
     const [updateData, setUpdateData] = useState<updateDataType[]>();
     const [editingStage, setEditingStage] = useState<number | null>(null);
     const { user } = usePage().props.auth as { user: User };
@@ -209,6 +220,30 @@ export default function Index({
     const stagesByLetterType = groupStagesByLetterType(data);
 
     const handleSubmit = () => {
+        // Validate required fields
+        const requiredFields = [
+            { field: "stage_name", label: "Nama Tahapan" },
+            { field: "sequence", label: "Urutan" },
+            { field: "letter_id", label: "Tipe Surat" },
+            { field: "approver_id", label: "Role Approver" },
+            { field: "status_id", label: "Status" },
+        ];
+
+        const emptyFields = requiredFields.filter(({ field }) => {
+            const value = formData[field as keyof typeof formData];
+            return !value || value === "" || value === "0";
+        });
+
+        if (emptyFields.length > 0) {
+            const fieldNames = emptyFields.map(({ label }) => label).join(", ");
+            toast({
+                variant: "destructive",
+                title: "Error Validasi!",
+                description: `Harap isi field yang wajib diisi: ${fieldNames}`,
+            });
+            return;
+        }
+
         console.log(formData);
         router.post(
             "/admin/manajemen-tahapan-surat?intent=stages.create",
@@ -220,20 +255,15 @@ export default function Index({
                         title: "Berhasil !",
                         description: "Tahapan berhasil dibuat",
                     });
-                    setFormData({
-                        stage_name: "",
-                        sequence: "",
-                        to_stage_id: "",
-                        rejected_id: "",
-                        letter_id: "",
-                        approver_id: "",
-                        status_id: "",
-                    });
+                    resetForm();
                 },
                 onError: (errors) => {
                     toast({
+                        variant: "destructive",
                         title: "Terjadi Kesalahan !",
-                        description: errors.message,
+                        description:
+                            errors.message ||
+                            "Terjadi kesalahan saat membuat tahapan",
                     });
                 },
             }
@@ -241,6 +271,30 @@ export default function Index({
     };
 
     const handleEdit = (id: number) => {
+        // Validate required fields
+        const requiredFields = [
+            { field: "stage_name", label: "Nama Tahapan" },
+            { field: "sequence", label: "Urutan" },
+            { field: "letter_id", label: "Tipe Surat" },
+            { field: "approver_id", label: "Role Approver" },
+            { field: "status_id", label: "Status" },
+        ];
+
+        const emptyFields = requiredFields.filter(({ field }) => {
+            const value = formData[field as keyof typeof formData];
+            return !value || value === "" || value === "0";
+        });
+
+        if (emptyFields.length > 0) {
+            const fieldNames = emptyFields.map(({ label }) => label).join(", ");
+            toast({
+                variant: "destructive",
+                title: "Error Validasi!",
+                description: `Harap isi field yang wajib diisi: ${fieldNames}`,
+            });
+            return;
+        }
+
         console.log(formData);
         router.put("/admin/manajemen-tahapan-surat/" + id, formData, {
             onSuccess: () => {
@@ -250,20 +304,15 @@ export default function Index({
                     description: "Tahapan berhasil diedit",
                 });
                 setEditingStage(null);
-                setFormData({
-                    stage_name: "",
-                    sequence: "",
-                    to_stage_id: "",
-                    rejected_id: "",
-                    letter_id: "",
-                    approver_id: "",
-                    status_id: "",
-                });
+                resetForm();
             },
             onError: (errors) => {
                 toast({
+                    variant: "destructive",
                     title: "Terjadi Kesalahan !",
-                    description: errors.message,
+                    description:
+                        errors.message ||
+                        "Terjadi kesalahan saat mengupdate tahapan",
                 });
             },
         });
@@ -286,14 +335,18 @@ export default function Index({
             },
         });
     }
-
     const handleChange = (
-        e: React.ChangeEvent<
-            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-        >
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const { name, value, type } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]:
+                type === "checkbox"
+                    ? (e.target as HTMLInputElement).checked
+                    : value,
+        }));
     };
 
     const handleUpdate = ({
@@ -370,15 +423,24 @@ export default function Index({
 
     const populateEditForm = (stage: any) => {
         setFormData({
-            stage_name: stage.stage_name,
-            sequence: stage.sequence.toString(),
-            to_stage_id: stage.request_approved?.id?.toString() || "",
-            rejected_id: stage.request_rejected?.id?.toString() || "",
-            letter_id: stage.letter_type?.id?.toString() || "",
-            approver_id: stage.approver?.id?.toString() || "",
-            status_id: stage.status?.id?.toString() || "",
+            stage_name: stage.stage_name || "",
+            sequence: stage.sequence || "",
+            to_stage_id: stage.to_stage_id || "",
+            rejected_id: stage.rejected_id || "",
+            letter_id: stage.letter_id || "",
+            approver_id: stage.approver_id || "",
+            status_id: stage.status_id || "",
+            requires_rejection_reason: stage.requires_rejection_reason || false,
+            is_fixable: stage.is_fixable || false,
+            requires_file_upload: stage.requires_file_upload || false,
+            is_external: stage.is_external || false,
+            notify_internal_manager: stage.notify_internal_manager || false,
+            notify_internal_user: stage.notify_internal_user || false,
+            notify_internal: stage.notify_internal || false,
+            notify_external: stage.notify_external || false,
+            notify_external_manager: stage.notify_external_manager || false,
+            notify_external_user: stage.notify_external_user || false,
         });
-        setEditingStage(stage.id);
     };
 
     const resetForm = () => {
@@ -390,8 +452,17 @@ export default function Index({
             letter_id: "",
             approver_id: "",
             status_id: "",
+            requires_rejection_reason: false,
+            is_fixable: false,
+            requires_file_upload: false,
+            is_external: false,
+            notify_internal_manager: false,
+            notify_internal_user: false,
+            notify_internal: false,
+            notify_external: false,
+            notify_external_manager: false,
+            notify_external_user: false,
         });
-        setEditingStage(null);
     };
 
     useEffect(() => {
@@ -427,7 +498,7 @@ export default function Index({
                             <Plus size={16} />
                             Buat Tahapan Baru
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="w-[300rem] max-w-2xl">
+                        <AlertDialogContent className="w-[60rem] max-w-4xl max-h-[90vh] overflow-y-auto">
                             <AlertDialogHeader>
                                 <AlertDialogTitle>
                                     {editingStage
@@ -435,6 +506,7 @@ export default function Index({
                                         : "Buat Tahapan Baru"}
                                 </AlertDialogTitle>
                                 <div className="grid gap-4">
+                                    {/* Stage Name */}
                                     <div>
                                         <label
                                             htmlFor="stage_name"
@@ -452,6 +524,7 @@ export default function Index({
                                         />
                                     </div>
 
+                                    {/* Sequence and Status */}
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
                                             <label
@@ -506,6 +579,7 @@ export default function Index({
                                         </div>
                                     </div>
 
+                                    {/* Letter Type and Approver */}
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
                                             <label
@@ -568,6 +642,7 @@ export default function Index({
                                         </div>
                                     </div>
 
+                                    {/* Next Stages */}
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
                                             <label
@@ -621,6 +696,198 @@ export default function Index({
                                                     </option>
                                                 ))}
                                             </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Stage Configuration Options */}
+                                    <div className="border-t pt-4">
+                                        <h4 className="text-sm font-semibold mb-3 text-gray-700">
+                                            Konfigurasi Tahapan
+                                        </h4>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div className="space-y-3">
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="requires_rejection_reason"
+                                                        checked={
+                                                            formData.requires_rejection_reason ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Butuh alasan penolakan
+                                                    </span>
+                                                </label>
+
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="is_fixable"
+                                                        checked={
+                                                            formData.is_fixable ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Dapat diperbaiki
+                                                    </span>
+                                                </label>
+
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="requires_file_upload"
+                                                        checked={
+                                                            formData.requires_file_upload ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Butuh upload file
+                                                    </span>
+                                                </label>
+
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="is_external"
+                                                        checked={
+                                                            formData.is_external ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Tahapan eksternal
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Notification Settings */}
+                                    <div className="border-t pt-4">
+                                        <h4 className="text-sm font-semibold mb-3 text-gray-700">
+                                            Pengaturan Notifikasi
+                                        </h4>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div className="space-y-3">
+                                                <h5 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                                    Notifikasi Internal
+                                                </h5>
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="notify_internal"
+                                                        checked={
+                                                            formData.notify_internal ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Notifikasi ke internal
+                                                    </span>
+                                                </label>
+
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="notify_internal_manager"
+                                                        checked={
+                                                            formData.notify_internal_manager ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Notifikasi ke manajer
+                                                        internal
+                                                    </span>
+                                                </label>
+
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="notify_internal_user"
+                                                        checked={
+                                                            formData.notify_internal_user ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Notifikasi ke pengguna
+                                                        internal
+                                                    </span>
+                                                </label>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <h5 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                                    Notifikasi Eksternal
+                                                </h5>
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="notify_external"
+                                                        checked={
+                                                            formData.notify_external ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Notifikasi ke eksternal
+                                                    </span>
+                                                </label>
+
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="notify_external_manager"
+                                                        checked={
+                                                            formData.notify_external_manager ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Notifikasi ke manajer
+                                                        eksternal
+                                                    </span>
+                                                </label>
+
+                                                <label className="flex items-center space-x-2">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="notify_external_user"
+                                                        checked={
+                                                            formData.notify_external_user ||
+                                                            false
+                                                        }
+                                                        onChange={handleChange}
+                                                        className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm">
+                                                        Notifikasi ke pengguna
+                                                        eksternal
+                                                    </span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -920,7 +1187,588 @@ export default function Index({
                                                                                         }
                                                                                     />
                                                                                 </AlertDialogTrigger>
+                                                                                <AlertDialogContent className="w-[60rem] max-w-4xl max-h-[90vh] overflow-y-auto">
+                                                                                    <AlertDialogHeader>
+                                                                                        <AlertDialogTitle>
+                                                                                            Edit
+                                                                                            Tahapan:{" "}
+                                                                                            {
+                                                                                                stage.stage_name
+                                                                                            }
+                                                                                        </AlertDialogTitle>
+                                                                                        <div className="grid gap-4">
+                                                                                            {/* Stage Name */}
+                                                                                            <div>
+                                                                                                <label
+                                                                                                    htmlFor="stage_name"
+                                                                                                    className="block mb-2 text-sm font-medium"
+                                                                                                >
+                                                                                                    Stage
+                                                                                                    Name
+                                                                                                    *
+                                                                                                </label>
+                                                                                                <input
+                                                                                                    value={
+                                                                                                        formData.stage_name
+                                                                                                    }
+                                                                                                    type="text"
+                                                                                                    name="stage_name"
+                                                                                                    onChange={
+                                                                                                        handleChange
+                                                                                                    }
+                                                                                                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                                                    placeholder="Enter stage name"
+                                                                                                />
+                                                                                            </div>
+
+                                                                                            {/* Sequence and Status */}
+                                                                                            <div className="grid md:grid-cols-2 gap-4">
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="sequence"
+                                                                                                        className="block mb-2 text-sm font-medium"
+                                                                                                    >
+                                                                                                        Sequence
+                                                                                                        *
+                                                                                                    </label>
+                                                                                                    <select
+                                                                                                        name="sequence"
+                                                                                                        value={
+                                                                                                            formData.sequence
+                                                                                                        }
+                                                                                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                                                        onChange={
+                                                                                                            handleChange
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="">
+                                                                                                            Pilih
+                                                                                                            Opsi
+                                                                                                        </option>
+                                                                                                        <option
+                                                                                                            value={
+                                                                                                                1
+                                                                                                            }
+                                                                                                        >
+                                                                                                            First
+                                                                                                            Stage
+                                                                                                        </option>
+                                                                                                        <option
+                                                                                                            value={
+                                                                                                                0
+                                                                                                            }
+                                                                                                        >
+                                                                                                            Regular
+                                                                                                            Stage
+                                                                                                        </option>
+                                                                                                    </select>
+                                                                                                </div>
+
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="status_id"
+                                                                                                        className="block mb-2 text-sm font-medium"
+                                                                                                    >
+                                                                                                        Status
+                                                                                                        *
+                                                                                                    </label>
+                                                                                                    <select
+                                                                                                        name="status_id"
+                                                                                                        value={
+                                                                                                            formData.status_id
+                                                                                                        }
+                                                                                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                                                        onChange={
+                                                                                                            handleChange
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="">
+                                                                                                            Pilih
+                                                                                                            Status
+                                                                                                        </option>
+                                                                                                        {statuses.map(
+                                                                                                            (
+                                                                                                                status: any
+                                                                                                            ) => (
+                                                                                                                <option
+                                                                                                                    key={
+                                                                                                                        status.id
+                                                                                                                    }
+                                                                                                                    value={
+                                                                                                                        status.id
+                                                                                                                    }
+                                                                                                                >
+                                                                                                                    {
+                                                                                                                        status.status_name
+                                                                                                                    }
+                                                                                                                </option>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            {/* Letter Type and Approver */}
+                                                                                            <div className="grid md:grid-cols-2 gap-4">
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="letter_id"
+                                                                                                        className="block mb-2 text-sm font-medium"
+                                                                                                    >
+                                                                                                        Letter
+                                                                                                        Type
+                                                                                                        *
+                                                                                                    </label>
+                                                                                                    <select
+                                                                                                        name="letter_id"
+                                                                                                        value={
+                                                                                                            formData.letter_id
+                                                                                                        }
+                                                                                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                                                        onChange={
+                                                                                                            handleChange
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="">
+                                                                                                            Pilih
+                                                                                                            Tipe
+                                                                                                            Surat
+                                                                                                        </option>
+                                                                                                        {letter.map(
+                                                                                                            (
+                                                                                                                letterType: any
+                                                                                                            ) => (
+                                                                                                                <option
+                                                                                                                    key={
+                                                                                                                        letterType.id
+                                                                                                                    }
+                                                                                                                    value={
+                                                                                                                        letterType.id
+                                                                                                                    }
+                                                                                                                >
+                                                                                                                    {
+                                                                                                                        letterType.letter_name
+                                                                                                                    }
+                                                                                                                </option>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </select>
+                                                                                                </div>
+
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="approver_id"
+                                                                                                        className="block mb-2 text-sm font-medium"
+                                                                                                    >
+                                                                                                        Approver
+                                                                                                        Role
+                                                                                                        *
+                                                                                                    </label>
+                                                                                                    <select
+                                                                                                        name="approver_id"
+                                                                                                        value={
+                                                                                                            formData.approver_id
+                                                                                                        }
+                                                                                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                                                        onChange={
+                                                                                                            handleChange
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="">
+                                                                                                            Pilih
+                                                                                                            Role
+                                                                                                        </option>
+                                                                                                        {role.map(
+                                                                                                            (
+                                                                                                                roleItem: any
+                                                                                                            ) => (
+                                                                                                                <option
+                                                                                                                    key={
+                                                                                                                        roleItem.id
+                                                                                                                    }
+                                                                                                                    value={
+                                                                                                                        roleItem.id
+                                                                                                                    }
+                                                                                                                >
+                                                                                                                    {
+                                                                                                                        roleItem.role_name
+                                                                                                                    }
+                                                                                                                </option>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            {/* Next Stages */}
+                                                                                            <div className="grid md:grid-cols-2 gap-4">
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="to_stage_id"
+                                                                                                        className="block mb-2 text-sm font-medium"
+                                                                                                    >
+                                                                                                        Next
+                                                                                                        Stage
+                                                                                                        (If
+                                                                                                        Approved)
+                                                                                                    </label>
+                                                                                                    <select
+                                                                                                        name="to_stage_id"
+                                                                                                        value={
+                                                                                                            formData.to_stage_id
+                                                                                                        }
+                                                                                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                                                                                        onChange={
+                                                                                                            handleChange
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="-1">
+                                                                                                            ❌
+                                                                                                            Tahapan
+                                                                                                            Akhir
+                                                                                                        </option>
+                                                                                                        {data.map(
+                                                                                                            (
+                                                                                                                stageOption: any
+                                                                                                            ) => (
+                                                                                                                <option
+                                                                                                                    key={
+                                                                                                                        stageOption.id
+                                                                                                                    }
+                                                                                                                    value={
+                                                                                                                        stageOption.id
+                                                                                                                    }
+                                                                                                                >
+                                                                                                                    ➡️{" "}
+                                                                                                                    {
+                                                                                                                        stageOption.stage_name
+                                                                                                                    }
+                                                                                                                </option>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </select>
+                                                                                                </div>
+
+                                                                                                <div>
+                                                                                                    <label
+                                                                                                        htmlFor="rejected_id"
+                                                                                                        className="block mb-2 text-sm font-medium"
+                                                                                                    >
+                                                                                                        Next
+                                                                                                        Stage
+                                                                                                        (If
+                                                                                                        Rejected)
+                                                                                                    </label>
+                                                                                                    <select
+                                                                                                        name="rejected_id"
+                                                                                                        value={
+                                                                                                            formData.rejected_id
+                                                                                                        }
+                                                                                                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                                                                        onChange={
+                                                                                                            handleChange
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <option value="-1">
+                                                                                                            ❌
+                                                                                                            Tahapan
+                                                                                                            Akhir
+                                                                                                        </option>
+                                                                                                        {data.map(
+                                                                                                            (
+                                                                                                                stageOption: any
+                                                                                                            ) => (
+                                                                                                                <option
+                                                                                                                    key={
+                                                                                                                        stageOption.id
+                                                                                                                    }
+                                                                                                                    value={
+                                                                                                                        stageOption.id
+                                                                                                                    }
+                                                                                                                >
+                                                                                                                    ↩️{" "}
+                                                                                                                    {
+                                                                                                                        stageOption.stage_name
+                                                                                                                    }
+                                                                                                                </option>
+                                                                                                            )
+                                                                                                        )}
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            {/* Stage Configuration Options */}
+                                                                                            <div className="border-t pt-4">
+                                                                                                <h4 className="text-sm font-semibold mb-3 text-gray-700">
+                                                                                                    Konfigurasi
+                                                                                                    Tahapan
+                                                                                                </h4>
+                                                                                                <div className="grid md:grid-cols-2 gap-4">
+                                                                                                    <div className="space-y-3">
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="requires_rejection_reason"
+                                                                                                                checked={
+                                                                                                                    formData.requires_rejection_reason ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Butuh
+                                                                                                                alasan
+                                                                                                                penolakan
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="is_fixable"
+                                                                                                                checked={
+                                                                                                                    formData.is_fixable ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Dapat
+                                                                                                                Diperbaiki
+                                                                                                                (Tahapan
+                                                                                                                dapat
+                                                                                                                diperbaiki)
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="requires_file_upload"
+                                                                                                                checked={
+                                                                                                                    formData.requires_file_upload ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Butuh
+                                                                                                                Upload
+                                                                                                                File
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="is_external"
+                                                                                                                checked={
+                                                                                                                    formData.is_external ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Tahapan
+                                                                                                                bersifat
+                                                                                                                eksternal
+                                                                                                                (tahapan
+                                                                                                                berada
+                                                                                                                pada
+                                                                                                                sisi
+                                                                                                                penerima
+                                                                                                                surat)
+                                                                                                            </span>
+                                                                                                        </label>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            {/* Notification Settings */}
+                                                                                            <div className="border-t pt-4">
+                                                                                                <h4 className="text-sm font-semibold mb-3 text-gray-700">
+                                                                                                    Pengaturan
+                                                                                                    Notifikasi
+                                                                                                </h4>
+                                                                                                <div className="grid md:grid-cols-2 gap-4">
+                                                                                                    <div className="space-y-3">
+                                                                                                        <h5 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                                                                                            Notifikasi
+                                                                                                            Internal
+                                                                                                        </h5>
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="notify_internal"
+                                                                                                                checked={
+                                                                                                                    formData.notify_internal ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Notifikasi
+                                                                                                                ke
+                                                                                                                seluruh
+                                                                                                                pengguna
+                                                                                                                Internal
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="notify_internal_manager"
+                                                                                                                checked={
+                                                                                                                    formData.notify_internal_manager ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Notifikasi
+                                                                                                                ke
+                                                                                                                Manajer
+                                                                                                                Internal
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="notify_internal_user"
+                                                                                                                checked={
+                                                                                                                    formData.notify_internal_user ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Notifikasi
+                                                                                                                ke
+                                                                                                                Pegawai
+                                                                                                                Internal
+                                                                                                            </span>
+                                                                                                        </label>
+                                                                                                    </div>
+
+                                                                                                    <div className="space-y-3">
+                                                                                                        <h5 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                                                                                            Notifikasi
+                                                                                                            Eksternal
+                                                                                                        </h5>
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="notify_external"
+                                                                                                                checked={
+                                                                                                                    formData.notify_external ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Notifikasi
+                                                                                                                ke
+                                                                                                                seluruh
+                                                                                                                pengguna
+                                                                                                                eksternal
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="notify_external_manager"
+                                                                                                                checked={
+                                                                                                                    formData.notify_external_manager ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Notifikasi
+                                                                                                                ke
+                                                                                                                Manajer
+                                                                                                                Eksternal
+                                                                                                            </span>
+                                                                                                        </label>
+
+                                                                                                        <label className="flex items-center space-x-2">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                name="notify_external_user"
+                                                                                                                checked={
+                                                                                                                    formData.notify_external_user ||
+                                                                                                                    false
+                                                                                                                }
+                                                                                                                onChange={
+                                                                                                                    handleChange
+                                                                                                                }
+                                                                                                                className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                                                                                                            />
+                                                                                                            <span className="text-sm">
+                                                                                                                Notifikasi
+                                                                                                                ke
+                                                                                                                pengguna
+                                                                                                                Eksternal
+                                                                                                            </span>
+                                                                                                        </label>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </AlertDialogHeader>
+                                                                                    <AlertDialogFooter>
+                                                                                        <AlertDialogCancel
+                                                                                            onClick={
+                                                                                                resetForm
+                                                                                            }
+                                                                                        >
+                                                                                            Batal
+                                                                                        </AlertDialogCancel>
+                                                                                        <AlertDialogAction
+                                                                                            className="bg-green-500 hover:bg-green-600"
+                                                                                            onClick={() =>
+                                                                                                handleEdit(
+                                                                                                    stage.id
+                                                                                                )
+                                                                                            }
+                                                                                        >
+                                                                                            Update
+                                                                                            Tahapan
+                                                                                        </AlertDialogAction>
+                                                                                    </AlertDialogFooter>
+                                                                                </AlertDialogContent>
                                                                             </AlertDialog>
+
                                                                             <button
                                                                                 onClick={() =>
                                                                                     deleteStages(

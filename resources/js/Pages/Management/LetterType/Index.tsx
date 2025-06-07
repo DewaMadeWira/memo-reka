@@ -136,9 +136,9 @@ export default function Index({ data }: { data: LetterType[] }) {
                         </DropdownMenuContent>
                     </DropdownMenu> */}
                     <AlertDialog>
-                        <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
+                        {/* <AlertDialogTrigger className="p-2 bg-blue-500 text-white rounded-md">
                             + Tambah Tipe Surat
-                        </AlertDialogTrigger>
+                        </AlertDialogTrigger> */}
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="">
