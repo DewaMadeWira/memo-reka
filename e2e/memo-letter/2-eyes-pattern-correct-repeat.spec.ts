@@ -242,6 +242,32 @@ test("memo creation, rejection, and review workflow", async ({ page }) => {
     await page.screenshot({
         path: path.join(testResultsDir, "17-rejection-reason-verified.png"),
     });
+    await page.keyboard.press("Escape");
+    await page.getByRole("button", { name: "Edit" }).click();
+    await page.locator('input[name="perihal"]').click();
+    await page
+        .locator('input[name="perihal"]')
+        .fill("Perihal Test Memo perbaikan");
+    await page.getByText("Isi dari memo untuk pengujian").click();
+    await page.getByText("Isi dari memo untuk pengujian").press("PageDown");
+    await page
+        .getByText("Isi dari memo untuk pengujian")
+        .fill("Isi dari memo untuk pengujian diperbaiki");
+    await page.screenshot({
+        path: path.join(testResultsDir, "18-edit-rejection-form.png"),
+    });
+    await page.getByRole("button", { name: "Simpan Perubahan Memo" }).click();
+    await page.getByRole("textbox", { name: "Cari Surat" }).click();
+    await page
+        .getByRole("textbox", { name: "Cari Surat" })
+        .fill("permintaan mem");
+    await page
+        .getByRole("row", { name: /Permintaan Memo Test 1/ })
+        .getByRole("button")
+        .nth(2)
+        .click();
+    await page.getByRole("button", { name: "Setujui" }).nth(1).click();
+    await page.getByRole("button", { name: "Tutup" }).click();
 });
 
 test("memo approval workflow", async ({ page }) => {
@@ -256,9 +282,9 @@ test("memo approval workflow", async ({ page }) => {
     // Test the positive flow where memo gets approved
     await page.goto("http://127.0.0.1:8000/memo");
     await page.waitForLoadState("networkidle");
-    await page.screenshot({
-        path: path.join(testResultsDir, "01-login-page.png"),
-    });
+    // await page.screenshot({
+    //     path: path.join(testResultsDir, "01-login-page.png"),
+    // });
 
     await page
         .getByRole("textbox", { name: "Email" })

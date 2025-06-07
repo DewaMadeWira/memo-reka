@@ -282,6 +282,9 @@ test("4-eyes pattern: memo rejection and ultimate approval workflow", async ({
         .waitFor({ state: "visible" });
     await page.getByRole("button", { name: "Upload Bukti" }).click();
 
+    await page.screenshot({
+        path: path.join(testResultsDir, "16-pegawai-upload-bukti.png"),
+    });
     // Set input files (assuming these files exist in the test environment)
     // await page
     //     .getByRole("button", { name: "Upload Bukti" })
@@ -295,9 +298,6 @@ test("4-eyes pattern: memo rejection and ultimate approval workflow", async ({
 
     await page.getByRole("button", { name: "Upload", exact: true }).click();
     await page.waitForLoadState("networkidle");
-    await page.screenshot({
-        path: path.join(testResultsDir, "14-files-uploaded.png"),
-    });
 
     // Close notification if it appears
     const notificationButton = page
@@ -392,6 +392,8 @@ test("4-eyes pattern: memo rejection and ultimate approval workflow", async ({
             path: path.join(testResultsDir, "18-next-image-viewed.png"),
         });
     }
+
+    
 
     // Go back to memo list
     await page.getByText("Kembali").nth(1).click();
