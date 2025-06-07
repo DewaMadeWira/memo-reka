@@ -30,32 +30,32 @@ class MemoService
     public function index($intent)
     {
         $division = $this->authService->userDivision();
-        // $user = Auth::user();
-        // $user = User::with('role')->with('division')->where("id", $user->id)->first();
-        // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->where("from_division", $user[0]->division->id)->first();
-        // $memo = RequestLetter::with('user')->with('status')->with('stages')->with('memo')->first();
-        // All
-        // dd($intent);
-        // dd($division);
 
         switch ($intent) {
             case '':
-                // $memo = $this->memoService->approve($id);
-                // return to_route('memo.index');
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
                 }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('from_division', $division)
-                        ->orWhere('to_division', $division);;
+                        ->orWhere('to_division', $division);
                 })->get();
 
                 $memo->each(function ($requestLetter) {
-                    // Handle different possible types of progress_stages
-                    $progressStages = [];
+                    // Parse to_stages mapping
+                    $toStagesMap = [];
+                    if (!empty($requestLetter->to_stages)) {
+                        $toStagesMap = json_decode($requestLetter->to_stages, true) ?? [];
+                    }
 
+                    // Always override the to_stage_id using the mapping (or set to null if no mapping)
+                    if ($requestLetter->stages) {
+                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
+                    }
+
+                    // Handle progress_stages as before
+                    $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
-                            // Try to decode JSON string
                             $decoded = json_decode($requestLetter->progress_stages, true);
                             if (is_array($decoded)) {
                                 $progressStages = $decoded;
@@ -65,44 +65,41 @@ class MemoService
                         }
                     }
 
-                    // Now use the properly formatted array
-                    // $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")")->get();
                     if (!empty($progressStages)) {
                         $requestLetter->progress = RequestStages::withTrashed()
                             ->with("request_rejected")
                             ->whereIn('id', $progressStages)
                             ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
-                                // Only apply the ordering if there are items in the array
                                 return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
                             })
                             ->get();
                     } else {
-                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                        $requestLetter->progress = collect();
                     }
-                    // return $requestLetter;
-                    // error_log($requestLetter);
                 });
 
-
                 return $memo;
+
             case 'memo.internal':
-                // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division', 'memo.to_division', 'memo.signatory')->whereHas('stages', function ($q) {
-                //     $q->where('stage_name', "Memo Internal");
-                // })->whereHas('memo', function ($q) use ($division) {
-                //     $q->where('from_division', $division);
-                // })->get();
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
                 }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory', 'memo.previous_memo', 'memo.images'])->whereHas('memo', function ($q) use ($division) {
                     $q->where('from_division', $division);
                 })->get();
 
-                // dd($memo);
-
-
                 $memo->each(function ($requestLetter) {
-                    $progressStages = [];
+                    // Parse to_stages mapping
+                    $toStagesMap = [];
+                    if (!empty($requestLetter->to_stages)) {
+                        $toStagesMap = json_decode($requestLetter->to_stages, true) ?? [];
+                    }
 
+                    // Override the to_stage_id using the mapping
+                    if ($requestLetter->stages && isset($toStagesMap[$requestLetter->stages->id])) {
+                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id];
+                    }
+
+                    $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
                             $decoded = json_decode($requestLetter->progress_stages, true);
@@ -116,9 +113,9 @@ class MemoService
 
                     $requestLetter->progress = RequestStages::withTrashed()->with("request_rejected")->whereIn('id', $progressStages)->get();
                 });
-                // error_log($memo);
 
                 return $memo;
+
             case 'memo.eksternal':
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {
                     $query->withTrashed();
@@ -126,12 +123,19 @@ class MemoService
                     $q->where('to_division', $division);
                 })->get();
 
-                // dd($memo);
-
-
                 $memo->each(function ($requestLetter) {
-                    $progressStages = [];
+                    // Parse to_stages mapping
+                    $toStagesMap = [];
+                    if (!empty($requestLetter->to_stages)) {
+                        $toStagesMap = json_decode($requestLetter->to_stages, true) ?? [];
+                    }
 
+                    // Override the to_stage_id using the mapping
+                    if ($requestLetter->stages && isset($toStagesMap[$requestLetter->stages->id])) {
+                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id];
+                    }
+
+                    $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
                             $decoded = json_decode($requestLetter->progress_stages, true);
@@ -148,48 +152,9 @@ class MemoService
 
                 return $memo;
 
-            case "number":
-                $memo = RequestLetter::with(['user', 'stages' => function ($query) {
-                    $query->withTrashed();
-                }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($division) {
-                    $q->where('from_division', $division);
-                })->latest()->first();
-
-                // $year = date("Y", strtotime($memo->created_at));
-
-                $year = $memo->created_at->format('Y');
-                $month = $memo->created_at->format('m');
-
-
-                // $lastYear = 2025;
-                $lastYearlyCounter = 198;
-
-                // $lastMonth = '04'; // format 2 digit
-                $lastMonthlyCounter = 27;
-
-                // $result = $this->generateNomorSurat($year, $lastYearlyCounter, $month, $lastMonthlyCounter);
-
-                // dd($result);
-                // return ("number");
-
             default:
                 return response()->json(['error' => 'Invalid letter type'], 400);
         }
-
-        // Memo Internal
-        // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('memo', function ($q) use ($division) {
-        //     $q->where('from_division', $division);
-        // })->get();
-        // return $memo;
-
-        // Memo External
-        // $memo = RequestLetter::with('user', 'stages', 'stages.status', 'memo', 'memo.to_division')->whereHas('stages', function ($q) {
-        //     $q->where('stage_name', "Memo Eksternal");
-        // })->whereHas('memo', function ($q) use ($division) {
-        //     $q->where('from_division', $division);
-        // })->get();
-
-        // return $memo;
     }
 
 
@@ -234,9 +199,9 @@ class MemoService
             // "yearly_counter" => $generatedMemoData["yearly_counter"],
         ]);
         $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
-        $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
-        $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
-        $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
+        $nextStageMap = $this->buildConnectedStageMap($stages, 'to_stage_id');
+        $rejectedStageMap = $this->buildConnectedStageMap($stages, 'rejected_id');
+        $progressStageMap = $this->extract_progress_stage($nextStageMap);
 
         // dd($nextStageMap);
         // dd($progressStageMap);
@@ -248,8 +213,8 @@ class MemoService
             "stages_id" => $stages->where('sequence', 1)->first()->id,
             "letter_type_id" => $memo->letter_id,
             "memo_id" => $memo->id,
-            "to_stages" => $nextStageMap->toJson(),
-            "rejected_stages" => $rejectedStageMap->toJson(),
+            "to_stages" => json_encode($nextStageMap),
+            "rejected_stages" => json_encode($rejectedStageMap),
             "progress_stages" => json_encode($progressStageMap),
         ]);
         $toDivision = Division::where('id', $request->to_division)->first();
@@ -261,6 +226,34 @@ class MemoService
             'related_request_id' => $requestLetter->id,
         ]);
     }
+    private function buildConnectedStageMap($stages, $fieldName)
+    {
+        // Don't filter out nulls initially - we need to see the structure
+        $fullMap = $stages->pluck($fieldName, 'id')->toArray();
+
+        if (empty($fullMap)) {
+            return [];
+        }
+
+        $connectedMap = [];
+        $firstStageId = array_key_first($fullMap);
+        $currentStageId = $firstStageId;
+
+        while ($currentStageId !== null && array_key_exists($currentStageId, $fullMap)) {
+            $nextStageId = $fullMap[$currentStageId];
+
+            if ($nextStageId !== null) {
+                $connectedMap[$currentStageId] = $nextStageId;
+                $currentStageId = $nextStageId;
+            } else {
+                // Hit null - this is a final stage, don't add it to the map
+                break;
+            }
+        }
+
+        return $connectedMap;
+    }
+
     public function extract_progress_stage($to_stages)
     {
 
@@ -816,7 +809,7 @@ class MemoService
         ]);
 
         // Get the next stage information BEFORE updating the request
-        $nextStage = RequestStages::find($nextStageId);
+        $nextStage = RequestStages::withTrashed()->find($nextStageId);
         $isNextStageExternal = $nextStage ? $nextStage->is_external : false;
         $currentStageName = $request->stages->stage_name;
         $nextStageName = $nextStage ? $nextStage->stage_name : 'final stage';
