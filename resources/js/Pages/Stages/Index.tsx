@@ -100,7 +100,6 @@ export default function Index({
     // Function to sort stages by approval flow and include rejected stages
     const sortStagesByFlow = (stages: any[]): FlowStage[] => {
         const stageMap = new Map();
-        const visited = new Set();
         const result: FlowStage[] = [];
 
         // Create a map for quick lookup
@@ -108,75 +107,87 @@ export default function Index({
             stageMap.set(stage.id, stage);
         });
 
-        // Find starting stages (sequence = 1 or not referenced as to_stage_id by others)
-        const referencedIds = new Set(
-            stages
-                .map((s) => s.request_approved?.id)
-                .filter((id) => id !== undefined && id !== -1)
-        );
+        // Find the starting stage (sequence = 1)
+        const startingStage = stages.find((stage) => stage.sequence === 1);
 
-        const startingStages = stages.filter(
-            (stage) => stage.sequence === 1 || !referencedIds.has(stage.id)
-        );
+        if (!startingStage) {
+            // If no starting stage, return all stages as regular stages
+            return stages.map((stage) => ({
+                stage: stage,
+                isRejectedFlow: false,
+            }));
+        }
 
-        // Function to traverse the flow chain
-        const traverseFlow = (
-            stageId: number,
-            path: Set<number> = new Set()
-        ) => {
-            if (
-                !stageId ||
-                stageId === -1 ||
-                visited.has(stageId) ||
-                path.has(stageId)
-            ) {
-                return; // Avoid infinite loops
-            }
+        // First, identify all stages that are part of the main approval flow
+        const mainFlowStageIds = new Set();
+        let currentStageId = startingStage.id;
 
-            const stage = stageMap.get(stageId);
-            if (!stage) return;
+        while (
+            currentStageId &&
+            currentStageId !== -1 &&
+            !mainFlowStageIds.has(currentStageId)
+        ) {
+            const stage = stageMap.get(currentStageId);
+            if (!stage) break;
 
-            visited.add(stageId);
-            path.add(stageId);
+            mainFlowStageIds.add(currentStageId);
+            currentStageId = stage.request_approved?.id;
+        }
 
-            // Add the current stage (positive flow)
+        // Now build the flow with rejected stages inline
+        const processedStages = new Set();
+        currentStageId = startingStage.id;
+
+        while (
+            currentStageId &&
+            currentStageId !== -1 &&
+            !processedStages.has(currentStageId)
+        ) {
+            const stage = stageMap.get(currentStageId);
+            if (!stage) break;
+
+            processedStages.add(currentStageId);
+
+            // Add the main stage
             result.push({
                 stage: stage,
                 isRejectedFlow: false,
             });
 
-            // If this stage has a rejected path, add it next
-            if (
-                stage.request_rejected?.id &&
-                stage.request_rejected.id !== -1
-            ) {
-                const rejectedStage = stageMap.get(stage.request_rejected.id);
-                if (rejectedStage) {
+            // Check if this stage has a rejected path
+            const rejectedStageId = stage.request_rejected?.id;
+            if (rejectedStageId && rejectedStageId !== -1) {
+                const rejectedStage = stageMap.get(rejectedStageId);
+
+                // Only add rejected stage if:
+                // 1. It exists
+                // 2. It's not part of the main approval flow (to avoid duplication)
+                // 3. We haven't already processed it as a rejected stage
+                if (
+                    rejectedStage &&
+                    !mainFlowStageIds.has(rejectedStageId) &&
+                    !processedStages.has(`rejected-${rejectedStageId}`)
+                ) {
                     result.push({
                         stage: rejectedStage,
                         isRejectedFlow: true,
                         parentStageId: stage.id,
                     });
+
+                    processedStages.add(`rejected-${rejectedStageId}`);
                 }
             }
 
-            // Follow the approval path
-            const nextStageId = stage.request_approved?.id;
-            if (nextStageId && nextStageId !== -1) {
-                traverseFlow(nextStageId, new Set(path));
-            }
-        };
+            // Move to next approved stage
+            currentStageId = stage.request_approved?.id;
+        }
 
-        // Start traversal from each starting stage
-        startingStages.forEach((stage) => {
-            if (!visited.has(stage.id)) {
-                traverseFlow(stage.id);
-            }
-        });
-
-        // Add any remaining stages that weren't part of the main flow
+        // Add any remaining stages that aren't part of the main flow or already added as rejected
         stages.forEach((stage) => {
-            if (!visited.has(stage.id)) {
+            if (
+                !processedStages.has(stage.id) &&
+                !processedStages.has(`rejected-${stage.id}`)
+            ) {
                 result.push({
                     stage: stage,
                     isRejectedFlow: false,
