@@ -211,11 +211,11 @@ DataTableProps<TData, TValue>) {
     const [rejectionReason, setRejectionReason] = useState<string>("");
 
     const actionButtonClass =
-        "bg-blue-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+        "bg-blue-500 p-2 text-white rounded-lg text-sm font-normal w-fit";
     const rejectButtonClass =
-        "bg-red-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+        "bg-red-500 p-2  text-white rounded-lg text-sm font-normal  w-fit";
     const approveButtonClass =
-        "bg-green-500 p-2 mt-2 text-white rounded-lg text-sm font-normal h-10 w-fit";
+        "bg-green-500 p-2  text-white rounded-lg text-sm font-normal w-fit";
 
     const safeFormatDate = (dateString: string | null | undefined) => {
         if (!dateString) return "";
@@ -477,871 +477,10 @@ DataTableProps<TData, TValue>) {
                                     >
                                         <div className="flex gap-2 justify-center">
                                             <div className="flex gap-2">
-                                                <>
-                                                    {row.original.stages
-                                                        .is_external == 1
-                                                        ? row.original.summary!
-                                                              .invite!
-                                                              .to_division.id ==
-                                                              user.division_id && (
-                                                              <>
-                                                                  {/* <TooltipProvider
-                                                                      delayDuration={
-                                                                          100
-                                                                      }
-                                                                      skipDelayDuration={
-                                                                          0
-                                                                      }
-                                                                  >
-                                                                      <Tooltip>
-                                                                          <TooltipTrigger
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .to_stage_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : ""
-                                                                              }
-                                                                          >
-                                                                              <button
-                                                                                  onClick={() =>
-                                                                                      handleApprove(
-                                                                                          row
-                                                                                              .original
-                                                                                              .invite!
-                                                                                              .id
-                                                                                      )
-                                                                                  }
-                                                                                  className={
-                                                                                      user.role_id !=
-                                                                                          row
-                                                                                              .original
-                                                                                              .stages
-                                                                                              .approver_id ||
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .to_stage_id ==
-                                                                                          null
-                                                                                          ? "hidden"
-                                                                                          : `${approveButtonClass} ${
-                                                                                                row
-                                                                                                    .original
-                                                                                                    .stages
-                                                                                                    .requires_file_upload ==
-                                                                                                    1 &&
-                                                                                                row
-                                                                                                    .original
-                                                                                                    .invite!
-                                                                                                    .file_path ==
-                                                                                                    null
-                                                                                                    ? "opacity-50 cursor-not-allowed"
-                                                                                                    : ""
-                                                                                            }`
-                                                                                  }
-                                                                                  disabled={
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .requires_file_upload ==
-                                                                                          1 &&
-                                                                                      row
-                                                                                          .original
-                                                                                          .invite!
-                                                                                          .file_path ==
-                                                                                          null
-                                                                                  }
-                                                                              >
-                                                                                  <Check />
-                                                                              </button>
-                                                                          </TooltipTrigger>
-                                                                          <TooltipContent
-                                                                              side="top"
-                                                                              sideOffset={
-                                                                                  10
-                                                                              }
-                                                                          >
-                                                                              {row
-                                                                                  .original
-                                                                                  .stages
-                                                                                  .requires_file_upload ==
-                                                                                  1 &&
-                                                                              row
-                                                                                  .original
-                                                                                  .invite!
-                                                                                  .file_path ==
-                                                                                  null ? (
-                                                                                  <p>
-                                                                                      File
-                                                                                      Belum
-                                                                                      Diupload.
-                                                                                  </p>
-                                                                              ) : (
-                                                                                  <p>
-                                                                                      Setujui
-                                                                                      Memo
-                                                                                  </p>
-                                                                              )}
-                                                                          </TooltipContent>
-                                                                      </Tooltip>
-                                                                  </TooltipProvider> */}
-
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              className={
-                                                                                  row
-                                                                                      .original
-                                                                                      .summary!
-                                                                                      .rejection_reason
-                                                                                      ? `${actionButtonClass} bg-yellow-500`
-                                                                                      : "hidden"
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <Info
-                                                                                          //   size={
-                                                                                          //       18
-                                                                                          //   }
-                                                                                          />
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Lihat
-                                                                                              Alasan
-                                                                                              Penolakan
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                                  Undangan
-                                                                                  Rapat
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Ditolak
-                                                                                          pada
-                                                                                          tahap:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .stages
-                                                                                              .stage_name ||
-                                                                                              "Tidak diketahui"}
-                                                                                      </p>
-
-                                                                                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                          Alasan
-                                                                                          penolakan:
-                                                                                      </p>
-                                                                                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                                                                                          {row
-                                                                                              .original
-                                                                                              .summary!
-                                                                                              .rejection_reason ||
-                                                                                              "Tidak ada alasan yang diberikan"}
-                                                                                      </p>
-                                                                                  </div>
-                                                                              </AlertDialogDescription>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
-                                                                                  Tutup
-                                                                              </AlertDialogCancel>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              //   onClick={() =>
-                                                                              //       handleReject(
-                                                                              //           row
-                                                                              //               .original
-                                                                              //               .invite!
-                                                                              //               .id
-                                                                              //       )
-                                                                              //   }
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .rejected_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : `${rejectButtonClass}
-                                                                                            `
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <X></X>
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Tolak
-                                                                                              Undangan
-                                                                                              Rapat
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                              {/* Reject */}
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  Mohon
-                                                                                  berikan
-                                                                                  alasan
-                                                                                  penolakan
-                                                                                  invite!
-                                                                                  ini.
-                                                                              </AlertDialogDescription>
-                                                                              <div className="mt-4">
-                                                                                  <Textarea
-                                                                                      placeholder="Alasan penolakan..."
-                                                                                      value={
-                                                                                          rejectionReason
-                                                                                      }
-                                                                                      onChange={(
-                                                                                          e
-                                                                                      ) =>
-                                                                                          setRejectionReason(
-                                                                                              e
-                                                                                                  .target
-                                                                                                  .value
-                                                                                          )
-                                                                                      }
-                                                                                      className="w-full min-h-[100px]"
-                                                                                  />
-                                                                              </div>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel
-                                                                                  onClick={() => {
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                  }}
-                                                                              >
-                                                                                  Batal
-                                                                              </AlertDialogCancel>
-                                                                              <AlertDialogAction
-                                                                                  onClick={() => {
-                                                                                      alert(
-                                                                                          "mema"
-                                                                                      );
-                                                                                      handleReject(
-                                                                                          row
-                                                                                              .original
-                                                                                              .id,
-                                                                                          rejectionReason
-                                                                                      );
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                      // }
-                                                                                  }}
-                                                                                  className="bg-red-500 hover:bg-red-600"
-                                                                                  disabled={
-                                                                                      rejectionReason.trim() ===
-                                                                                      ""
-                                                                                  }
-                                                                              >
-                                                                                  Tolak
-                                                                                  Risalah
-                                                                                  Rapat
-                                                                              </AlertDialogAction>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                              </>
-                                                          )
-                                                        : row.original.summary!
-                                                              .invite!
-                                                              .from_division
-                                                              .id ==
-                                                              user.division_id && (
-                                                              <>
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .to_stage_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : `${approveButtonClass}`
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <Check></Check>
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Setujui
-                                                                                              Undangan
-                                                                                              Rapat
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                              {/* {user.role_id ==
-                                                                              1
-                                                                                  ? "Approve"
-                                                                                  : "Perbaiki"} */}
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Apakah
-                                                                                  Anda
-                                                                                  Yakin
-                                                                                  ?
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  {row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .is_fixable ==
-                                                                                  0 ? (
-                                                                                      <>
-                                                                                          Undangan
-                                                                                          Rapat
-                                                                                          akan
-                                                                                          dikirimkan
-                                                                                          ke
-                                                                                          manajer
-                                                                                          divisi{" "}
-                                                                                          <span className="font-bold">
-                                                                                              {
-                                                                                                  row
-                                                                                                      .original
-                                                                                                      .summary!
-                                                                                                      .invite!
-                                                                                                      .to_division
-                                                                                                      .division_name
-                                                                                              }
-                                                                                          </span>{" "}
-                                                                                          apakah
-                                                                                          anda
-                                                                                          yakin
-                                                                                          ?
-                                                                                      </>
-                                                                                  ) : (
-                                                                                      `
-                                                                                      
-                                                                                  Undangan Rapat
-                                                                                  akan
-                                                                                  dikirimkan
-                                                                                  ke
-                                                                                  manajer.
-                                                                                  Apakah
-                                                                                  anda
-                                                                                  yakin
-                                                                                  dengan
-                                                                                  perubahan
-                                                                                  yang
-                                                                                  sudah
-                                                                                  dibuat
-                                                                                  ?
-                                                                                      `
-                                                                                  )}
-                                                                              </AlertDialogDescription>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel>
-                                                                                  Kembali{" "}
-                                                                                  {
-                                                                                      row
-                                                                                          .original
-                                                                                          .summary!
-                                                                                          .id
-                                                                                  }
-                                                                              </AlertDialogCancel>
-                                                                              <AlertDialogAction
-                                                                                  onClick={() => {
-                                                                                      handleApprove(
-                                                                                          row
-                                                                                              .original
-                                                                                              .summary!
-                                                                                              .id
-                                                                                      );
-                                                                                  }}
-                                                                                  className="bg-blue-500 font-normal hover:bg-blue-600"
-                                                                              >
-                                                                                  Kirim
-                                                                                  Undangan
-                                                                                  Rapat
-                                                                                  ke
-                                                                                  Manajer
-                                                                              </AlertDialogAction>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              className={
-                                                                                  row
-                                                                                      .original
-                                                                                      .summary!
-                                                                                      .rejection_reason
-                                                                                      ? `${actionButtonClass} bg-yellow-500`
-                                                                                      : "hidden"
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <Info
-                                                                                          //   size={
-                                                                                          //       18
-                                                                                          //   }
-                                                                                          />
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Lihat
-                                                                                              Alasan
-                                                                                              Penolakan
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                                  Undangan
-                                                                                  Rapat
-                                                                              </AlertDialogTitle>
-                                                                              <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                                                                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                      Ditolak
-                                                                                      pada
-                                                                                      tahap:
-                                                                                  </p>
-                                                                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                                                                      {row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .stage_name ||
-                                                                                          "Tidak diketahui"}
-                                                                                  </p>
-
-                                                                                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                                                      Alasan
-                                                                                      penolakan:
-                                                                                  </p>
-                                                                                  <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                                                                                      {row
-                                                                                          .original
-                                                                                          .summary!
-                                                                                          .rejection_reason ||
-                                                                                          "Tidak ada alasan yang diberikan"}
-                                                                                  </p>
-                                                                              </div>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
-                                                                                  Tutup
-                                                                              </AlertDialogCancel>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                                  <AlertDialog>
-                                                                      <AlertDialogTrigger>
-                                                                          <button
-                                                                              //   onClick={() =>
-                                                                              //       handleReject(
-                                                                              //           row
-                                                                              //               .original
-                                                                              //               .invite!
-                                                                              //               .id
-                                                                              //       )
-                                                                              //   }
-                                                                              className={
-                                                                                  user.role_id !=
-                                                                                      row
-                                                                                          .original
-                                                                                          .stages
-                                                                                          .approver_id ||
-                                                                                  row
-                                                                                      .original
-                                                                                      .stages
-                                                                                      .rejected_id ==
-                                                                                      null
-                                                                                      ? "hidden"
-                                                                                      : `${rejectButtonClass}
-                                                                                            `
-                                                                              }
-                                                                          >
-                                                                              <TooltipProvider
-                                                                                  delayDuration={
-                                                                                      100
-                                                                                  }
-                                                                                  skipDelayDuration={
-                                                                                      0
-                                                                                  }
-                                                                              >
-                                                                                  <Tooltip>
-                                                                                      <TooltipTrigger>
-                                                                                          <X></X>
-                                                                                      </TooltipTrigger>
-                                                                                      <TooltipContent
-                                                                                          side="top"
-                                                                                          sideOffset={
-                                                                                              10
-                                                                                          }
-                                                                                      >
-                                                                                          <p>
-                                                                                              Tolak
-                                                                                              Undangan
-                                                                                              Rapat
-                                                                                          </p>
-                                                                                      </TooltipContent>
-                                                                                  </Tooltip>
-                                                                              </TooltipProvider>
-                                                                              {/* Reject */}
-                                                                          </button>
-                                                                      </AlertDialogTrigger>
-                                                                      <AlertDialogContent>
-                                                                          <AlertDialogHeader>
-                                                                              <AlertDialogTitle>
-                                                                                  Alasan
-                                                                                  Penolakan
-                                                                              </AlertDialogTitle>
-                                                                              <AlertDialogDescription>
-                                                                                  Mohon
-                                                                                  berikan
-                                                                                  alasan
-                                                                                  penolakan
-                                                                                  Risalah
-                                                                                  Rapat.
-                                                                              </AlertDialogDescription>
-                                                                              <div className="mt-4">
-                                                                                  <Textarea
-                                                                                      placeholder="Alasan penolakan..."
-                                                                                      value={
-                                                                                          rejectionReason
-                                                                                      }
-                                                                                      onChange={(
-                                                                                          e
-                                                                                      ) =>
-                                                                                          setRejectionReason(
-                                                                                              e
-                                                                                                  .target
-                                                                                                  .value
-                                                                                          )
-                                                                                      }
-                                                                                      className="w-full min-h-[100px]"
-                                                                                  />
-                                                                              </div>
-                                                                          </AlertDialogHeader>
-                                                                          <AlertDialogFooter>
-                                                                              <AlertDialogCancel
-                                                                                  onClick={() => {
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                  }}
-                                                                              >
-                                                                                  Batal
-                                                                              </AlertDialogCancel>
-                                                                              <AlertDialogAction
-                                                                                  onClick={() => {
-                                                                                      handleReject(
-                                                                                          row
-                                                                                              .original
-                                                                                              .summary!
-                                                                                              .id,
-                                                                                          rejectionReason
-                                                                                      );
-                                                                                      setRejectionReason(
-                                                                                          ""
-                                                                                      );
-                                                                                      // setMemoToReject(
-                                                                                      //     null
-                                                                                      // );
-                                                                                      // }
-                                                                                  }}
-                                                                                  className="bg-red-500 hover:bg-red-600"
-                                                                                  disabled={
-                                                                                      rejectionReason.trim() ===
-                                                                                      ""
-                                                                                  }
-                                                                              >
-                                                                                  Tolak
-                                                                                  Undangan
-                                                                                  Rapat
-                                                                              </AlertDialogAction>
-                                                                          </AlertDialogFooter>
-                                                                      </AlertDialogContent>
-                                                                  </AlertDialog>
-                                                              </>
-                                                          )}
-                                                </>
-                                                <AlertDialog
-                                                    open={editDialogOpen}
-                                                    onOpenChange={
-                                                        setEditDialogOpen
-                                                    }
-                                                >
-                                                    <AlertDialogTrigger
-                                                        onClick={() =>
-                                                            // setFormData({
-                                                            //     perihal:
-                                                            //         row.original
-                                                            //             .invite!
-                                                            //             .perihal,
-                                                            //     content:
-                                                            //         row.original
-                                                            //             .invite!
-                                                            //             .content,
-                                                            // })
-                                                            setFormData({
-                                                                invitation_id: 0,
-                                                                file: null,
-                                                                request_name:
-                                                                    "",
-                                                                judul_rapat: "",
-                                                                rangkuman_rapat:
-                                                                    "",
-                                                            })
-                                                        }
-                                                        // onClick={() =>
-                                                        //     setFormData({
-                                                        //         official: "",
-                                                        //         request_name:
-                                                        //             "",
-                                                        //         to_division:
-                                                        //             null,
-                                                        //         perihal:
-                                                        //             row.original
-                                                        //                 .invite!
-                                                        //                 .perihal,
-                                                        //         content:
-                                                        //             row.original
-                                                        //                 .invite!
-                                                        //                 .content,
-                                                        //     })
-                                                        // }
-                                                        // onClick={() =>
-                                                        //     alert(
-                                                        //         row.original
-                                                        //             .invite!
-                                                        //             .perihal
-                                                        //     )
-                                                        // }
-                                                        className={`${actionButtonClass} ${
-                                                            row.original.stages
-                                                                .is_fixable ==
-                                                                1 &&
-                                                            row.original.stages
-                                                                .approver_id ==
-                                                                user.role_id
-                                                                ? ""
-                                                                : "hidden"
-                                                        }`}
-                                                    >
-                                                        <Pencil></Pencil>
-                                                        {/* Edit Memo */}
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent className="w-[300rem]">
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle className="font-medium">
-                                                                Perbaiki Risalah
-                                                                Rapat
-                                                            </AlertDialogTitle>
-                                                            <ScrollArea className="h-[500px] w-full pr-4">
-                                                                <div className="mt-4">
-                                                                    <label
-                                                                        htmlFor="judul_rapat"
-                                                                        className="block mb-2 mt-4"
-                                                                    >
-                                                                        Judul
-                                                                        Rapat
-                                                                    </label>
-                                                                    <input
-                                                                        onChange={
-                                                                            handleChange
-                                                                        }
-                                                                        type="text"
-                                                                        name="judul_rapat"
-                                                                        id="judul_rapat"
-                                                                        className="w-full p-2 border rounded-lg"
-                                                                    />
-
-                                                                    <label
-                                                                        htmlFor="rangkuman_rapat"
-                                                                        className="block mb-2 mt-4"
-                                                                    >
-                                                                        Rangkuman
-                                                                        Rapat
-                                                                    </label>
-                                                                    <textarea
-                                                                        onChange={
-                                                                            handleChange
-                                                                        }
-                                                                        name="rangkuman_rapat"
-                                                                        id="rangkuman_rapat"
-                                                                        rows={4}
-                                                                        className="w-full p-2 border rounded-lg"
-                                                                    ></textarea>
-                                                                    <label
-                                                                        htmlFor="perihal"
-                                                                        className="block mb-2"
-                                                                    >
-                                                                        File
-                                                                        Risalah
-                                                                        Rapat
-                                                                    </label>
-                                                                    <input
-                                                                        type="file"
-                                                                        id="file"
-                                                                        className="w-full p-2 border rounded-lg"
-                                                                        onChange={
-                                                                            handleSummaryFileChange
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                            </ScrollArea>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Kembali
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className="bg-blue-500 font-normal hover:bg-blue-600"
-                                                                onClick={() =>
-                                                                    // alert(
-                                                                    //     row
-                                                                    //         .original
-                                                                    //         .invite!
-                                                                    //         .id
-                                                                    // )
-                                                                    handleUpdate(
-                                                                        row
-                                                                            .original
-                                                                            .summary!
-                                                                            .id
-                                                                    )
-                                                                }
-                                                            >
-                                                                Ubah Risalah
-                                                                Rapat
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                                {/* <AlertDialog>
+                                                <AlertDialog>
                                                     <AlertDialogTrigger>
                                                         <button
-                                                            className={
-                                                                actionButtonClass
-                                                            }
+                                                            className={`${actionButtonClass} flex items-center gap-2`}
                                                         >
                                                             <TooltipProvider
                                                                 delayDuration={
@@ -1353,7 +492,7 @@ DataTableProps<TData, TValue>) {
                                                             >
                                                                 <Tooltip>
                                                                     <TooltipTrigger>
-                                                                        <FileText></FileText>
+                                                                        <FileText />
                                                                     </TooltipTrigger>
                                                                     <TooltipContent
                                                                         side="top"
@@ -1371,399 +510,1203 @@ DataTableProps<TData, TValue>) {
                                                         </button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent className="w-full max-w-7xl">
-                                                        <AlertDialogHeader className="">
+                                                        <AlertDialogHeader>
                                                             <AlertDialogTitle>
                                                                 Preview PDF
                                                             </AlertDialogTitle>
                                                             <div className="">
-                                                                <PDFViewer className="w-full h-[80vh]">
-                                                                    <UndanganTemplate
-                                                                        data={
+                                                                <div className="mb-2">
+                                                                    <p className="text-sm">
+                                                                        Tahapan
+                                                                        surat
+                                                                        saat
+                                                                        ini:{" "}
+                                                                    </p>
+                                                                    <p className="">
+                                                                        {
                                                                             row
                                                                                 .original
-                                                                                .invite!
+                                                                                .stages
+                                                                                .stage_name
                                                                         }
-                                                                    />
-                                                                </PDFViewer>
+                                                                    </p>
+                                                                </div>
+                                                                {/* PDF Viewer - You'll need to replace this with your actual PDF template */}
+                                                                <div className="w-full h-[80vh] bg-gray-100 rounded-md flex items-center justify-center">
+                                                                    <p className="text-gray-500">
+                                                                        PDF
+                                                                        Preview
+                                                                        for
+                                                                        Summary{" "}
+                                                                        {
+                                                                            row
+                                                                                .original
+                                                                                .summary
+                                                                                ?.id
+                                                                        }
+                                                                        {/* Replace this with actual PDFViewer component */}
+                                                                        {/* <PDFViewer className="w-full h-full">
+                                                                            <SummaryTemplate data={row.original.summary} />
+                                                                        </PDFViewer> */}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel className="bg-blue-500 text-white">
-                                                                Kembali
-                                                            </AlertDialogCancel>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog> */}
-                                                {/* {
-                                                    row.original.summary!
-                                                        .file_path
-                                                } */}
+                                                        <AlertDialogFooter className="items-center">
+                                                            {/* All action buttons moved here */}
+                                                            <div className="flex items-center justify-center gap-1">
+                                                                {/* Approve Button */}
+                                                                {row.original
+                                                                    .stages
+                                                                    .is_external ==
+                                                                1
+                                                                    ? row
+                                                                          .original
+                                                                          .summary!
+                                                                          .invite!
+                                                                          .to_division
+                                                                          .id ==
+                                                                          user.division_id && (
+                                                                          <>
+                                                                              {user.role_id ==
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .approver_id &&
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .to_stage_id !=
+                                                                                      null && (
+                                                                                      <AlertDialog>
+                                                                                          <AlertDialogTrigger
+                                                                                              asChild
+                                                                                          >
+                                                                                              <button
+                                                                                                  className={`${approveButtonClass} flex items-center gap-2 mr-1`}
+                                                                                              >
+                                                                                                  <TooltipProvider
+                                                                                                      delayDuration={
+                                                                                                          100
+                                                                                                      }
+                                                                                                      skipDelayDuration={
+                                                                                                          0
+                                                                                                      }
+                                                                                                  >
+                                                                                                      <Tooltip>
+                                                                                                          <TooltipTrigger className="flex items-center gap-2">
+                                                                                                              <Check
+                                                                                                                  size={
+                                                                                                                      20
+                                                                                                                  }
+                                                                                                              />
+                                                                                                              <span>
+                                                                                                                  Setujui
+                                                                                                              </span>
+                                                                                                          </TooltipTrigger>
+                                                                                                          <TooltipContent
+                                                                                                              side="top"
+                                                                                                              sideOffset={
+                                                                                                                  10
+                                                                                                              }
+                                                                                                          >
+                                                                                                              <p>
+                                                                                                                  Setujui
+                                                                                                                  Risalah
+                                                                                                                  Rapat
+                                                                                                              </p>
+                                                                                                          </TooltipContent>
+                                                                                                      </Tooltip>
+                                                                                                  </TooltipProvider>
+                                                                                              </button>
+                                                                                          </AlertDialogTrigger>
+                                                                                          <AlertDialogContent>
+                                                                                              <AlertDialogHeader>
+                                                                                                  <AlertDialogTitle>
+                                                                                                      Apakah
+                                                                                                      Anda
+                                                                                                      Yakin?
+                                                                                                  </AlertDialogTitle>
+                                                                                                  <AlertDialogDescription>
+                                                                                                      Risalah
+                                                                                                      Rapat
+                                                                                                      akan
+                                                                                                      dikirimkan
+                                                                                                      ke
+                                                                                                      manajer
+                                                                                                      divisi{" "}
+                                                                                                      <span className="font-bold">
+                                                                                                          {
+                                                                                                              row
+                                                                                                                  .original
+                                                                                                                  .summary!
+                                                                                                                  .invite!
+                                                                                                                  .to_division
+                                                                                                                  .division_name
+                                                                                                          }
+                                                                                                      </span>{" "}
+                                                                                                      apakah
+                                                                                                      anda
+                                                                                                      yakin?
+                                                                                                  </AlertDialogDescription>
+                                                                                              </AlertDialogHeader>
+                                                                                              <AlertDialogFooter>
+                                                                                                  <AlertDialogCancel>
+                                                                                                      Kembali
+                                                                                                  </AlertDialogCancel>
+                                                                                                  <AlertDialogAction
+                                                                                                      onClick={() =>
+                                                                                                          handleApprove(
+                                                                                                              row
+                                                                                                                  .original
+                                                                                                                  .summary!
+                                                                                                                  .id
+                                                                                                          )
+                                                                                                      }
+                                                                                                      className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                                                  >
+                                                                                                      Kirim
+                                                                                                      Risalah
+                                                                                                      Rapat
+                                                                                                      ke
+                                                                                                      Manajer
+                                                                                                  </AlertDialogAction>
+                                                                                              </AlertDialogFooter>
+                                                                                          </AlertDialogContent>
+                                                                                      </AlertDialog>
+                                                                                  )}
 
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger>
-                                                        {row.original.summary!
-                                                            .file_path && (
-                                                            <button
-                                                                className={
+                                                                              {/* Reject Button */}
+                                                                              {user.role_id ==
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .approver_id &&
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .rejected_id !=
+                                                                                      null && (
+                                                                                      <AlertDialog>
+                                                                                          <AlertDialogTrigger
+                                                                                              asChild
+                                                                                          >
+                                                                                              <button
+                                                                                                  className={`${rejectButtonClass} flex items-center gap-2`}
+                                                                                              >
+                                                                                                  <TooltipProvider
+                                                                                                      delayDuration={
+                                                                                                          100
+                                                                                                      }
+                                                                                                      skipDelayDuration={
+                                                                                                          0
+                                                                                                      }
+                                                                                                  >
+                                                                                                      <Tooltip>
+                                                                                                          <TooltipTrigger className="flex items-center gap-2">
+                                                                                                              <X
+                                                                                                                  size={
+                                                                                                                      20
+                                                                                                                  }
+                                                                                                              />
+                                                                                                              <span>
+                                                                                                                  Tolak
+                                                                                                              </span>
+                                                                                                          </TooltipTrigger>
+                                                                                                          <TooltipContent
+                                                                                                              side="top"
+                                                                                                              sideOffset={
+                                                                                                                  10
+                                                                                                              }
+                                                                                                          >
+                                                                                                              <p>
+                                                                                                                  Tolak
+                                                                                                                  Risalah
+                                                                                                                  Rapat
+                                                                                                              </p>
+                                                                                                          </TooltipContent>
+                                                                                                      </Tooltip>
+                                                                                                  </TooltipProvider>
+                                                                                              </button>
+                                                                                          </AlertDialogTrigger>
+                                                                                          <AlertDialogContent>
+                                                                                              <AlertDialogHeader>
+                                                                                                  <AlertDialogTitle>
+                                                                                                      Alasan
+                                                                                                      Penolakan
+                                                                                                  </AlertDialogTitle>
+                                                                                                  <AlertDialogDescription>
+                                                                                                      Mohon
+                                                                                                      berikan
+                                                                                                      alasan
+                                                                                                      penolakan
+                                                                                                      risalah
+                                                                                                      rapat
+                                                                                                      ini.
+                                                                                                  </AlertDialogDescription>
+                                                                                                  <div className="mt-4">
+                                                                                                      <Textarea
+                                                                                                          placeholder="Alasan penolakan..."
+                                                                                                          value={
+                                                                                                              rejectionReason
+                                                                                                          }
+                                                                                                          onChange={(
+                                                                                                              e
+                                                                                                          ) =>
+                                                                                                              setRejectionReason(
+                                                                                                                  e
+                                                                                                                      .target
+                                                                                                                      .value
+                                                                                                              )
+                                                                                                          }
+                                                                                                          className="w-full min-h-[100px]"
+                                                                                                      />
+                                                                                                  </div>
+                                                                                              </AlertDialogHeader>
+                                                                                              <AlertDialogFooter>
+                                                                                                  <AlertDialogCancel
+                                                                                                      onClick={() =>
+                                                                                                          setRejectionReason(
+                                                                                                              ""
+                                                                                                          )
+                                                                                                      }
+                                                                                                  >
+                                                                                                      Batal
+                                                                                                  </AlertDialogCancel>
+                                                                                                  <AlertDialogAction
+                                                                                                      onClick={() => {
+                                                                                                          handleReject(
+                                                                                                              row
+                                                                                                                  .original
+                                                                                                                  .id,
+                                                                                                              rejectionReason
+                                                                                                          );
+                                                                                                          setRejectionReason(
+                                                                                                              ""
+                                                                                                          );
+                                                                                                      }}
+                                                                                                      className="bg-red-500 hover:bg-red-600"
+                                                                                                      disabled={
+                                                                                                          rejectionReason.trim() ===
+                                                                                                          ""
+                                                                                                      }
+                                                                                                  >
+                                                                                                      Tolak
+                                                                                                      Risalah
+                                                                                                      Rapat
+                                                                                                  </AlertDialogAction>
+                                                                                              </AlertDialogFooter>
+                                                                                          </AlertDialogContent>
+                                                                                      </AlertDialog>
+                                                                                  )}
+                                                                          </>
+                                                                      )
+                                                                    : row
+                                                                          .original
+                                                                          .summary!
+                                                                          .invite!
+                                                                          .from_division
+                                                                          .id ==
+                                                                          user.division_id && (
+                                                                          <>
+                                                                              {/* Approve Button for from_division */}
+                                                                              {user.role_id ==
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .approver_id &&
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .to_stage_id !=
+                                                                                      null && (
+                                                                                      <AlertDialog>
+                                                                                          <AlertDialogTrigger
+                                                                                              asChild
+                                                                                          >
+                                                                                              <button
+                                                                                                  className={`${approveButtonClass} flex items-center gap-2`}
+                                                                                              >
+                                                                                                  <TooltipProvider
+                                                                                                      delayDuration={
+                                                                                                          100
+                                                                                                      }
+                                                                                                      skipDelayDuration={
+                                                                                                          0
+                                                                                                      }
+                                                                                                  >
+                                                                                                      <Tooltip>
+                                                                                                          <TooltipTrigger className="flex items-center gap-2">
+                                                                                                              <Check
+                                                                                                                  size={
+                                                                                                                      20
+                                                                                                                  }
+                                                                                                              />
+                                                                                                              <span>
+                                                                                                                  Setujui
+                                                                                                              </span>
+                                                                                                          </TooltipTrigger>
+                                                                                                          <TooltipContent
+                                                                                                              side="top"
+                                                                                                              sideOffset={
+                                                                                                                  10
+                                                                                                              }
+                                                                                                          >
+                                                                                                              <p>
+                                                                                                                  Setujui
+                                                                                                                  Risalah
+                                                                                                                  Rapat
+                                                                                                              </p>
+                                                                                                          </TooltipContent>
+                                                                                                      </Tooltip>
+                                                                                                  </TooltipProvider>
+                                                                                              </button>
+                                                                                          </AlertDialogTrigger>
+                                                                                          <AlertDialogContent>
+                                                                                              <AlertDialogHeader>
+                                                                                                  <AlertDialogTitle>
+                                                                                                      Apakah
+                                                                                                      Anda
+                                                                                                      Yakin?
+                                                                                                  </AlertDialogTitle>
+                                                                                                  <AlertDialogDescription>
+                                                                                                      {row
+                                                                                                          .original
+                                                                                                          .stages
+                                                                                                          .is_fixable ==
+                                                                                                      0 ? (
+                                                                                                          <>
+                                                                                                              Risalah
+                                                                                                              Rapat
+                                                                                                              akan
+                                                                                                              dikirimkan
+                                                                                                              ke
+                                                                                                              manajer
+                                                                                                              divisi{" "}
+                                                                                                              <span className="font-bold">
+                                                                                                                  {
+                                                                                                                      row
+                                                                                                                          .original
+                                                                                                                          .summary!
+                                                                                                                          .invite!
+                                                                                                                          .to_division
+                                                                                                                          .division_name
+                                                                                                                  }
+                                                                                                              </span>{" "}
+                                                                                                              apakah
+                                                                                                              anda
+                                                                                                              yakin?
+                                                                                                          </>
+                                                                                                      ) : (
+                                                                                                          `Risalah Rapat akan dikirimkan ke manajer. Apakah anda yakin dengan perubahan yang sudah dibuat?`
+                                                                                                      )}
+                                                                                                  </AlertDialogDescription>
+                                                                                              </AlertDialogHeader>
+                                                                                              <AlertDialogFooter>
+                                                                                                  <AlertDialogCancel>
+                                                                                                      Kembali{" "}
+                                                                                                      {
+                                                                                                          row
+                                                                                                              .original
+                                                                                                              .summary!
+                                                                                                              .id
+                                                                                                      }
+                                                                                                  </AlertDialogCancel>
+                                                                                                  <AlertDialogAction
+                                                                                                      onClick={() =>
+                                                                                                          handleApprove(
+                                                                                                              row
+                                                                                                                  .original
+                                                                                                                  .summary!
+                                                                                                                  .id
+                                                                                                          )
+                                                                                                      }
+                                                                                                      className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                                                  >
+                                                                                                      Kirim
+                                                                                                      Risalah
+                                                                                                      Rapat
+                                                                                                      ke
+                                                                                                      Manajer
+                                                                                                  </AlertDialogAction>
+                                                                                              </AlertDialogFooter>
+                                                                                          </AlertDialogContent>
+                                                                                      </AlertDialog>
+                                                                                  )}
+
+                                                                              {/* Reject Button for from_division */}
+                                                                              {user.role_id ==
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .approver_id &&
+                                                                                  row
+                                                                                      .original
+                                                                                      .stages
+                                                                                      .rejected_id !=
+                                                                                      null && (
+                                                                                      <AlertDialog>
+                                                                                          <AlertDialogTrigger
+                                                                                              asChild
+                                                                                          >
+                                                                                              <button
+                                                                                                  className={`${rejectButtonClass} flex items-center gap-2`}
+                                                                                              >
+                                                                                                  <TooltipProvider
+                                                                                                      delayDuration={
+                                                                                                          100
+                                                                                                      }
+                                                                                                      skipDelayDuration={
+                                                                                                          0
+                                                                                                      }
+                                                                                                  >
+                                                                                                      <Tooltip>
+                                                                                                          <TooltipTrigger className="flex items-center gap-2">
+                                                                                                              <X
+                                                                                                                  size={
+                                                                                                                      20
+                                                                                                                  }
+                                                                                                              />
+                                                                                                              <span>
+                                                                                                                  Tolak
+                                                                                                              </span>
+                                                                                                          </TooltipTrigger>
+                                                                                                          <TooltipContent
+                                                                                                              side="top"
+                                                                                                              sideOffset={
+                                                                                                                  10
+                                                                                                              }
+                                                                                                          >
+                                                                                                              <p>
+                                                                                                                  Tolak
+                                                                                                                  Risalah
+                                                                                                                  Rapat
+                                                                                                              </p>
+                                                                                                          </TooltipContent>
+                                                                                                      </Tooltip>
+                                                                                                  </TooltipProvider>
+                                                                                              </button>
+                                                                                          </AlertDialogTrigger>
+                                                                                          <AlertDialogContent>
+                                                                                              <AlertDialogHeader>
+                                                                                                  <AlertDialogTitle>
+                                                                                                      Alasan
+                                                                                                      Penolakan
+                                                                                                  </AlertDialogTitle>
+                                                                                                  <AlertDialogDescription>
+                                                                                                      Mohon
+                                                                                                      berikan
+                                                                                                      alasan
+                                                                                                      penolakan
+                                                                                                      Risalah
+                                                                                                      Rapat.
+                                                                                                  </AlertDialogDescription>
+                                                                                                  <div className="mt-4">
+                                                                                                      <Textarea
+                                                                                                          placeholder="Alasan penolakan..."
+                                                                                                          value={
+                                                                                                              rejectionReason
+                                                                                                          }
+                                                                                                          onChange={(
+                                                                                                              e
+                                                                                                          ) =>
+                                                                                                              setRejectionReason(
+                                                                                                                  e
+                                                                                                                      .target
+                                                                                                                      .value
+                                                                                                              )
+                                                                                                          }
+                                                                                                          className="w-full min-h-[100px]"
+                                                                                                      />
+                                                                                                  </div>
+                                                                                              </AlertDialogHeader>
+                                                                                              <AlertDialogFooter>
+                                                                                                  <AlertDialogCancel
+                                                                                                      onClick={() =>
+                                                                                                          setRejectionReason(
+                                                                                                              ""
+                                                                                                          )
+                                                                                                      }
+                                                                                                  >
+                                                                                                      Batal
+                                                                                                  </AlertDialogCancel>
+                                                                                                  <AlertDialogAction
+                                                                                                      onClick={() => {
+                                                                                                          handleReject(
+                                                                                                              row
+                                                                                                                  .original
+                                                                                                                  .summary!
+                                                                                                                  .id,
+                                                                                                              rejectionReason
+                                                                                                          );
+                                                                                                          setRejectionReason(
+                                                                                                              ""
+                                                                                                          );
+                                                                                                      }}
+                                                                                                      className="bg-red-500 hover:bg-red-600"
+                                                                                                      disabled={
+                                                                                                          rejectionReason.trim() ===
+                                                                                                          ""
+                                                                                                      }
+                                                                                                  >
+                                                                                                      Tolak
+                                                                                                      Risalah
+                                                                                                      Rapat
+                                                                                                  </AlertDialogAction>
+                                                                                              </AlertDialogFooter>
+                                                                                          </AlertDialogContent>
+                                                                                      </AlertDialog>
+                                                                                  )}
+                                                                          </>
+                                                                      )}
+
+                                                                {/* Edit Button */}
+                                                                {row.original
+                                                                    .stages
+                                                                    .is_fixable ==
+                                                                    1 &&
                                                                     row.original
                                                                         .stages
-                                                                        .requires_file_upload !=
-                                                                    1
-                                                                        ? "hidden"
-                                                                        : `bg-blue-500 p-2 mt-2 text-white rounded-lg`
-                                                                }
-                                                            >
-                                                                <FileSearch></FileSearch>
-                                                            </button>
-                                                        )}
-                                                    </AlertDialogTrigger>
-                                                    {row.original.summary!
-                                                        .file_path != null ? (
-                                                        <AlertDialogContent className="w-full max-w-7xl">
-                                                            <AlertDialogHeader className="">
-                                                                <AlertDialogTitle>
-                                                                    Preview File
-                                                                </AlertDialogTitle>
-                                                                <div className="flex flex-col w-full">
-                                                                    {/* Add meeting title and summary information */}
-                                                                    <div className="mb-6 p-4 bg-blue-50 rounded-md border border-blue-200">
-                                                                        <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                                                                            Judul
-                                                                            :{" "}
-                                                                            {row
-                                                                                .original
-                                                                                .summary!
-                                                                                .judul_rapat ||
-                                                                                "Tidak ada judul"}
-                                                                        </h3>
-                                                                        <div className="mt-3">
-                                                                            <h4 className="text-sm font-medium text-blue-700 mb-1">
-                                                                                Rangkuman
-                                                                                Rapat:
-                                                                            </h4>
-                                                                            <p className="text-sm text-gray-700 whitespace-pre-line">
-                                                                                {row
-                                                                                    .original
-                                                                                    .summary!
-                                                                                    .rangkuman_rapat ||
-                                                                                    "Tidak ada rangkuman"}
-                                                                            </p>
-                                                                        </div>
-                                                                        {/* <div className="mt-3 text-xs text-gray-500">
-                                                                            Tanggal:{" "}
-                                                                            {safeFormatDate(
-                                                                                row
-                                                                                    .original
-                                                                                    .summary!
-                                                                                    .created_at
-                                                                            )}
-                                                                        </div> */}
-                                                                    </div>
-                                                                    <div
-                                                                        style={{
-                                                                            height: "400px",
-                                                                        }}
-                                                                    >
-                                                                        <embed
-                                                                            src={`/risalah-file/${
-                                                                                row
-                                                                                    .original
-                                                                                    .summary!
-                                                                                    .file_path
-                                                                            }`}
-                                                                            type="application/pdf"
-                                                                            width="100%"
-                                                                            height="100%"
-                                                                            className="border"
-                                                                            onContextMenu={(
-                                                                                e
-                                                                            ) =>
-                                                                                e.preventDefault()
+                                                                        .approver_id ==
+                                                                        user.role_id && (
+                                                                        <AlertDialog
+                                                                            open={
+                                                                                editDialogOpen
                                                                             }
-                                                                        />
-                                                                    </div>
-
-                                                                    {/* Original file preview content */}
-                                                                    {/* <div className="relative w-full h-[60vh] bg-gray-100 rounded-md overflow-hidden">
-                                                                        <div
-                                                                            className="absolute inset-0 flex items-center justify-center z-10 bg-white/50"
-                                                                            id="loading-indicator"
+                                                                            onOpenChange={
+                                                                                setEditDialogOpen
+                                                                            }
                                                                         >
-                                                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                                                                        </div>
-
-                                                                        <div className="w-full h-full flex items-center justify-center overflow-auto">
-                                                                            <p>
-                                                                                {
-                                                                                    row
-                                                                                        .original
-                                                                                        .summary!
-                                                                                        .file_path
-                                                                                }
-                                                                            </p>
-                                                                        </div>
-                                                                    </div> */}
-
-                                                                    <div className="flex items-center justify-between mt-4">
-                                                                        <div className="text-sm text-gray-500">
-                                                                            {row.original
-                                                                                .summary!.file_path?.split(
-                                                                                    "/"
-                                                                                )
-                                                                                .pop()}
-                                                                        </div>
-                                                                        <div className="flex gap-2">
-                                                                            <button
-                                                                                className="px-3 py-1 bg-gray-200 rounded-md text-sm"
+                                                                            <AlertDialogTrigger
                                                                                 onClick={() =>
-                                                                                    window.open(
-                                                                                        `invite!-file/${
-                                                                                            row
-                                                                                                .original
-                                                                                                .summary!
-                                                                                                .file_path
-                                                                                        }`,
-                                                                                        "_blank"
+                                                                                    setFormData(
+                                                                                        {
+                                                                                            invitation_id: 0,
+                                                                                            file: null,
+                                                                                            request_name:
+                                                                                                "",
+                                                                                            judul_rapat:
+                                                                                                "",
+                                                                                            rangkuman_rapat:
+                                                                                                "",
+                                                                                        }
                                                                                     )
                                                                                 }
+                                                                                className={`${actionButtonClass} bg-orange-500 flex items-center gap-2`}
                                                                             >
-                                                                                Buka
-                                                                                di
-                                                                                tab
-                                                                                baru
+                                                                                <TooltipProvider
+                                                                                    delayDuration={
+                                                                                        100
+                                                                                    }
+                                                                                    skipDelayDuration={
+                                                                                        0
+                                                                                    }
+                                                                                >
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger className="flex items-center gap-2">
+                                                                                            <Pencil
+                                                                                                size={
+                                                                                                    20
+                                                                                                }
+                                                                                            />
+                                                                                            <span>
+                                                                                                Edit
+                                                                                            </span>
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent
+                                                                                            side="top"
+                                                                                            sideOffset={
+                                                                                                10
+                                                                                            }
+                                                                                        >
+                                                                                            <p>
+                                                                                                Edit
+                                                                                                Risalah
+                                                                                                Rapat
+                                                                                            </p>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                </TooltipProvider>
+                                                                            </AlertDialogTrigger>
+                                                                            <AlertDialogContent className="w-[300rem]">
+                                                                                <AlertDialogHeader>
+                                                                                    <AlertDialogTitle className="font-medium">
+                                                                                        Perbaiki
+                                                                                        Risalah
+                                                                                        Rapat
+                                                                                    </AlertDialogTitle>
+                                                                                    <ScrollArea className="h-[500px] w-full pr-4">
+                                                                                        <div className="mt-4">
+                                                                                            <label
+                                                                                                htmlFor="judul_rapat"
+                                                                                                className="block mb-2 mt-4"
+                                                                                            >
+                                                                                                Judul
+                                                                                                Rapat
+                                                                                            </label>
+                                                                                            <input
+                                                                                                onChange={
+                                                                                                    handleChange
+                                                                                                }
+                                                                                                type="text"
+                                                                                                name="judul_rapat"
+                                                                                                id="judul_rapat"
+                                                                                                className="w-full p-2 border rounded-lg"
+                                                                                            />
+
+                                                                                            <label
+                                                                                                htmlFor="rangkuman_rapat"
+                                                                                                className="block mb-2 mt-4"
+                                                                                            >
+                                                                                                Rangkuman
+                                                                                                Rapat
+                                                                                            </label>
+                                                                                            <textarea
+                                                                                                onChange={
+                                                                                                    handleChange
+                                                                                                }
+                                                                                                name="rangkuman_rapat"
+                                                                                                id="rangkuman_rapat"
+                                                                                                rows={
+                                                                                                    4
+                                                                                                }
+                                                                                                className="w-full p-2 border rounded-lg"
+                                                                                            ></textarea>
+                                                                                            <label
+                                                                                                htmlFor="file"
+                                                                                                className="block mb-2"
+                                                                                            >
+                                                                                                File
+                                                                                                Risalah
+                                                                                                Rapat
+                                                                                            </label>
+                                                                                            <input
+                                                                                                type="file"
+                                                                                                id="file"
+                                                                                                className="w-full p-2 border rounded-lg"
+                                                                                                onChange={
+                                                                                                    handleSummaryFileChange
+                                                                                                }
+                                                                                            />
+                                                                                        </div>
+                                                                                    </ScrollArea>
+                                                                                </AlertDialogHeader>
+                                                                                <AlertDialogFooter>
+                                                                                    <AlertDialogCancel>
+                                                                                        Kembali
+                                                                                    </AlertDialogCancel>
+                                                                                    <AlertDialogAction
+                                                                                        className="bg-blue-500 font-normal hover:bg-blue-600"
+                                                                                        onClick={() =>
+                                                                                            handleUpdate(
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .summary!
+                                                                                                    .id
+                                                                                            )
+                                                                                        }
+                                                                                    >
+                                                                                        Ubah
+                                                                                        Risalah
+                                                                                        Rapat
+                                                                                    </AlertDialogAction>
+                                                                                </AlertDialogFooter>
+                                                                            </AlertDialogContent>
+                                                                        </AlertDialog>
+                                                                    )}
+
+                                                                {/* Rejection Reason Info Button */}
+                                                                {row.original
+                                                                    .summary!
+                                                                    .rejection_reason && (
+                                                                    <AlertDialog>
+                                                                        <AlertDialogTrigger
+                                                                            asChild
+                                                                        >
+                                                                            <button
+                                                                                className={`${actionButtonClass} bg-yellow-500 flex items-center gap-2`}
+                                                                            >
+                                                                                <TooltipProvider
+                                                                                    delayDuration={
+                                                                                        100
+                                                                                    }
+                                                                                    skipDelayDuration={
+                                                                                        0
+                                                                                    }
+                                                                                >
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger className="flex items-center gap-2">
+                                                                                            <Info
+                                                                                                size={
+                                                                                                    20
+                                                                                                }
+                                                                                            />
+                                                                                            <span>
+                                                                                                Info
+                                                                                                Penolakan
+                                                                                            </span>
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent
+                                                                                            side="top"
+                                                                                            sideOffset={
+                                                                                                10
+                                                                                            }
+                                                                                        >
+                                                                                            <p>
+                                                                                                Lihat
+                                                                                                Alasan
+                                                                                                Penolakan
+                                                                                            </p>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                </TooltipProvider>
                                                                             </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel className="bg-blue-500 text-white">
-                                                                    Kembali
-                                                                </AlertDialogCancel>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    ) : (
-                                                        <AlertDialogContent className="w-full">
-                                                            <AlertDialogHeader className="">
-                                                                <AlertDialogTitle>
-                                                                    Upload File
-                                                                </AlertDialogTitle>
-                                                                <div className="">
-                                                                    <div className="">
-                                                                        <div className="mb-4">
-                                                                            <label
-                                                                                htmlFor="fileUpload"
-                                                                                className="block text-sm font-medium mb-2"
+                                                                        </AlertDialogTrigger>
+                                                                        <AlertDialogContent>
+                                                                            <AlertDialogHeader>
+                                                                                <AlertDialogTitle>
+                                                                                    Alasan
+                                                                                    Penolakan
+                                                                                    Risalah
+                                                                                    Rapat
+                                                                                </AlertDialogTitle>
+                                                                                <AlertDialogDescription>
+                                                                                    <div className="mt-2 p-4 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                                                                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                            Ditolak
+                                                                                            pada
+                                                                                            tahap:
+                                                                                        </p>
+                                                                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                                                                            {row
+                                                                                                .original
+                                                                                                .stages
+                                                                                                .stage_name ||
+                                                                                                "Tidak diketahui"}
+                                                                                        </p>
+                                                                                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                                            Alasan
+                                                                                            penolakan:
+                                                                                        </p>
+                                                                                        <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
+                                                                                            {row
+                                                                                                .original
+                                                                                                .summary!
+                                                                                                .rejection_reason ||
+                                                                                                "Tidak ada alasan yang diberikan"}
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </AlertDialogDescription>
+                                                                            </AlertDialogHeader>
+                                                                            <AlertDialogFooter>
+                                                                                <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
+                                                                                    Tutup
+                                                                                </AlertDialogCancel>
+                                                                            </AlertDialogFooter>
+                                                                        </AlertDialogContent>
+                                                                    </AlertDialog>
+                                                                )}
+
+                                                                {/* File Preview Button */}
+                                                                {row.original
+                                                                    .summary!
+                                                                    .file_path && (
+                                                                    <AlertDialog>
+                                                                        <AlertDialogTrigger
+                                                                            asChild
+                                                                        >
+                                                                            <button
+                                                                                className={`${actionButtonClass} flex items-center gap-2`}
                                                                             >
-                                                                                Upload
-                                                                                File
-                                                                                (Hanya
-                                                                                gambar
-                                                                                )
-                                                                            </label>
-                                                                            <input
-                                                                                type="file"
-                                                                                id="fileUpload"
-                                                                                name="fileUpload"
-                                                                                accept="image/*"
-                                                                                className="block w-full text-sm text-gray-500
+                                                                                <TooltipProvider
+                                                                                    delayDuration={
+                                                                                        100
+                                                                                    }
+                                                                                    skipDelayDuration={
+                                                                                        0
+                                                                                    }
+                                                                                >
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger className="flex items-center gap-2">
+                                                                                            <FileSearch
+                                                                                                size={
+                                                                                                    20
+                                                                                                }
+                                                                                            />
+                                                                                            <span>
+                                                                                                Lihat
+                                                                                                File
+                                                                                            </span>
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent
+                                                                                            side="top"
+                                                                                            sideOffset={
+                                                                                                10
+                                                                                            }
+                                                                                        >
+                                                                                            <p>
+                                                                                                Lihat
+                                                                                                File
+                                                                                                Risalah
+                                                                                            </p>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                </TooltipProvider>
+                                                                            </button>
+                                                                        </AlertDialogTrigger>
+                                                                        <AlertDialogContent className="w-full max-w-7xl">
+                                                                            <AlertDialogHeader>
+                                                                                <AlertDialogTitle>
+                                                                                    Preview
+                                                                                    File
+                                                                                    Risalah
+                                                                                    Rapat
+                                                                                </AlertDialogTitle>
+                                                                                <div className="flex flex-col w-full">
+                                                                                    {/* Meeting information */}
+                                                                                    <div className="mb-6 p-4 bg-blue-50 rounded-md border border-blue-200">
+                                                                                        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                                                                                            Judul:{" "}
+                                                                                            {row
+                                                                                                .original
+                                                                                                .summary!
+                                                                                                .judul_rapat ||
+                                                                                                "Tidak ada judul"}
+                                                                                        </h3>
+                                                                                        <div className="mt-3">
+                                                                                            <h4 className="text-sm font-medium text-blue-700 mb-1">
+                                                                                                Rangkuman
+                                                                                                Rapat:
+                                                                                            </h4>
+                                                                                            <p className="text-sm text-gray-700 whitespace-pre-line">
+                                                                                                {row
+                                                                                                    .original
+                                                                                                    .summary!
+                                                                                                    .rangkuman_rapat ||
+                                                                                                    "Tidak ada rangkuman"}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        style={{
+                                                                                            height: "400px",
+                                                                                        }}
+                                                                                    >
+                                                                                        <embed
+                                                                                            src={`/risalah-file/${
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .summary!
+                                                                                                    .file_path
+                                                                                            }`}
+                                                                                            type="application/pdf"
+                                                                                            width="100%"
+                                                                                            height="100%"
+                                                                                            className="border"
+                                                                                            onContextMenu={(
+                                                                                                e
+                                                                                            ) =>
+                                                                                                e.preventDefault()
+                                                                                            }
+                                                                                        />
+                                                                                    </div>
+                                                                                    <div className="flex items-center justify-between mt-4">
+                                                                                        <div className="text-sm text-gray-500">
+                                                                                            {row.original
+                                                                                                .summary!.file_path?.split(
+                                                                                                    "/"
+                                                                                                )
+                                                                                                .pop()}
+                                                                                        </div>
+                                                                                        <div className="flex gap-2">
+                                                                                            <button
+                                                                                                className="px-3 py-1 bg-gray-200 rounded-md text-sm"
+                                                                                                onClick={() =>
+                                                                                                    window.open(
+                                                                                                        `/risalah-file/${
+                                                                                                            row
+                                                                                                                .original
+                                                                                                                .summary!
+                                                                                                                .file_path
+                                                                                                        }`,
+                                                                                                        "_blank"
+                                                                                                    )
+                                                                                                }
+                                                                                            >
+                                                                                                Buka
+                                                                                                di
+                                                                                                tab
+                                                                                                baru
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </AlertDialogHeader>
+                                                                            <AlertDialogFooter>
+                                                                                <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
+                                                                                    Tutup
+                                                                                </AlertDialogCancel>
+                                                                            </AlertDialogFooter>
+                                                                        </AlertDialogContent>
+                                                                    </AlertDialog>
+                                                                )}
+
+                                                                {/* File Upload Button */}
+                                                                {!row.original
+                                                                    .summary!
+                                                                    .file_path &&
+                                                                    row.original
+                                                                        .stages
+                                                                        .requires_file_upload ==
+                                                                        1 && (
+                                                                        <AlertDialog>
+                                                                            <AlertDialogTrigger
+                                                                                asChild
+                                                                            >
+                                                                                <button
+                                                                                    className={`${actionButtonClass} flex items-center gap-2`}
+                                                                                >
+                                                                                    <TooltipProvider
+                                                                                        delayDuration={
+                                                                                            100
+                                                                                        }
+                                                                                        skipDelayDuration={
+                                                                                            0
+                                                                                        }
+                                                                                    >
+                                                                                        <Tooltip>
+                                                                                            <TooltipTrigger className="flex items-center gap-2">
+                                                                                                <FileUp
+                                                                                                    size={
+                                                                                                        20
+                                                                                                    }
+                                                                                                />
+                                                                                                <span>
+                                                                                                    Upload
+                                                                                                    File
+                                                                                                </span>
+                                                                                            </TooltipTrigger>
+                                                                                            <TooltipContent
+                                                                                                side="top"
+                                                                                                sideOffset={
+                                                                                                    10
+                                                                                                }
+                                                                                            >
+                                                                                                <p>
+                                                                                                    Upload
+                                                                                                    File
+                                                                                                    Risalah
+                                                                                                </p>
+                                                                                            </TooltipContent>
+                                                                                        </Tooltip>
+                                                                                    </TooltipProvider>
+                                                                                </button>
+                                                                            </AlertDialogTrigger>
+                                                                            <AlertDialogContent className="w-full">
+                                                                                <AlertDialogHeader>
+                                                                                    <AlertDialogTitle>
+                                                                                        Upload
+                                                                                        File
+                                                                                        Risalah
+                                                                                        Rapat
+                                                                                    </AlertDialogTitle>
+                                                                                    <div className="">
+                                                                                        <div className="mb-4">
+                                                                                            <label
+                                                                                                htmlFor="fileUpload"
+                                                                                                className="block text-sm font-medium mb-2"
+                                                                                            >
+                                                                                                Upload
+                                                                                                File
+                                                                                                Risalah
+                                                                                                Rapat
+                                                                                                (PDF)
+                                                                                            </label>
+                                                                                            <input
+                                                                                                type="file"
+                                                                                                id="fileUpload"
+                                                                                                name="fileUpload"
+                                                                                                accept=".pdf"
+                                                                                                className="block w-full text-sm text-gray-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-md file:border-0
                 file:text-sm file:font-semibold
                 file:bg-blue-50 file:text-blue-700
                 hover:file:bg-blue-100"
-                                                                                onChange={(
-                                                                                    e
-                                                                                ) => {
-                                                                                    const file =
-                                                                                        e
-                                                                                            .target
-                                                                                            .files?.[0];
-                                                                                    if (
-                                                                                        file
-                                                                                    ) {
-                                                                                        const reader =
-                                                                                            new FileReader();
-                                                                                        reader.onload =
-                                                                                            (
-                                                                                                event
-                                                                                            ) => {
-                                                                                                setFilePreview(
-                                                                                                    event
-                                                                                                        .target
-                                                                                                        ?.result as string
-                                                                                                );
-                                                                                            };
-                                                                                        reader.readAsDataURL(
-                                                                                            file
-                                                                                        );
-                                                                                        setFileData(
-                                                                                            {
-                                                                                                file: file,
-                                                                                                memo_id:
-                                                                                                    row
-                                                                                                        .original
-                                                                                                        .invite!
-                                                                                                        .id,
-                                                                                                fileName:
-                                                                                                    file.name,
-                                                                                            }
-                                                                                        );
-                                                                                    }
-                                                                                }}
-                                                                            />
-                                                                        </div>
+                                                                                                onChange={(
+                                                                                                    e
+                                                                                                ) => {
+                                                                                                    const file =
+                                                                                                        e
+                                                                                                            .target
+                                                                                                            .files?.[0];
+                                                                                                    if (
+                                                                                                        file
+                                                                                                    ) {
+                                                                                                        setFileData(
+                                                                                                            {
+                                                                                                                file: file,
+                                                                                                                memo_id:
+                                                                                                                    row
+                                                                                                                        .original
+                                                                                                                        .summary!
+                                                                                                                        .id,
+                                                                                                                fileName:
+                                                                                                                    file.name,
+                                                                                                            }
+                                                                                                        );
+                                                                                                        if (
+                                                                                                            file.type ===
+                                                                                                            "application/pdf"
+                                                                                                        ) {
+                                                                                                            const reader =
+                                                                                                                new FileReader();
+                                                                                                            reader.onload =
+                                                                                                                (
+                                                                                                                    event
+                                                                                                                ) => {
+                                                                                                                    setFilePreview(
+                                                                                                                        event
+                                                                                                                            .target
+                                                                                                                            ?.result as string
+                                                                                                                    );
+                                                                                                                };
+                                                                                                            reader.readAsDataURL(
+                                                                                                                file
+                                                                                                            );
+                                                                                                        }
+                                                                                                    }
+                                                                                                }}
+                                                                                            />
+                                                                                        </div>
 
-                                                                        {filePreview && (
-                                                                            <div className="mt-4 mb-4">
-                                                                                <h4 className="text-sm font-medium mb-2">
-                                                                                    Preview:
-                                                                                </h4>
-                                                                                <div className="border rounded-md p-2 max-w-md">
-                                                                                    <img
-                                                                                        src={
-                                                                                            filePreview
+                                                                                        {filePreview && (
+                                                                                            <div className="mt-4 mb-4">
+                                                                                                <h4 className="text-sm font-medium mb-2">
+                                                                                                    Preview:
+                                                                                                </h4>
+                                                                                                <div className="border rounded-md p-2 max-w-md">
+                                                                                                    <embed
+                                                                                                        src={
+                                                                                                            filePreview
+                                                                                                        }
+                                                                                                        type="application/pdf"
+                                                                                                        width="100%"
+                                                                                                        height="200px"
+                                                                                                        className="border"
+                                                                                                    />
+                                                                                                    <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                                        {
+                                                                                                            fileData?.fileName
+                                                                                                        }
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </div>
+                                                                                </AlertDialogHeader>
+                                                                                <AlertDialogFooter>
+                                                                                    <AlertDialogCancel>
+                                                                                        Kembali
+                                                                                    </AlertDialogCancel>
+                                                                                    <AlertDialogAction
+                                                                                        className="bg-blue-500 text-white"
+                                                                                        onClick={() =>
+                                                                                            handleUpload(
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .id
+                                                                                            )
                                                                                         }
-                                                                                        alt="File Preview"
-                                                                                        className="max-h-48 max-w-full mx-auto"
-                                                                                    />
-                                                                                    <p className="text-xs text-center mt-2 text-gray-500">
-                                                                                        {
-                                                                                            fileData?.fileName
+                                                                                        disabled={
+                                                                                            !fileData?.file
                                                                                         }
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel className=" ">
-                                                                    Kembali
-                                                                </AlertDialogCancel>
-                                                                <AlertDialogAction
-                                                                    className="bg-blue-500 text-white"
-                                                                    onClick={() =>
-                                                                        handleUpload(
-                                                                            row
-                                                                                .original
-                                                                                .id
-                                                                        )
+                                                                                    >
+                                                                                        Upload
+                                                                                    </AlertDialogAction>
+                                                                                </AlertDialogFooter>
+                                                                            </AlertDialogContent>
+                                                                        </AlertDialog>
+                                                                    )}
+                                                            </div>
+
+                                                            <div className="flex gap-3">
+                                                                {/* Download PDF Button - if you have a PDF template for summary */}
+                                                                {/* <PDFDownloadLink
+                                                                    document={
+                                                                        <SummaryTemplate
+                                                                            data={row.original.summary}
+                                                                        />
                                                                     }
-                                                                    disabled={
-                                                                        !fileData?.file
-                                                                    }
+                                                                    fileName={`risalah-rapat-${
+                                                                        row.original.summary?.id ||
+                                                                        "document"
+                                                                    }.pdf`}
+                                                                    className="bg-blue-500 text-white px-4 rounded-lg text-center text-sm hover:bg-blue-600 flex items-center gap-2"
                                                                 >
-                                                                    Upload
-                                                                </AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    )}
+                                                                    {({
+                                                                        blob,
+                                                                        url,
+                                                                        loading,
+                                                                        error,
+                                                                    }) => (
+                                                                        <>
+                                                                            <FileText size={20} />
+                                                                            <span>
+                                                                                {loading
+                                                                                    ? "Generating PDF..."
+                                                                                    : "Download PDF"}
+                                                                            </span>
+                                                                        </>
+                                                                    )}
+                                                                </PDFDownloadLink> */}
+
+                                                                {/* Download Uploaded File Button */}
+                                                                {row.original
+                                                                    .summary!
+                                                                    .file_path && (
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            window.open(
+                                                                                `/risalah-file/${
+                                                                                    row
+                                                                                        .original
+                                                                                        .summary!
+                                                                                        .file_path
+                                                                                }`,
+                                                                                "_blank"
+                                                                            )
+                                                                        }
+                                                                        className="bg-green-500 text-white px-4 rounded-lg text-center text-sm hover:bg-green-600 flex items-center gap-2"
+                                                                    >
+                                                                        <FileText
+                                                                            size={
+                                                                                20
+                                                                            }
+                                                                        />
+                                                                        <span>
+                                                                            Download
+                                                                            File
+                                                                            Risalah
+                                                                        </span>
+                                                                    </button>
+                                                                )}
+
+                                                                <AlertDialogCancel className="bg-gray-500 text-white hover:bg-gray-600 hover:text-white flex items-center gap-2">
+                                                                    <X
+                                                                        size={
+                                                                            20
+                                                                        }
+                                                                    />
+                                                                    <span>
+                                                                        Tutup
+                                                                    </span>
+                                                                </AlertDialogCancel>
+                                                            </div>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
                                                 </AlertDialog>
                                             </div>
-                                            {/* <AlertDialog>
-                                                <AlertDialogTrigger
-                                                    onClick={() =>
-                                                        setEdit(row.original)
-                                                    }
-                                                    className="p-2 bg-emerald-500 text-white rounded-md"
-                                                >
-                                                    Edit
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle className="">
-                                                            Edit Role "
-                                                            {
-                                                                (
-                                                                    row.original as {
-                                                                        role_name: string;
-                                                                    }
-                                                                ).role_name
-                                                            }
-                                                            "
-                                                        </AlertDialogTitle>
-                                                        <div className="flex flex-col gap-3">
-                                                            <div className="flex flex-col gap-2">
-                                                                <label htmlFor="name">
-                                                                    Nama Role
-                                                                </label>
-                                                                <input
-                                                                    // onChange={
-                                                                    //     handleChange
-                                                                    // }
-                                                                    className=" rounded-md"
-                                                                    type="text"
-                                                                    id="role_name"
-                                                                    name="role_name"
-                                                                    // value={
-                                                                    //     formData.role_name
-                                                                    // }
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>
-                                                            Kembali
-                                                        </AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            // onClick={() =>
-                                                            //     handleUpdate(
-                                                            //         Number(
-                                                            //             (
-                                                            //                 row.original as {
-                                                            //                     id: number;
-                                                            //                 }
-                                                            //             ).id
-                                                            //         )
-                                                            //     )
-                                                            // }
-                                                            className="bg-blue-500"
-                                                        >
-                                                            Simpan
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog> */}
-
-                                            {/* <AlertDialog>
-                                                <AlertDialogTrigger>
-                                                    Hapus
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>
-                                                            Apakah anda yakin ?
-                                                        </AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            Data yang dipilih
-                                                            akan dihapus
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>
-                                                            Kembali
-                                                        </AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                        // onClick={() =>
-                                                        //     handleDelete(
-                                                        //         Number(
-                                                        //             (
-                                                        //                 row.original as {
-                                                        //                     id: number;
-                                                        //                 }
-                                                        //             ).id
-                                                        //         )
-                                                        //     )
-                                                        // }
-                                                        >
-                                                            Hapus
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog> */}
                                         </div>
                                     </TableCell>
                                 </TableRow>
