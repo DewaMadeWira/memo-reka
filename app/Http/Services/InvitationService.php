@@ -657,7 +657,7 @@ class InvitationService
             if ($creator) {
                 SendMemoNotification::dispatch(
                     $creator->id,
-                    $isRejected ? 'Undangan Rapa Ditolak!' : 'Status Undangan Rapat Diperbarui!',
+                    $isRejected ? 'Undangan Rapat Ditolak!' : 'Status Undangan Rapat Diperbarui!',
                     $statusMessage,
                     $request->id
                 );

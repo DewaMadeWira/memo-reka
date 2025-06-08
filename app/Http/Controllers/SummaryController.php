@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\SummaryService;
 use App\Models\Division;
+use App\Models\Notification;
 use App\Models\RequestLetter;
 use App\Models\SummaryLetter;
 use App\Models\User;
@@ -33,6 +34,10 @@ class SummaryController extends Controller
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
 
+        $notifications = Notification::where('user_id', $user->id)
+            ->where('is_read', false)
+            ->orderBy('created_at', 'desc')
+            ->get();
         $invite = RequestLetter::with(['user', 'stages' => function ($query) {
             $query->withTrashed();
         }, 'stages.status', 'invite', 'invite.to_division', 'invite.from_division', 'invite.signatory', 'invite.attendees.user'])->whereHas('invite', function ($q) use ($division, $user) {
@@ -48,6 +53,7 @@ class SummaryController extends Controller
             'request' => $data,
             'division' => $division,
             'invite' => $invite,
+            'notifications' => $notifications,
         ]);
     }
 

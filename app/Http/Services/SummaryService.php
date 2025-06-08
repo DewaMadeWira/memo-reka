@@ -295,7 +295,7 @@ class SummaryService
         Notification::create([
             'user_id' => $manager->id,
             'title' => 'Persetujuan Dibutuhkan !',
-            'message' => "Pegawai meminta persetujuan baru untuk Undangan Rapat " . $request->perihal . " yang akan dikirimkan ke divisi " . $toDivisionName,
+            'message' => "Pegawai meminta persetujuan baru untuk Risalah Rapat " . $request->perihal . " yang akan dikirimkan ke divisi " . $toDivisionName,
             'related_request_id' => $requestLetter->id,
         ]);
     }
@@ -512,7 +512,7 @@ class SummaryService
         return $map[$number] ?? $number;
     }
 
-    private function sendMemoNotifications(
+    private function sendInvitationNotifications(
         $request,
         $nextStageName,
         $isNextStageExternal,
@@ -523,54 +523,65 @@ class SummaryService
         $isRejected = false,
         $rejectionReason = null
     ) {
-        $memoNumber = $request->memo->memo_number;
+        // dd($request);
+        // $this->info($request.print_r());i
+        // $this->info('My variable: ' . print_r($request, true));
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $isRejected = $request->stages->status_id == 4;
+        $invitationNumber = $request->invite->invitation_number;
+        $currentStage = RequestStages::find($request->stages_id);
+        $output->writeln($currentStage);
 
-        // Handle internal workflow notifications
-        if (!$isNextStageExternal) {
-            if ($isRejected) {
-                // 2. Negative Internal Flow - rejection notification
-                foreach ($internalUsers as $user) {
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Memo Ditolak!',
-                        "Memo '{$memoNumber}' telah ditolak dengan alasan: {$rejectionReason}. Silakan perbaiki dan kirim kembali.",
-                        $request->id
-                    );
-                }
-            } else {
-                // 1. Full Positive Internal Flow - memo approved notification
-                foreach ($internalUsers as $user) {
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Memo Disetujui!',
-                        "Memo '{$memoNumber}' telah disetujui dan masuk ke tahap {$nextStageName}.",
-                        $request->id
-                    );
-                }
+        $output->writeln("----------------------");
+        // dd("mamamia");
+        // dd($currentStage);
 
-                // 1 & 2. Both internal flows - notify managers about new memo
-                foreach ($internalManagers as $manager) {
-                    SendMemoNotification::dispatch(
-                        $manager->id,
-                        'Memo Perlu Persetujuan!',
-                        "Memo '{$memoNumber}' memerlukan persetujuan Anda. Silakan periksa.",
-                        $request->id
-                    );
-                }
-            }
+        // Get notification settings from the current stage
+        $notifyInternalManager = $currentStage->notify_internal_manager ?? false;
+        $notifyInternalUser = $currentStage->notify_internal_user ?? false;
+        $notifyInternal = $currentStage->notify_internal ?? false;
+        $notifyExternal = $currentStage->notify_external ?? false;
+        $notifyExternalManager = $currentStage->notify_external_manager ?? false;
+        $notifyExternalUser = $currentStage->notify_external_user ?? false;
+        $notifyCreator = $currentStage->notify_creator ?? false;
 
-            // Don't notify external users during internal stages
-            return;
-        }
+        // Determine message content based on status (approved/rejected)
+        $statusMessage = $isRejected
+            ? "Risalah Rapat'{$invitationNumber}' telah ditolak, periksa kembali alasan penolakan !"
+            : "Risalah Rapat'{$invitationNumber}' telah disetujui dan masuk ke tahap {$nextStageName}";
 
-        // Handle external workflow notifications
-        if ($isRejected) {
-            // 4. Full Negative External - notify internal users and managers about rejection
+        // Internal user notifications
+        $output->writeln($internalUsers);
+        if ($notifyInternalUser) {
             foreach ($internalUsers as $user) {
                 SendMemoNotification::dispatch(
                     $user->id,
-                    'Memo Ditolak!',
-                    "Memo '{$memoNumber}' telah ditolak oleh divisi tujuan. {$rejectionReason}",
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah Rapat Disetujui!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // Internal manager notifications
+        if ($notifyInternalManager) {
+            foreach ($internalManagers as $manager) {
+                SendMemoNotification::dispatch(
+                    $manager->id,
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah Rapat Perlu Persetujuan!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // General internal notifications (sends to both users and managers)
+        if ($notifyInternal) {
+            foreach ($internalUsers as $user) {
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah Rapat Disetujui!',
+                    $statusMessage,
                     $request->id
                 );
             }
@@ -578,123 +589,69 @@ class SummaryService
             foreach ($internalManagers as $manager) {
                 SendMemoNotification::dispatch(
                     $manager->id,
-                    'Memo Ditolak!',
-                    "Memo '{$memoNumber}' telah ditolak oleh divisi tujuan. {$rejectionReason}",
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah Rapat Perlu Persetujuan!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // External user notifications
+        if ($notifyExternalUser) {
+            foreach ($externalUsers as $user) {
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah RapatDisetujui!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // External manager notifications
+        if ($notifyExternalManager) {
+            foreach ($externalManagers as $manager) {
+                SendMemoNotification::dispatch(
+                    $manager->id,
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah RapatPerlu Persetujuan!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // General external notifications (sends to both users and managers)
+        if ($notifyExternal) {
+            foreach ($externalUsers as $user) {
+                SendMemoNotification::dispatch(
+                    $user->id,
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah Rapat Baru Diterima!',
+                    $statusMessage,
                     $request->id
                 );
             }
 
-            // 5. Half Negative External - notify external users about rejected work
-            if ($request->stages->sequence > 1) { // If we're in a later stage (work being rejected)
-                foreach ($externalUsers as $user) {
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Hasil Kerja Memo Ditolak!',
-                        "Hasil kerja untuk memo '{$memoNumber}' ditolak dengan alasan: {$rejectionReason}. Silakan perbaiki.",
-                        $request->id
-                    );
-                }
-            }
-        } else {
-            // 3. Full Positive External & 5. Half Negative External - work notification
-            // Determine if memo is being worked on or completed based on stage
-            $isBeingWorkedOn = $request->stages->id == 4; // ID for "Memo Eksternal Dikerjakan"
-            $isComplete = $request->stages->id == 6; // ID for "Memo Eksternal Selesai"
-
-            // Notify internal stakeholders
-            foreach ($internalUsers as $user) {
-                if ($isBeingWorkedOn) {
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Memo Sedang Dikerjakan!',
-                        "Memo '{$memoNumber}' sedang dikerjakan oleh divisi tujuan.",
-                        $request->id
-                    );
-                } elseif ($isComplete) {
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Memo Selesai Dikerjakan!',
-                        "Memo '{$memoNumber}' telah selesai dikerjakan oleh divisi tujuan.",
-                        $request->id
-                    );
-                } else {
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Memo Berhasil Dikirim!',
-                        "Memo '{$memoNumber}' telah berhasil dikirim ke divisi tujuan.",
-                        $request->id
-                    );
-                }
-            }
-
-            foreach ($internalManagers as $manager) {
-                if ($isBeingWorkedOn) {
-                    SendMemoNotification::dispatch(
-                        $manager->id,
-                        'Memo Sedang Dikerjakan!',
-                        "Memo '{$memoNumber}' sedang dikerjakan oleh divisi tujuan.",
-                        $request->id
-                    );
-                } elseif ($isComplete) {
-                    SendMemoNotification::dispatch(
-                        $manager->id,
-                        'Memo Selesai Dikerjakan!',
-                        "Memo '{$memoNumber}' telah selesai dikerjakan oleh divisi tujuan.",
-                        $request->id
-                    );
-                } else {
-                    SendMemoNotification::dispatch(
-                        $manager->id,
-                        'Memo Berhasil Dikirim!',
-                        "Memo '{$memoNumber}' telah berhasil dikirim ke divisi tujuan.",
-                        $request->id
-                    );
-                }
-            }
-
-            // Notify external users
-            foreach ($externalUsers as $user) {
-                if ($request->stages->id == 3) { // "Memo Internal Disetujui" - memo accepted by manager
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Memo Baru Diterima!',
-                        "Memo '{$memoNumber}' telah diterima oleh divisi Anda dan memerlukan perhatian.",
-                        $request->id
-                    );
-                } elseif ($request->stages->id == 15) { // "Menunggu Persetujuan Manajer Eksternal" - work completed by user
-                    SendMemoNotification::dispatch(
-                        $user->id,
-                        'Memo Menunggu Persetujuan!',
-                        "Hasil kerja untuk memo '{$memoNumber}' telah diselesaikan dan menunggu persetujuan manajer.",
-                        $request->id
-                    );
-                }
-            }
-
-            // Notify external managers
             foreach ($externalManagers as $manager) {
-                if ($request->stages->id == 3) { // "Memo Internal Disetujui" - new memo received
-                    SendMemoNotification::dispatch(
-                        $manager->id,
-                        'Memo Perlu Persetujuan!',
-                        "Memo '{$memoNumber}' telah dikirim ke divisi Anda dan memerlukan persetujuan.",
-                        $request->id
-                    );
-                } elseif ($request->stages->id == 15) { // "Menunggu Persetujuan Manajer Eksternal" - work completed by user
-                    SendMemoNotification::dispatch(
-                        $manager->id,
-                        'Memo Perlu Persetujuan!',
-                        "Hasil kerja untuk memo '{$memoNumber}' telah diselesaikan dan memerlukan persetujuan Anda.",
-                        $request->id
-                    );
-                } elseif ($request->stages->id == 4) { // "Memo Eksternal Dikerjakan" - after repair
-                    SendMemoNotification::dispatch(
-                        $manager->id,
-                        'Memo Telah Diperbaiki!',
-                        "Memo '{$memoNumber}' telah diperbaiki dan siap untuk ditinjau kembali.",
-                        $request->id
-                    );
-                }
+                SendMemoNotification::dispatch(
+                    $manager->id,
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Risalah Rapat Perlu Persetujuan!',
+                    $statusMessage,
+                    $request->id
+                );
+            }
+        }
+
+        // Notify creator specifically if needed
+        if ($notifyCreator) {
+            // Find the creator (user who created the memo)
+            $creator = User::find($request->user_id);
+            if ($creator) {
+                SendMemoNotification::dispatch(
+                    $creator->id,
+                    $isRejected ? 'Risalah Rapat Ditolak!' : 'Status Risalah Rapat Diperbarui!',
+                    $statusMessage,
+                    $request->id
+                );
             }
         }
     }
@@ -731,6 +688,33 @@ class SummaryService
         $request->save();
         $request->refresh(); // Refresh the model to get updated relationships
 
+        $internalUsers = User::where('division_id', $request->summary->from_division)
+            ->where('role_id', '!=', 1) // Non-managers
+            ->get();
+        // dd($internalUsers);
+
+        $internalManagers = User::where('division_id', $request->summary->from_division)
+            ->where('role_id', 1) // Managers
+            ->get();
+
+        $externalUsers = User::where('division_id', $request->summary->to_division)
+            ->where('role_id', '!=', 1) // Non-managers
+            ->get();
+
+        $externalManagers = User::where('division_id', $request->summary->to_division)
+            ->where('role_id', 1) // Managers
+            ->get();
+        $nextStage = RequestStages::withTrashed()->find($nextStageId);
+        $isNextStageExternal = $nextStage ? $nextStage->is_external : false;
+        $this->sendInvitationNotifications(
+            $request,
+            $nextStage->stage_name,
+            $isNextStageExternal,
+            $internalUsers,
+            $internalManagers,
+            $externalUsers,
+            $externalManagers
+        );
         // Get user groups who need notifications
         // $internalUsers = User::where('division_id', $request->memo->from_division)
         //     ->where('role_id', '!=', 1) // Non-managers
@@ -879,6 +863,32 @@ class SummaryService
             "stages_id" => $nextStageId
         ]);
         $request_letter->save();
+        $internalUsers = User::where('division_id', $request_letter->summary->from_division)
+            ->where('role_id', '!=', 1) // Non-managers
+            ->get();
+
+        $internalManagers = User::where('division_id', $request_letter->summary->from_division)
+            ->where('role_id', 1) // Managers
+            ->get();
+
+        $externalUsers = User::where('division_id', $request_letter->summary->to_division)
+            ->where('role_id', '!=', 1) // Non-managers
+            ->get();
+
+        $externalManagers = User::where('division_id', $request_letter->summary->to_division)
+            ->where('role_id', 1) // Managers
+            ->get();
+        $nextStage = RequestStages::withTrashed()->find($nextStageId);
+        $isNextStageExternal = $nextStage ? $nextStage->is_external : false;
+        $this->sendInvitationNotifications(
+            $request_letter,
+            $nextStage->stage_name,
+            $isNextStageExternal,
+            $internalUsers,
+            $internalManagers,
+            $externalUsers,
+            $externalManagers
+        );
 
         // NOTIFICATION
         // $fromDivisionId = $request_letter->memo->from_division;

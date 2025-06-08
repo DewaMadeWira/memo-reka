@@ -255,6 +255,7 @@ class StagesSeeder extends Seeder
             'status_id' => 1,
             'rejected_id' => 18,
             'requires_file_upload' => true,
+            'notify_internal_manager' => true,
         ]);
         DB::table('request_stages')->insert([
             'id' => 17,
@@ -267,6 +268,8 @@ class StagesSeeder extends Seeder
             'status_id' => 5,
             'rejected_id' => NULL,
             'requires_file_upload' => true,
+            'notify_internal_user' => true,
+            'notify_external' => true,
         ]);
         DB::table('request_stages')->insert([
             'id' => 18,
@@ -280,6 +283,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => NULL,
             'is_fixable' => true,
             'requires_file_upload' => true,
+            'notify_internal_user' => true,
         ]);
         Schema::enableForeignKeyConstraints();
     }
