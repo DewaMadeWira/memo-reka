@@ -46,10 +46,19 @@ class MemoService
                     if (!empty($requestLetter->to_stages)) {
                         $toStagesMap = json_decode($requestLetter->to_stages, true) ?? [];
                     }
+                    $rejectedStagesMap = [];
+                    if (!empty($requestLetter->to_stages)) {
+                        $rejectedStagesMap = json_decode($requestLetter->rejected_stages, true) ?? [];
+                    }
+
+                    // dd($toStagesMap, $requestLetter, $rejectedStagesMap);
 
                     // Always override the to_stage_id using the mapping (or set to null if no mapping)
                     if ($requestLetter->stages) {
                         $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
+                    }
+                    if ($requestLetter->stages) {
+                        $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
                     }
 
                     // Handle progress_stages as before
