@@ -237,13 +237,14 @@ class SummaryService
     public function create($request)
     {
 
-        if (Gate::allows('admin')) {
-            abort(403);
-        }
+        // if (Gate::allows('admin')) {
+        //     abort(403);
+        // }
         // dd($request);
 
         // $division = $this->authService->userDivision();
         // $user = $this->authService->index();
+
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
         $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
@@ -251,6 +252,7 @@ class SummaryService
         })->first();
 
         $file = $request->file("file");
+        // dd($file);
         $ext = $file->getClientOriginalExtension();
         $filename = rand(100000000, 999999999) . '.' . $ext;
         Storage::disk('local')->put('risalah-rapat/' . $filename, FacadesFile::get($file));

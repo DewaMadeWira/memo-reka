@@ -67,12 +67,32 @@ export default function Index({
     ) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
+
+            // Check file type
             if (file.type !== "application/pdf") {
                 toast({
                     title: "Format File Tidak Valid",
                     description: "Hanya file PDF yang diperbolehkan",
                     variant: "destructive",
                 });
+                e.target.value = ""; // Clear the input
+                return;
+            }
+
+            // Check file size (e.g., 10MB = 10 * 1024 * 1024 bytes)
+            const maxSize = 2 * 1024 * 1024; // 10MB in bytes
+            if (file.size > maxSize) {
+                toast({
+                    title: "File Terlalu Besar",
+                    description: `Ukuran file maksimal adalah ${
+                        maxSize / (1024 * 1024)
+                    }MB. File Anda berukuran ${(
+                        file.size /
+                        (1024 * 1024)
+                    ).toFixed(2)}MB`,
+                    variant: "destructive",
+                });
+                e.target.value = ""; // Clear the input
                 return;
             }
 
@@ -86,9 +106,61 @@ export default function Index({
             setPdfPreview(fileUrl);
         }
     };
+    const validateFormData = () => {
+        const errors: string[] = [];
+
+        if (!formData.request_name.trim()) {
+            errors.push("Nama Permintaan Persetujuan");
+        }
+        if (!formData.judul_rapat.trim()) {
+            errors.push("Judul Rapat");
+        }
+        if (!formData.rangkuman_rapat.trim()) {
+            errors.push("Rangkuman Rapat");
+        }
+        if (!formData.invitation_id) {
+            errors.push("Undangan Rapat");
+        }
+        if (!formData.file) {
+            errors.push("File Risalah Rapat");
+        }
+
+        return errors;
+    };
+    const handleEmptyInputValidation = () => {
+        const emptyFields = validateFormData();
+
+        if (emptyFields.length > 0) {
+            toast({
+                title: "Peringatan",
+                description: `Harap lengkapi field berikut: ${emptyFields.join(
+                    ", "
+                )}`,
+                variant: "destructive",
+            });
+            return false;
+        }
+        return true;
+    };
 
     const handleSummarySubmit = (invitationId: number) => {
         console.log(formData);
+        if (!handleEmptyInputValidation()) {
+            return;
+        }
+
+        // Create a proper FormData object
+        // const data = new FormData();
+
+        // if (formData.file) {
+        //     data.append("file", formData.file);
+        // }
+        // data.append("invitation_id", formData.invitation_id?.toString() || "");
+        // data.append("request_name", formData.request_name);
+        // data.append("judul_rapat", formData.judul_rapat);
+        // data.append("rangkuman_rapat", formData.rangkuman_rapat);
+
+        // console.log(data);o
 
         router.post("/request?intent=summary.create", formData, {
             forceFormData: true,
@@ -345,20 +417,10 @@ export default function Index({
                                 <AlertDialogAction
                                     className="bg-green-500 font-normal hover:bg-green-600"
                                     onClick={() => {
-                                        if (
-                                            formData.invitation_id &&
-                                            formData.file
-                                        ) {
+                                        if (handleEmptyInputValidation()) {
                                             handleSummarySubmit(
-                                                formData.invitation_id
+                                                formData.invitation_id!
                                             );
-                                        } else {
-                                            toast({
-                                                title: "Peringatan",
-                                                description:
-                                                    "Harap pilih undangan dan file risalah rapat",
-                                                variant: "destructive",
-                                            });
                                         }
                                     }}
                                 >
