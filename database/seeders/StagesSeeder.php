@@ -168,6 +168,7 @@ class StagesSeeder extends Seeder
             'status_id' => 1,
             'rejected_id' => 8,
             'is_external' => false,
+            'notify_internal_manager' => true,
         ]);
         // If rejected mark as rejected 
         DB::table('request_stages')->insert([
@@ -182,6 +183,7 @@ class StagesSeeder extends Seeder
             'rejected_id' => NULL,
             'is_external' => false,
             'is_fixable' => true,
+            'notify_internal_user' => true,
         ]);
         DB::table('request_stages')->insert([
             'id' => 9,
@@ -194,19 +196,21 @@ class StagesSeeder extends Seeder
             'status_id' => 3,
             'rejected_id' => NULL,
             'is_external' => false,
+            'notify_external' => true,
+            'notify_internal' => true,
         ]);
-        DB::table('request_stages')->insert([
-            'id' => 10,
-            'stage_name' => "Undangan Rapat Diterima",
-            'sequence' => 0,
-            'description' => "Undangan Rapat diterima oleh Divisi Tujuan. Silahakan hadiri rapat sesuai dengan tanggal dan waktu yang tertera pada Undangan Rapat.",
-            'letter_id' => 2,
-            'approver_id' => 1,
-            'to_stage_id' => NULL,
-            'status_id' => 5,
-            'rejected_id' => NULL,
-            'is_external' => true,
-        ]);
+        // DB::table('request_stages')->insert([
+        //     'id' => 10,
+        //     'stage_name' => "Undangan Rapat Diterima",
+        //     'sequence' => 0,
+        //     'description' => "Undangan Rapat diterima oleh Divisi Tujuan. Silahakan hadiri rapat sesuai dengan tanggal dan waktu yang tertera pada Undangan Rapat.",
+        //     'letter_id' => 2,
+        //     'approver_id' => 1,
+        //     'to_stage_id' => NULL,
+        //     'status_id' => 5,
+        //     'rejected_id' => NULL,
+        //     'is_external' => true,
+        // ]);
         DB::table('request_stages')->insert([
             'id' => 11,
             'stage_name' => "Delete Me",

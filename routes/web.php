@@ -19,6 +19,7 @@ use App\Http\Controllers\UserManagementController;
 use App\Models\InvitationLetter;
 use App\Models\MemoImage;
 use App\Models\MemoLetter;
+use App\Models\Notification;
 use App\Models\SummaryLetter;
 use Faker\Core\File;
 use Illuminate\Foundation\Application;
@@ -76,6 +77,12 @@ Route::middleware('auth')->group(function () {
             'judul_rapat' => $request->judul_rapat,
             'rangkuman_rapat' => $request->rangkuman_rapat,
         ]);
+    });
+    Route::put('read-notification/{id}', function (Request $request, $id) {
+        $notification = Notification::find($id);
+        $notification->is_read = true;
+        $notification->save();
+        // return response()->json(['message' => 'Notification marked as read']);
     });
     Route::post('upload-bukti', function (Request $request) {
         // Set timeout to a larger value for big uploads

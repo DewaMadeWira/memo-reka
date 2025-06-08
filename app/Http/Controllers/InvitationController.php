@@ -6,6 +6,7 @@ use App\Http\Services\InvitationService;
 use App\Models\Division;
 use App\Models\InvitationLetter;
 use App\Models\InvitedUser;
+use App\Models\Notification;
 use App\Models\Official;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -32,6 +33,10 @@ class InvitationController extends Controller
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
         $all_user = InvitedUser::with("division", "official")->get();
+        $notifications = Notification::where('user_id', $user->id)
+            ->where('is_read', false)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return Inertia::render('Invitation/Index', [
             'request' => $data,
@@ -39,6 +44,7 @@ class InvitationController extends Controller
             'official' => $official,
             'userData' => $user,
             'all_user' => $all_user,
+            'notifications' => $notifications,
         ]);
     }
 

@@ -30,7 +30,8 @@ PropsWithChildren<{ header?: ReactNode }>) {
     const [searchQuery, setSearchQuery] = useState("");
 
     function handleMarkAsRead(id: number) {
-        router.put("/memo/" + id + "?intent=memo.notification");
+        // router.put("/memo/" + id + "?intent=memo.notification");
+        router.put("/read-notification/" + id);
     }
 
     // Filter notifications based on search query
