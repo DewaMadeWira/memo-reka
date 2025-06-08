@@ -192,7 +192,7 @@ class StagesSeeder extends Seeder
             'description' => "Tahap ini merupakan tahap dimana Undangan Rapat telah disetujui oleh manajer internal. Setelah disetujui, Undangan Rapat akan dikirimkan ke Divisi Tujuan",
             'letter_id' => 2,
             'approver_id' => 1,
-            'to_stage_id' => 10,
+            'to_stage_id' => NULL,
             'status_id' => 3,
             'rejected_id' => NULL,
             'is_external' => false,
