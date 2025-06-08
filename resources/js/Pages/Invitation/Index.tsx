@@ -52,7 +52,64 @@ export default function Index({
     console.log(user);
     console.log(all_user);
     console.log(request);
+    const validateInvitationFormData = () => {
+        const errors: string[] = [];
+
+        if (!formData.request_name.trim()) {
+            errors.push("Nama Permintaan Persetujuan");
+        }
+        if (!formData.perihal.trim()) {
+            errors.push("Perihal");
+        }
+        if (!formData.content.trim()) {
+            errors.push("Isi");
+        }
+        if (!formData.official.trim()) {
+            errors.push("Pejabat");
+        }
+        if (!formData.hari_tanggal.trim()) {
+            errors.push("Hari / Tanggal");
+        }
+        if (!formData.waktu.trim()) {
+            errors.push("Waktu");
+        }
+        if (!formData.tempat.trim()) {
+            errors.push("Tempat");
+        }
+        if (!formData.agenda.trim()) {
+            errors.push("Agenda");
+        }
+        if (!formData.to_division) {
+            errors.push("Divisi Tujuan");
+        }
+        if (!formData.invited_users || formData.invited_users.length === 0) {
+            errors.push("Peserta Undangan");
+        }
+
+        return errors;
+    };
+
+    const handleInvitationInputValidation = () => {
+        const emptyFields = validateInvitationFormData();
+
+        if (emptyFields.length > 0) {
+            toast({
+                title: "Peringatan",
+                description: `Harap lengkapi field berikut: ${emptyFields.join(
+                    ", "
+                )}`,
+                variant: "destructive",
+            });
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = () => {
+        if (!handleInvitationInputValidation()) {
+            return;
+        }
+
         router.post("/request?intent=invitation.create", formData, {
             onError: (errors) => {
                 toast({
@@ -480,7 +537,13 @@ export default function Index({
                                 <AlertDialogCancel>Kembali</AlertDialogCancel>
                                 <AlertDialogAction
                                     className="bg-blue-500 font-normal hover:bg-blue-600"
-                                    onClick={handleSubmit}
+                                    // onClick={handleSubmit}
+
+                                    onClick={() => {
+                                        if (handleInvitationInputValidation()) {
+                                            handleSubmit();
+                                        }
+                                    }}
                                 >
                                     Buat Undangan Rapat
                                 </AlertDialogAction>

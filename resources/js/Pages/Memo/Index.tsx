@@ -230,8 +230,49 @@ export default function Index({
     const { user } = usePage().props.auth as { user: User };
     console.log(user);
     console.log(request);
+    const validateMemoFormData = () => {
+        const errors: string[] = [];
+
+        if (!formData.request_name?.trim()) {
+            errors.push("Nama Permintaan Persetujuan");
+        }
+        if (!formData.perihal?.trim()) {
+            errors.push("Perihal");
+        }
+        if (!formData.content?.trim()) {
+            errors.push("Isi");
+        }
+        if (!formData.official?.trim()) {
+            errors.push("Pejabat");
+        }
+        if (!formData.to_division) {
+            errors.push("Divisi Tujuan");
+        }
+        // Add other required fields based on your memo form structure
+
+        return errors;
+    };
+    const handleMemoInputValidation = () => {
+        const emptyFields = validateMemoFormData();
+
+        if (emptyFields.length > 0) {
+            toast({
+                title: "Peringatan",
+                description: `Harap lengkapi field berikut: ${emptyFields.join(
+                    ", "
+                )}`,
+                variant: "destructive",
+            });
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = () => {
         console.log(formData);
+        if (!handleMemoInputValidation()) {
+            return;
+        }
         router.post("/request?intent=memo.create", formData, {
             onError: (errors) => {
                 toast({
@@ -529,7 +570,12 @@ export default function Index({
                                 <AlertDialogCancel>Kembali</AlertDialogCancel>
                                 <AlertDialogAction
                                     className="bg-blue-500 font-normal hover:bg-blue-600"
-                                    onClick={handleSubmit}
+                                    // onClick={handleSubmit}
+                                    onClick={() => {
+                                        if (handleMemoInputValidation()) {
+                                            handleSubmit();
+                                        }
+                                    }}
                                 >
                                     Buat Memo
                                 </AlertDialogAction>
