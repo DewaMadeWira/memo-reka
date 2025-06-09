@@ -1452,182 +1452,183 @@ DataTableProps<TData, TValue>) {
                                                                 )}
 
                                                                 {/* File Upload Button */}
-                                                                {!row.original
+
+                                                                {/* {!row.original
                                                                     .summary!
-                                                                    .file_path &&
-                                                                    row.original
-                                                                        .stages
-                                                                        .requires_file_upload ==
-                                                                        1 && (
-                                                                        <AlertDialog>
-                                                                            <AlertDialogTrigger
-                                                                                asChild
+                                                                    .file_path && */}
+                                                                {row.original
+                                                                    .stages
+                                                                    .requires_file_upload ==
+                                                                    1 && (
+                                                                    <AlertDialog>
+                                                                        <AlertDialogTrigger
+                                                                            asChild
+                                                                        >
+                                                                            <button
+                                                                                className={`${actionButtonClass} flex items-center gap-2`}
                                                                             >
-                                                                                <button
-                                                                                    className={`${actionButtonClass} flex items-center gap-2`}
+                                                                                <TooltipProvider
+                                                                                    delayDuration={
+                                                                                        100
+                                                                                    }
+                                                                                    skipDelayDuration={
+                                                                                        0
+                                                                                    }
                                                                                 >
-                                                                                    <TooltipProvider
-                                                                                        delayDuration={
-                                                                                            100
-                                                                                        }
-                                                                                        skipDelayDuration={
-                                                                                            0
-                                                                                        }
-                                                                                    >
-                                                                                        <Tooltip>
-                                                                                            <TooltipTrigger className="flex items-center gap-2">
-                                                                                                <FileUp
-                                                                                                    size={
-                                                                                                        20
-                                                                                                    }
-                                                                                                />
-                                                                                                <span>
-                                                                                                    Upload
-                                                                                                    File
-                                                                                                </span>
-                                                                                            </TooltipTrigger>
-                                                                                            <TooltipContent
-                                                                                                side="top"
-                                                                                                sideOffset={
-                                                                                                    10
+                                                                                    <Tooltip>
+                                                                                        <TooltipTrigger className="flex items-center gap-2">
+                                                                                            <FileUp
+                                                                                                size={
+                                                                                                    20
                                                                                                 }
-                                                                                            >
-                                                                                                <p>
-                                                                                                    Upload
-                                                                                                    File
-                                                                                                    Risalah
-                                                                                                </p>
-                                                                                            </TooltipContent>
-                                                                                        </Tooltip>
-                                                                                    </TooltipProvider>
-                                                                                </button>
-                                                                            </AlertDialogTrigger>
-                                                                            <AlertDialogContent className="w-full">
-                                                                                <AlertDialogHeader>
-                                                                                    <AlertDialogTitle>
-                                                                                        Upload
-                                                                                        File
-                                                                                        Risalah
-                                                                                        Rapat
-                                                                                    </AlertDialogTitle>
-                                                                                    <div className="">
-                                                                                        <div className="mb-4">
-                                                                                            <label
-                                                                                                htmlFor="fileUpload"
-                                                                                                className="block text-sm font-medium mb-2"
-                                                                                            >
+                                                                                            />
+                                                                                            <span>
+                                                                                                Upload
+                                                                                                File
+                                                                                            </span>
+                                                                                        </TooltipTrigger>
+                                                                                        <TooltipContent
+                                                                                            side="top"
+                                                                                            sideOffset={
+                                                                                                10
+                                                                                            }
+                                                                                        >
+                                                                                            <p>
                                                                                                 Upload
                                                                                                 File
                                                                                                 Risalah
-                                                                                                Rapat
-                                                                                                (PDF)
-                                                                                            </label>
-                                                                                            <input
-                                                                                                type="file"
-                                                                                                id="fileUpload"
-                                                                                                name="fileUpload"
-                                                                                                accept=".pdf"
-                                                                                                className="block w-full text-sm text-gray-500
+                                                                                            </p>
+                                                                                        </TooltipContent>
+                                                                                    </Tooltip>
+                                                                                </TooltipProvider>
+                                                                            </button>
+                                                                        </AlertDialogTrigger>
+                                                                        <AlertDialogContent className="w-full">
+                                                                            <AlertDialogHeader>
+                                                                                <AlertDialogTitle>
+                                                                                    Upload
+                                                                                    File
+                                                                                    Risalah
+                                                                                    Rapat
+                                                                                </AlertDialogTitle>
+                                                                                <div className="">
+                                                                                    <div className="mb-4">
+                                                                                        <label
+                                                                                            htmlFor="fileUpload"
+                                                                                            className="block text-sm font-medium mb-2"
+                                                                                        >
+                                                                                            Upload
+                                                                                            File
+                                                                                            Risalah
+                                                                                            Rapat
+                                                                                            (PDF)
+                                                                                        </label>
+                                                                                        <input
+                                                                                            type="file"
+                                                                                            id="fileUpload"
+                                                                                            name="fileUpload"
+                                                                                            accept=".pdf"
+                                                                                            className="block w-full text-sm text-gray-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-md file:border-0
                 file:text-sm file:font-semibold
                 file:bg-blue-50 file:text-blue-700
                 hover:file:bg-blue-100"
-                                                                                                onChange={(
+                                                                                            onChange={(
+                                                                                                e
+                                                                                            ) => {
+                                                                                                const file =
                                                                                                     e
-                                                                                                ) => {
-                                                                                                    const file =
-                                                                                                        e
-                                                                                                            .target
-                                                                                                            .files?.[0];
-                                                                                                    if (
-                                                                                                        file
-                                                                                                    ) {
-                                                                                                        setFileData(
-                                                                                                            {
-                                                                                                                file: file,
-                                                                                                                memo_id:
-                                                                                                                    row
-                                                                                                                        .original
-                                                                                                                        .summary!
-                                                                                                                        .id,
-                                                                                                                fileName:
-                                                                                                                    file.name,
-                                                                                                            }
-                                                                                                        );
-                                                                                                        if (
-                                                                                                            file.type ===
-                                                                                                            "application/pdf"
-                                                                                                        ) {
-                                                                                                            const reader =
-                                                                                                                new FileReader();
-                                                                                                            reader.onload =
-                                                                                                                (
-                                                                                                                    event
-                                                                                                                ) => {
-                                                                                                                    setFilePreview(
-                                                                                                                        event
-                                                                                                                            .target
-                                                                                                                            ?.result as string
-                                                                                                                    );
-                                                                                                                };
-                                                                                                            reader.readAsDataURL(
-                                                                                                                file
-                                                                                                            );
-                                                                                                        }
-                                                                                                    }
-                                                                                                }}
-                                                                                            />
-                                                                                        </div>
-
-                                                                                        {filePreview && (
-                                                                                            <div className="mt-4 mb-4">
-                                                                                                <h4 className="text-sm font-medium mb-2">
-                                                                                                    Preview:
-                                                                                                </h4>
-                                                                                                <div className="border rounded-md p-2 max-w-md">
-                                                                                                    <embed
-                                                                                                        src={
-                                                                                                            filePreview
-                                                                                                        }
-                                                                                                        type="application/pdf"
-                                                                                                        width="100%"
-                                                                                                        height="200px"
-                                                                                                        className="border"
-                                                                                                    />
-                                                                                                    <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                                        .target
+                                                                                                        .files?.[0];
+                                                                                                if (
+                                                                                                    file
+                                                                                                ) {
+                                                                                                    setFileData(
                                                                                                         {
-                                                                                                            fileData?.fileName
+                                                                                                            file: file,
+                                                                                                            memo_id:
+                                                                                                                row
+                                                                                                                    .original
+                                                                                                                    .summary!
+                                                                                                                    .id,
+                                                                                                            fileName:
+                                                                                                                file.name,
                                                                                                         }
-                                                                                                    </p>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        )}
+                                                                                                    );
+                                                                                                    if (
+                                                                                                        file.type ===
+                                                                                                        "application/pdf"
+                                                                                                    ) {
+                                                                                                        const reader =
+                                                                                                            new FileReader();
+                                                                                                        reader.onload =
+                                                                                                            (
+                                                                                                                event
+                                                                                                            ) => {
+                                                                                                                setFilePreview(
+                                                                                                                    event
+                                                                                                                        .target
+                                                                                                                        ?.result as string
+                                                                                                                );
+                                                                                                            };
+                                                                                                        reader.readAsDataURL(
+                                                                                                            file
+                                                                                                        );
+                                                                                                    }
+                                                                                                }
+                                                                                            }}
+                                                                                        />
                                                                                     </div>
-                                                                                </AlertDialogHeader>
-                                                                                <AlertDialogFooter>
-                                                                                    <AlertDialogCancel>
-                                                                                        Kembali
-                                                                                    </AlertDialogCancel>
-                                                                                    <AlertDialogAction
-                                                                                        className="bg-blue-500 text-white"
-                                                                                        onClick={() =>
-                                                                                            handleUpload(
-                                                                                                row
-                                                                                                    .original
-                                                                                                    .id
-                                                                                            )
-                                                                                        }
-                                                                                        disabled={
-                                                                                            !fileData?.file
-                                                                                        }
-                                                                                    >
-                                                                                        Upload
-                                                                                    </AlertDialogAction>
-                                                                                </AlertDialogFooter>
-                                                                            </AlertDialogContent>
-                                                                        </AlertDialog>
-                                                                    )}
+
+                                                                                    {filePreview && (
+                                                                                        <div className="mt-4 mb-4">
+                                                                                            <h4 className="text-sm font-medium mb-2">
+                                                                                                Preview:
+                                                                                            </h4>
+                                                                                            <div className="border rounded-md p-2 max-w-md">
+                                                                                                <embed
+                                                                                                    src={
+                                                                                                        filePreview
+                                                                                                    }
+                                                                                                    type="application/pdf"
+                                                                                                    width="100%"
+                                                                                                    height="200px"
+                                                                                                    className="border"
+                                                                                                />
+                                                                                                <p className="text-xs text-center mt-2 text-gray-500">
+                                                                                                    {
+                                                                                                        fileData?.fileName
+                                                                                                    }
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            </AlertDialogHeader>
+                                                                            <AlertDialogFooter>
+                                                                                <AlertDialogCancel>
+                                                                                    Kembali
+                                                                                </AlertDialogCancel>
+                                                                                <AlertDialogAction
+                                                                                    className="bg-blue-500 text-white"
+                                                                                    onClick={() =>
+                                                                                        handleUpload(
+                                                                                            row
+                                                                                                .original
+                                                                                                .id
+                                                                                        )
+                                                                                    }
+                                                                                    disabled={
+                                                                                        !fileData?.file
+                                                                                    }
+                                                                                >
+                                                                                    Upload
+                                                                                </AlertDialogAction>
+                                                                            </AlertDialogFooter>
+                                                                        </AlertDialogContent>
+                                                                    </AlertDialog>
+                                                                )}
                                                             </div>
 
                                                             <div className="flex gap-3">

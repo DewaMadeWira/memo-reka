@@ -1088,18 +1088,27 @@ DataTableProps<TData, TValue>) {
                                                                             {user.role_id !=
                                                                                 1 && (
                                                                                 <button
+                                                                                    // className={
+                                                                                    //     row
+                                                                                    //         .original
+                                                                                    //         .stages
+                                                                                    //         .requires_file_upload !=
+                                                                                    //         1 ||
+                                                                                    //     row
+                                                                                    //         .original
+                                                                                    //         .memo!
+                                                                                    //         .to_division
+                                                                                    //         .id !=
+                                                                                    //         user.division_id
+                                                                                    //         ? "hidden"
+                                                                                    //         : `${actionButtonClass} flex items-center gap-2`
+                                                                                    // }
                                                                                     className={
                                                                                         row
                                                                                             .original
                                                                                             .stages
                                                                                             .requires_file_upload !=
-                                                                                            1 ||
-                                                                                        row
-                                                                                            .original
-                                                                                            .memo!
-                                                                                            .to_division
-                                                                                            .id !=
-                                                                                            user.division_id
+                                                                                        1
                                                                                             ? "hidden"
                                                                                             : `${actionButtonClass} flex items-center gap-2`
                                                                                     }
