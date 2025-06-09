@@ -356,6 +356,7 @@ export default function Index({
             },
         });
     }
+
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {

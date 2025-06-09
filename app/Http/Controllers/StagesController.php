@@ -55,11 +55,22 @@ class StagesController extends Controller
                 $stages = RequestStages::create([
                     'stage_name' => $request->stage_name,
                     'sequence' => $request->sequence,
+                    'description' => $request->description,
                     'to_stage_id' => $toStageId,
                     'rejected_id' => $rejectedId,
                     'letter_id' => $request->letter_id,
                     'approver_id' => $request->approver_id,
                     'status_id' => $request->status_id,
+                    'requires_file_upload' => $request->boolean('requires_file_upload', false),
+                    'is_fixable' => $request->boolean('is_fixable', false),
+                    'requires_rejection_reason' => $request->boolean('requires_rejection_reason', false),
+                    'is_external' => $request->boolean('is_external', false),
+                    'notify_internal_manager' => $request->boolean('notify_internal_manager'),
+                    'notify_internal_user' => $request->boolean('notify_internal_user'),
+                    'notify_internal' => $request->boolean('notify_internal'),
+                    'notify_external' => $request->boolean('notify_external'),
+                    'notify_external_manager' => $request->boolean('notify_external_manager'),
+                    'notify_external_user' => $request->boolean('notify_external_user'),
                 ]);
                 // return to_route('admin/manajemen-tahapan-surat.index');
                 return to_route('manajemen-tahapan-surat.index');
@@ -74,6 +85,56 @@ class StagesController extends Controller
                     // Handle rejected_id
                     if ($item["rejected_id"] != -2) {
                         $updateData["rejected_id"] = ($item["rejected_id"] == -1) ? NULL : $item["rejected_id"];
+                    }
+
+                    // Handle other fields if they exist in the item
+                    if (isset($item["stage_name"])) {
+                        $updateData["stage_name"] = $item["stage_name"];
+                    }
+                    if (isset($item["sequence"])) {
+                        $updateData["sequence"] = $item["sequence"];
+                    }
+                    if (isset($item["description"])) {
+                        $updateData["description"] = $item["description"];
+                    }
+                    if (isset($item["letter_id"])) {
+                        $updateData["letter_id"] = $item["letter_id"];
+                    }
+                    if (isset($item["approver_id"])) {
+                        $updateData["approver_id"] = $item["approver_id"];
+                    }
+                    if (isset($item["status_id"])) {
+                        $updateData["status_id"] = $item["status_id"];
+                    }
+                    if (isset($item["requires_file_upload"])) {
+                        $updateData["requires_file_upload"] = (bool) $item["requires_file_upload"];
+                    }
+                    if (isset($item["is_fixable"])) {
+                        $updateData["is_fixable"] = (bool) $item["is_fixable"];
+                    }
+                    if (isset($item["requires_rejection_reason"])) {
+                        $updateData["requires_rejection_reason"] = (bool) $item["requires_rejection_reason"];
+                    }
+                    if (isset($item["is_external"])) {
+                        $updateData["is_external"] = (bool) $item["is_external"];
+                    }
+                    if (array_key_exists("notify_internal_manager", $item)) {
+                        $updateData["notify_internal_manager"] = $item["notify_internal_manager"] ? (bool) $item["notify_internal_manager"] : null;
+                    }
+                    if (array_key_exists("notify_internal_user", $item)) {
+                        $updateData["notify_internal_user"] = $item["notify_internal_user"] ? (bool) $item["notify_internal_user"] : null;
+                    }
+                    if (array_key_exists("notify_internal", $item)) {
+                        $updateData["notify_internal"] = $item["notify_internal"] ? (bool) $item["notify_internal"] : null;
+                    }
+                    if (array_key_exists("notify_external", $item)) {
+                        $updateData["notify_external"] = $item["notify_external"] ? (bool) $item["notify_external"] : null;
+                    }
+                    if (array_key_exists("notify_external_manager", $item)) {
+                        $updateData["notify_external_manager"] = $item["notify_external_manager"] ? (bool) $item["notify_external_manager"] : null;
+                    }
+                    if (array_key_exists("notify_external_user", $item)) {
+                        $updateData["notify_external_user"] = $item["notify_external_user"] ? (bool) $item["notify_external_user"] : null;
                     }
 
                     // Only update if there's data to update
@@ -111,14 +172,28 @@ class StagesController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $toStageId = $request->to_stage_id == -1 ? null : $request->to_stage_id;
+        $rejectedId = $request->rejected_id == -1 ? null : $request->rejected_id;
+
         $stages = RequestStages::where('id', $id)->update([
             'stage_name' => $request->stage_name,
             'sequence' => $request->sequence,
-            'to_stage_id' => $request->to_stage_id,
-            'rejected_id' => $request->rejected_id,
+            'description' => $request->description,
+            'to_stage_id' => $toStageId,
+            'rejected_id' => $rejectedId,
             'letter_id' => $request->letter_id,
             'approver_id' => $request->approver_id,
             'status_id' => $request->status_id,
+            'requires_file_upload' => $request->boolean('requires_file_upload', false),
+            'is_fixable' => $request->boolean('is_fixable', false),
+            'requires_rejection_reason' => $request->boolean('requires_rejection_reason', false),
+            'is_external' => $request->boolean('is_external', false),
+            'notify_internal_manager' => $request->has('notify_internal_manager') ? $request->boolean('notify_internal_manager') : null,
+            'notify_internal_user' => $request->has('notify_internal_user') ? $request->boolean('notify_internal_user') : null,
+            'notify_internal' => $request->has('notify_internal') ? $request->boolean('notify_internal') : null,
+            'notify_external' => $request->has('notify_external') ? $request->boolean('notify_external') : null,
+            'notify_external_manager' => $request->has('notify_external_manager') ? $request->boolean('notify_external_manager') : null,
+            'notify_external_user' => $request->has('notify_external_user') ? $request->boolean('notify_external_user') : null,
         ]);
     }
 
