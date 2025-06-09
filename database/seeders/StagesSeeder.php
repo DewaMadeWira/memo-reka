@@ -193,7 +193,7 @@ class StagesSeeder extends Seeder
             'letter_id' => 2,
             'approver_id' => 1,
             'to_stage_id' => NULL,
-            'status_id' => 3,
+            'status_id' => 5,
             'rejected_id' => NULL,
             'is_external' => false,
             'notify_external' => true,
