@@ -240,8 +240,18 @@ export default function Index({
             { field: "status_id", label: "Status" },
         ];
 
+        // const emptyFields = requiredFields.filter(({ field }) => {
+        //     const value = formData[field as keyof typeof formData];
+        //     return !value || value === "" || value === "0";
+        // });
         const emptyFields = requiredFields.filter(({ field }) => {
             const value = formData[field as keyof typeof formData];
+
+            // Special handling for sequence field since 0 is a valid value
+            if (field === "sequence") {
+                return value === "" || value === undefined || value === null;
+            }
+
             return !value || value === "" || value === "0";
         });
 
