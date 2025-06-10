@@ -532,7 +532,7 @@ DataTableProps<TData, TValue>) {
                                                                     </p>
                                                                 </div>
                                                                 {/* PDF Viewer - You'll need to replace this with your actual PDF template */}
-                                                                <div className="w-full h-[80vh] bg-gray-100 rounded-md flex items-center justify-center">
+                                                                {/* <div className="w-full h-[80vh] bg-gray-100 rounded-md flex items-center justify-center">
                                                                     <p className="text-gray-500">
                                                                         PDF
                                                                         Preview
@@ -544,11 +544,112 @@ DataTableProps<TData, TValue>) {
                                                                                 .summary
                                                                                 ?.id
                                                                         }
-                                                                        {/* Replace this with actual PDFViewer component */}
-                                                                        {/* <PDFViewer className="w-full h-full">
-                                                                            <SummaryTemplate data={row.original.summary} />
-                                                                        </PDFViewer> */}
                                                                     </p>
+                                                                </div> */}
+                                                                <div className="flex flex-col w-full">
+                                                                    {/* Meeting information */}
+                                                                    <div className="mb-6 p-4 bg-blue-50 rounded-md border border-blue-200">
+                                                                        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                                                                            Judul:{" "}
+                                                                            {row
+                                                                                .original
+                                                                                .summary!
+                                                                                .judul_rapat ||
+                                                                                "Tidak ada judul"}
+                                                                        </h3>
+                                                                        <div className="mt-3">
+                                                                            <h4 className="text-sm font-medium text-blue-700 mb-1">
+                                                                                Rangkuman
+                                                                                Rapat:
+                                                                            </h4>
+                                                                            <p className="text-sm text-gray-700 whitespace-pre-line">
+                                                                                {row
+                                                                                    .original
+                                                                                    .summary!
+                                                                                    .rangkuman_rapat ||
+                                                                                    "Tidak ada rangkuman"}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* PDF Preview */}
+                                                                    {row
+                                                                        .original
+                                                                        .summary!
+                                                                        .file_path ? (
+                                                                        <div
+                                                                            style={{
+                                                                                height: "400px",
+                                                                            }}
+                                                                        >
+                                                                            <embed
+                                                                                src={`/risalah-file/${
+                                                                                    row
+                                                                                        .original
+                                                                                        .summary!
+                                                                                        .file_path
+                                                                                }`}
+                                                                                type="application/pdf"
+                                                                                width="100%"
+                                                                                height="100%"
+                                                                                className="border"
+                                                                                onContextMenu={(
+                                                                                    e
+                                                                                ) =>
+                                                                                    e.preventDefault()
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="w-full h-[400px] bg-gray-100 rounded-md flex items-center justify-center">
+                                                                            <p className="text-gray-500">
+                                                                                Tidak
+                                                                                ada
+                                                                                file
+                                                                                risalah
+                                                                                rapat
+                                                                                yang
+                                                                                tersedia
+                                                                            </p>
+                                                                        </div>
+                                                                    )}
+
+                                                                    {/* File info and actions */}
+                                                                    {row
+                                                                        .original
+                                                                        .summary!
+                                                                        .file_path && (
+                                                                        <div className="flex items-center justify-between mt-4">
+                                                                            <div className="text-sm text-gray-500">
+                                                                                {row.original
+                                                                                    .summary!.file_path?.split(
+                                                                                        "/"
+                                                                                    )
+                                                                                    .pop()}
+                                                                            </div>
+                                                                            <div className="flex gap-2">
+                                                                                <button
+                                                                                    className="px-3 py-1 bg-gray-200 rounded-md text-sm"
+                                                                                    onClick={() =>
+                                                                                        window.open(
+                                                                                            `/risalah-file/${
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .summary!
+                                                                                                    .file_path
+                                                                                            }`,
+                                                                                            "_blank"
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    Buka
+                                                                                    di
+                                                                                    tab
+                                                                                    baru
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         </AlertDialogHeader>
@@ -1297,150 +1398,6 @@ DataTableProps<TData, TValue>) {
                                                                                         </p>
                                                                                     </div>
                                                                                 </AlertDialogDescription>
-                                                                            </AlertDialogHeader>
-                                                                            <AlertDialogFooter>
-                                                                                <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
-                                                                                    Tutup
-                                                                                </AlertDialogCancel>
-                                                                            </AlertDialogFooter>
-                                                                        </AlertDialogContent>
-                                                                    </AlertDialog>
-                                                                )}
-
-                                                                {/* File Preview Button */}
-                                                                {row.original
-                                                                    .summary!
-                                                                    .file_path && (
-                                                                    <AlertDialog>
-                                                                        <AlertDialogTrigger
-                                                                            asChild
-                                                                        >
-                                                                            <button
-                                                                                className={`${actionButtonClass} flex items-center gap-2`}
-                                                                            >
-                                                                                <TooltipProvider
-                                                                                    delayDuration={
-                                                                                        100
-                                                                                    }
-                                                                                    skipDelayDuration={
-                                                                                        0
-                                                                                    }
-                                                                                >
-                                                                                    <Tooltip>
-                                                                                        <TooltipTrigger className="flex items-center gap-2">
-                                                                                            <FileSearch
-                                                                                                size={
-                                                                                                    20
-                                                                                                }
-                                                                                            />
-                                                                                            <span>
-                                                                                                Lihat
-                                                                                                File
-                                                                                            </span>
-                                                                                        </TooltipTrigger>
-                                                                                        <TooltipContent
-                                                                                            side="top"
-                                                                                            sideOffset={
-                                                                                                10
-                                                                                            }
-                                                                                        >
-                                                                                            <p>
-                                                                                                Lihat
-                                                                                                File
-                                                                                                Risalah
-                                                                                            </p>
-                                                                                        </TooltipContent>
-                                                                                    </Tooltip>
-                                                                                </TooltipProvider>
-                                                                            </button>
-                                                                        </AlertDialogTrigger>
-                                                                        <AlertDialogContent className="w-full max-w-7xl">
-                                                                            <AlertDialogHeader>
-                                                                                <AlertDialogTitle>
-                                                                                    Preview
-                                                                                    File
-                                                                                    Risalah
-                                                                                    Rapat
-                                                                                </AlertDialogTitle>
-                                                                                <div className="flex flex-col w-full">
-                                                                                    {/* Meeting information */}
-                                                                                    <div className="mb-6 p-4 bg-blue-50 rounded-md border border-blue-200">
-                                                                                        <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                                                                                            Judul:{" "}
-                                                                                            {row
-                                                                                                .original
-                                                                                                .summary!
-                                                                                                .judul_rapat ||
-                                                                                                "Tidak ada judul"}
-                                                                                        </h3>
-                                                                                        <div className="mt-3">
-                                                                                            <h4 className="text-sm font-medium text-blue-700 mb-1">
-                                                                                                Rangkuman
-                                                                                                Rapat:
-                                                                                            </h4>
-                                                                                            <p className="text-sm text-gray-700 whitespace-pre-line">
-                                                                                                {row
-                                                                                                    .original
-                                                                                                    .summary!
-                                                                                                    .rangkuman_rapat ||
-                                                                                                    "Tidak ada rangkuman"}
-                                                                                            </p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div
-                                                                                        style={{
-                                                                                            height: "400px",
-                                                                                        }}
-                                                                                    >
-                                                                                        <embed
-                                                                                            src={`/risalah-file/${
-                                                                                                row
-                                                                                                    .original
-                                                                                                    .summary!
-                                                                                                    .file_path
-                                                                                            }`}
-                                                                                            type="application/pdf"
-                                                                                            width="100%"
-                                                                                            height="100%"
-                                                                                            className="border"
-                                                                                            onContextMenu={(
-                                                                                                e
-                                                                                            ) =>
-                                                                                                e.preventDefault()
-                                                                                            }
-                                                                                        />
-                                                                                    </div>
-                                                                                    <div className="flex items-center justify-between mt-4">
-                                                                                        <div className="text-sm text-gray-500">
-                                                                                            {row.original
-                                                                                                .summary!.file_path?.split(
-                                                                                                    "/"
-                                                                                                )
-                                                                                                .pop()}
-                                                                                        </div>
-                                                                                        <div className="flex gap-2">
-                                                                                            <button
-                                                                                                className="px-3 py-1 bg-gray-200 rounded-md text-sm"
-                                                                                                onClick={() =>
-                                                                                                    window.open(
-                                                                                                        `/risalah-file/${
-                                                                                                            row
-                                                                                                                .original
-                                                                                                                .summary!
-                                                                                                                .file_path
-                                                                                                        }`,
-                                                                                                        "_blank"
-                                                                                                    )
-                                                                                                }
-                                                                                            >
-                                                                                                Buka
-                                                                                                di
-                                                                                                tab
-                                                                                                baru
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
                                                                             </AlertDialogHeader>
                                                                             <AlertDialogFooter>
                                                                                 <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white">
