@@ -528,7 +528,7 @@ class SummaryService
         // $this->info('My variable: ' . print_r($request, true));
         $output = new \Symfony\Component\Console\Output\ConsoleOutput();
         $isRejected = $request->stages->status_id == 4;
-        $invitationNumber = $request->invite->invitation_number;
+        $invitationNumber = $request->summary->invite->invitation_number;
         $currentStage = RequestStages::find($request->stages_id);
         $output->writeln($currentStage);
 
