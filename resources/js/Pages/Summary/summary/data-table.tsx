@@ -109,6 +109,8 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
         invitation_id: number | null;
         file: File | null;
         request_name: string;
+        judul_rapat: string;
+        rangkuman_rapat: string;
     };
     setFormData: React.Dispatch<
         React.SetStateAction<{
@@ -124,6 +126,8 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
         >
     ) => void;
+    judul_rapat: string;
+    rangkuman_rapat: string;
     setFilePreview: React.Dispatch<React.SetStateAction<string | null>>;
     setFileData: React.Dispatch<
         React.SetStateAction<{
@@ -138,6 +142,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
         memo_id: number;
         fileName: string;
     } | null;
+    pdfPreview: string | null;
 }
 
 export function DataTable<TData extends RequestLetter, TValue>({
@@ -158,6 +163,7 @@ export function DataTable<TData extends RequestLetter, TValue>({
     official,
     division,
     handleSummaryFileChange,
+    pdfPreview,
 }: // request_file_upload,
 // handleDelete,
 // role,
@@ -1005,13 +1011,7 @@ DataTableProps<TData, TValue>) {
                                                                                               </AlertDialogHeader>
                                                                                               <AlertDialogFooter>
                                                                                                   <AlertDialogCancel>
-                                                                                                      Kembali{" "}
-                                                                                                      {
-                                                                                                          row
-                                                                                                              .original
-                                                                                                              .summary!
-                                                                                                              .id
-                                                                                                      }
+                                                                                                      Kembali
                                                                                                   </AlertDialogCancel>
                                                                                                   <AlertDialogAction
                                                                                                       onClick={() =>
@@ -1187,8 +1187,16 @@ DataTableProps<TData, TValue>) {
                                                                                             request_name:
                                                                                                 "",
                                                                                             judul_rapat:
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .summary!
+                                                                                                    .judul_rapat ||
                                                                                                 "",
                                                                                             rangkuman_rapat:
+                                                                                                row
+                                                                                                    .original
+                                                                                                    .summary!
+                                                                                                    .rangkuman_rapat ||
                                                                                                 "",
                                                                                         }
                                                                                     )
@@ -1229,6 +1237,7 @@ DataTableProps<TData, TValue>) {
                                                                                     </Tooltip>
                                                                                 </TooltipProvider>
                                                                             </AlertDialogTrigger>
+
                                                                             <AlertDialogContent className="w-[300rem]">
                                                                                 <AlertDialogHeader>
                                                                                     <AlertDialogTitle className="font-medium">
@@ -1253,6 +1262,9 @@ DataTableProps<TData, TValue>) {
                                                                                                 name="judul_rapat"
                                                                                                 id="judul_rapat"
                                                                                                 className="w-full p-2 border rounded-lg"
+                                                                                                value={
+                                                                                                    formData.judul_rapat
+                                                                                                }
                                                                                             />
 
                                                                                             <label
@@ -1272,6 +1284,9 @@ DataTableProps<TData, TValue>) {
                                                                                                     4
                                                                                                 }
                                                                                                 className="w-full p-2 border rounded-lg"
+                                                                                                value={
+                                                                                                    formData.rangkuman_rapat
+                                                                                                }
                                                                                             ></textarea>
                                                                                             <label
                                                                                                 htmlFor="file"
@@ -1284,11 +1299,46 @@ DataTableProps<TData, TValue>) {
                                                                                             <input
                                                                                                 type="file"
                                                                                                 id="file"
+                                                                                                accept=".pdf"
                                                                                                 className="w-full p-2 border rounded-lg"
                                                                                                 onChange={
                                                                                                     handleSummaryFileChange
                                                                                                 }
                                                                                             />
+                                                                                            {formData.file && (
+                                                                                                <div className="mt-2 text-sm text-green-600">
+                                                                                                    File
+                                                                                                    selected:{" "}
+                                                                                                    {
+                                                                                                        formData
+                                                                                                            .file
+                                                                                                            .name
+                                                                                                    }
+                                                                                                </div>
+                                                                                            )}
+                                                                                            {pdfPreview && (
+                                                                                                <div className="mt-4 border rounded">
+                                                                                                    <div className="text-sm font-medium p-2 bg-gray-50">
+                                                                                                        Preview
+                                                                                                        PDF
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        style={{
+                                                                                                            height: "400px",
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        <embed
+                                                                                                            src={
+                                                                                                                pdfPreview
+                                                                                                            }
+                                                                                                            type="application/pdf"
+                                                                                                            width="100%"
+                                                                                                            height="100%"
+                                                                                                            className="border"
+                                                                                                        />
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            )}
                                                                                         </div>
                                                                                     </ScrollArea>
                                                                                 </AlertDialogHeader>

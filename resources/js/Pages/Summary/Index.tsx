@@ -464,6 +464,9 @@ export default function Index({
                         fileData={null}
                         official={official}
                         division={division}
+                        pdfPreview={pdfPreview}
+                        judul_rapat={formData.judul_rapat}
+                        rangkuman_rapat={formData.rangkuman_rapat}
                     />
                 </div>
             </div>
