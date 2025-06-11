@@ -1630,7 +1630,17 @@ DataTableProps<TData, TValue>) {
                                                                                         !fileData?.file
                                                                                     }
                                                                                 >
-                                                                                    Upload
+                                                                                    {/* {row
+                                                                                        .original
+                                                                                        .summary!
+                                                                                        .file_path
+                                                                                        ? "File sudah di upload"
+                                                                                        : !fileData?.file
+                                                                                        ? "Pilih file terlebih dahulu"
+                                                                                        : "Upload"} */}
+                                                                                    {!fileData?.file
+                                                                                        ? "File sudah di upload"
+                                                                                        : "Upload"}
                                                                                 </AlertDialogAction>
                                                                             </AlertDialogFooter>
                                                                         </AlertDialogContent>
