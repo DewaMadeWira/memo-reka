@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Resources\RequestLetterResource;
 use App\Jobs\SendMemoNotification;
 use App\Models\Division;
 use App\Models\InvitationLetter;
@@ -27,6 +28,7 @@ class InvitationService
     {
         $this->authService = $authService;
     }
+
     public function index($intent)
     {
         $user = Auth::user();
@@ -53,19 +55,10 @@ class InvitationService
                         $rejectedStagesMap = json_decode($requestLetter->rejected_stages, true) ?? [];
                     }
 
-                    // Always override the to_stage_id using the mapping (or set to null if no mapping)
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
-                    }
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
-                    }
-
-                    // Handle different possible types of progress_stages
+                    // Handle progress_stages as before
                     $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
-                            // Try to decode JSON string
                             $decoded = json_decode($requestLetter->progress_stages, true);
                             if (is_array($decoded)) {
                                 $progressStages = $decoded;
@@ -75,21 +68,35 @@ class InvitationService
                         }
                     }
 
-                    // Now use the properly formatted array
                     if (!empty($progressStages)) {
                         $requestLetter->progress = RequestStages::withTrashed()
                             ->with("request_rejected")
                             ->whereIn('id', $progressStages)
                             ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
-                                // Only apply the ordering if there are items in the array
                                 return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
                             })
                             ->get();
                     } else {
-                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                        $requestLetter->progress = collect();
                     }
                 });
-                return $invite;
+
+                // $resource = $invite->map(function ($item) {
+                //     return [
+                //         ...(new RequestLetterResource($item))->toArray(request()),
+                //         'progress' => $item->progress, // manually add progress here
+                //     ];
+                // });
+                // dd("mamamia");
+                $resource = $invite->map(function ($item) {
+                    return [
+                        ...(new RequestLetterResource($item))->toArray(request()),
+                        'progress' => $item->progress,
+                    ];
+                })->values()->toArray();
+
+
+                return $resource;
 
             case 'invitation.internal':
                 $invite = RequestLetter::with(['user', 'stages' => function ($query) {
@@ -110,18 +117,14 @@ class InvitationService
                     }
 
                     // Override the to_stage_id using the mapping
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
-                    }
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
+                    if ($requestLetter->stages && isset($toStagesMap[$requestLetter->stages->id])) {
+                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id];
                     }
 
-                    // Handle different possible types of progress_stages
+                    // Handle progress_stages with proper ordering
                     $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
-                            // Try to decode JSON string
                             $decoded = json_decode($requestLetter->progress_stages, true);
                             if (is_array($decoded)) {
                                 $progressStages = $decoded;
@@ -131,21 +134,27 @@ class InvitationService
                         }
                     }
 
-                    // Now use the properly formatted array
                     if (!empty($progressStages)) {
                         $requestLetter->progress = RequestStages::withTrashed()
                             ->with("request_rejected")
                             ->whereIn('id', $progressStages)
                             ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
-                                // Only apply the ordering if there are items in the array
                                 return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
                             })
                             ->get();
                     } else {
-                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                        $requestLetter->progress = collect();
                     }
                 });
-                return $invite;
+
+                $resource = $invite->map(function ($item) {
+                    return [
+                        ...(new RequestLetterResource($item))->toArray(request()),
+                        'progress' => $item->progress, // manually add progress here
+                    ];
+                });
+
+                return $resource;
 
             case 'invitation.eksternal':
                 $invite = RequestLetter::with(['user', 'stages' => function ($query) {
@@ -166,18 +175,14 @@ class InvitationService
                     }
 
                     // Override the to_stage_id using the mapping
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
-                    }
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
+                    if ($requestLetter->stages && isset($toStagesMap[$requestLetter->stages->id])) {
+                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id];
                     }
 
-                    // Handle different possible types of progress_stages
+                    // Handle progress_stages with proper ordering
                     $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
-                            // Try to decode JSON string
                             $decoded = json_decode($requestLetter->progress_stages, true);
                             if (is_array($decoded)) {
                                 $progressStages = $decoded;
@@ -187,25 +192,30 @@ class InvitationService
                         }
                     }
 
-                    // Now use the properly formatted array
                     if (!empty($progressStages)) {
                         $requestLetter->progress = RequestStages::withTrashed()
                             ->with("request_rejected")
                             ->whereIn('id', $progressStages)
                             ->when(count($progressStages) > 0, function ($query) use ($progressStages) {
-                                // Only apply the ordering if there are items in the array
                                 return $query->orderByRaw("FIELD(id, " . implode(',', $progressStages) . ")");
                             })
                             ->get();
                     } else {
-                        $requestLetter->progress = collect(); // Empty collection if no progress stages
+                        $requestLetter->progress = collect();
                     }
                 });
-                return $invite;
+
+                $resource = $invite->map(function ($item) {
+                    return [
+                        ...(new RequestLetterResource($item))->toArray(request()),
+                        'progress' => $item->progress, // manually add progress here
+                    ];
+                });
+
+                return $resource;
 
             default:
-                $invite = $this->index('all');
-                break;
+                return response()->json(['error' => 'Invalid letter type'], 400);
         }
     }
 
@@ -256,9 +266,12 @@ class InvitationService
         // $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
 
         $stages = RequestStages::where('letter_id', $invite->letter_id)->get();
-        $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
-        $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
-        $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
+        $nextStageMap = $this->buildConnectedStageMap($stages, 'to_stage_id');
+        $rejectedStageMap = $this->buildConnectedStageMap($stages, 'rejected_id');
+        $progressStageMap = $this->extract_progress_stage($nextStageMap);
+        // $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
+        // $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
+        // $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
         // return $stages;
         // $stages_id = $stages->letter->request_stages->where('sequence', 1)->first()->id;
         // $stages_id = $stages->letter->request_stages;
@@ -271,10 +284,10 @@ class InvitationService
         //     "letter_type_id" => $invite->letter_id,
         //     "invitation_id" => $invite->id,
         // ]);
-        $stages = RequestStages::where('letter_id', $invite->letter_id)->get();
-        $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
-        $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
-        $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
+        // $stages = RequestStages::where('letter_id', $invite->letter_id)->get();
+        // $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
+        // $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
+        // $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
 
         $request_letter = RequestLetter::create([
             "request_name" => $request->request_name,
@@ -283,8 +296,8 @@ class InvitationService
             "stages_id" => $stages->where('sequence', 1)->first()->id,
             "letter_type_id" => $invite->letter_id,
             "invitation_id" => $invite->id,
-            "to_stages" => $nextStageMap->toJson(),
-            "rejected_stages" => $rejectedStageMap->toJson(),
+            "to_stages" => json_encode($nextStageMap),
+            "rejected_stages" => json_encode($rejectedStageMap),
             "progress_stages" => json_encode($progressStageMap),
         ]);
         $toDivision = Division::where('id', $invite->to_division)->first();
@@ -296,6 +309,49 @@ class InvitationService
             'message' => "Pegawai meminta persetujuan baru untuk undangan rapat " . $request->perihal . " yang akan dikirimkan ke divisi " . $toDivisionName,
             'related_request_id' => $request->id,
         ]);
+    }
+    private function buildConnectedStageMap($stages, $fieldName)
+    {
+        // Don't filter out nulls initially - we need to see the structure
+        $fullMap = $stages->pluck($fieldName, 'id')->toArray();
+
+        if (empty($fullMap)) {
+            return [];
+        }
+
+        $connectedMap = [];
+        $processedStages = [];
+
+        // Process all stages to capture all connected chains
+        foreach ($fullMap as $stageId => $nextStageId) {
+            // Skip if already processed or if next stage is null
+            if (in_array($stageId, $processedStages) || $nextStageId === null) {
+                continue;
+            }
+
+            // Follow the chain starting from this stage
+            $currentStageId = $stageId;
+
+            while (
+                $currentStageId !== null &&
+                array_key_exists($currentStageId, $fullMap) &&
+                !in_array($currentStageId, $processedStages)
+            ) {
+
+                $nextStageId = $fullMap[$currentStageId];
+                $processedStages[] = $currentStageId;
+
+                if ($nextStageId !== null) {
+                    $connectedMap[$currentStageId] = $nextStageId;
+                    $currentStageId = $nextStageId;
+                } else {
+                    // Hit null - this is a final stage, don't add it to the map
+                    break;
+                }
+            }
+        }
+
+        return $connectedMap;
     }
     public function extract_progress_stage($to_stages)
     {

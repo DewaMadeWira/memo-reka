@@ -24,6 +24,8 @@ class RequestLetterResource extends JsonResource
                 'rejected_id' => $rejectedStagesMap[$stageId] ?? null,
             ],
             'memo' => $this->memo,
+            'invite' => $this->invite,
+            'summary' => $this->summary,
             'progress_stages' => json_decode($this->progress_stages ?? '[]', true),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -231,6 +231,7 @@ export default function Index({
     const stagesByLetterType = groupStagesByLetterType(data);
 
     const handleSubmit = () => {
+        console.log("before filter", formData);
         // Validate required fields
         const requiredFields = [
             { field: "stage_name", label: "Nama Tahapan" },
@@ -265,7 +266,7 @@ export default function Index({
             return;
         }
 
-        console.log(formData);
+        console.log("after filter", formData);
         router.post(
             "/admin/manajemen-tahapan-surat?intent=stages.create",
             formData,
@@ -292,6 +293,7 @@ export default function Index({
     };
 
     const handleEdit = (id: number) => {
+        console.log("before edit", formData);
         // Validate required fields
         const requiredFields = [
             { field: "stage_name", label: "Nama Tahapan" },
@@ -301,8 +303,18 @@ export default function Index({
             { field: "status_id", label: "Status" },
         ];
 
+        // const emptyFields = requiredFields.filter(({ field }) => {
+        //     const value = formData[field as keyof typeof formData];
+        //     return !value || value === "" || value === "0";
+        // });
         const emptyFields = requiredFields.filter(({ field }) => {
             const value = formData[field as keyof typeof formData];
+
+            // Special handling for sequence field since 0 is a valid value
+            if (field === "sequence") {
+                return value === "" || value === undefined || value === null;
+            }
+
             return !value || value === "" || value === "0";
         });
 
