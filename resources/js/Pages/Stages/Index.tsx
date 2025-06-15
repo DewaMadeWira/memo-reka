@@ -95,7 +95,40 @@ export default function Index({
 
     const [updateData, setUpdateData] = useState<updateDataType[]>();
     const [editingStage, setEditingStage] = useState<number | null>(null);
+
+    // Add state to track current stage connections for controlled components
+    const [stageConnections, setStageConnections] = useState<{
+        [key: number]: { to_stage_id: number; rejected_id: number };
+    }>({});
+
     const { user } = usePage().props.auth as { user: User };
+
+    // Initialize connections from existing data
+    useEffect(() => {
+        const connections: {
+            [key: number]: { to_stage_id: number; rejected_id: number };
+        } = {};
+        data.forEach((stage) => {
+            connections[stage.id] = {
+                to_stage_id: stage.request_approved?.id || -1,
+                rejected_id: stage.request_rejected?.id || -1,
+            };
+        });
+        setStageConnections(connections);
+    }, [data]);
+
+    // Function to get available stages for a specific letter type (excluding current stage)
+    const getAvailableStages = (
+        currentStageId?: number,
+        letterTypeId?: string | number
+    ) => {
+        if (!letterTypeId || letterTypeId === "") return [];
+
+        return data.filter(
+            (stage) =>
+                stage.id !== currentStageId && stage.letter_id == letterTypeId
+        );
+    };
 
     // Function to sort stages by approval flow and include rejected stages
     const sortStagesByFlow = (stages: any[]): FlowStage[] => {
@@ -241,10 +274,6 @@ export default function Index({
             { field: "status_id", label: "Status" },
         ];
 
-        // const emptyFields = requiredFields.filter(({ field }) => {
-        //     const value = formData[field as keyof typeof formData];
-        //     return !value || value === "" || value === "0";
-        // });
         const emptyFields = requiredFields.filter(({ field }) => {
             const value = formData[field as keyof typeof formData];
 
@@ -265,6 +294,45 @@ export default function Index({
             });
             return;
         }
+
+        // Add validation for stage connections within same letter type
+        // Replace the validation section around lines 299-326 with proper type conversions:
+
+        // Add validation for stage connections within same letter type
+        // if (formData.to_stage_id && formData.to_stage_id !== "-1") {
+        //     const selectedStage = data.find(
+        //         (s) => s.id === parseInt(formData.to_stage_id)
+        //     );
+        //     if (
+        //         selectedStage &&
+        //         selectedStage.letter_id !== parseInt(formData.letter_id)
+        //     ) {
+        //         toast({
+        //             variant: "destructive",
+        //             title: "Error Validasi!",
+        //             description: "Next stage harus dari tipe surat yang sama",
+        //         });
+        //         return;
+        //     }
+        // }
+
+        // if (formData.rejected_id && formData.rejected_id !== "-1") {
+        //     const selectedStage = data.find(
+        //         (s) => s.id === parseInt(formData.rejected_id)
+        //     );
+        //     if (
+        //         selectedStage &&
+        //         selectedStage.letter_id !== parseInt(formData.letter_id)
+        //     ) {
+        //         toast({
+        //             variant: "destructive",
+        //             title: "Error Validasi!",
+        //             description:
+        //                 "Rejected stage harus dari tipe surat yang sama",
+        //         });
+        //         return;
+        //     }
+        // }
 
         console.log("after filter", formData);
         router.post(
@@ -303,10 +371,6 @@ export default function Index({
             { field: "status_id", label: "Status" },
         ];
 
-        // const emptyFields = requiredFields.filter(({ field }) => {
-        //     const value = formData[field as keyof typeof formData];
-        //     return !value || value === "" || value === "0";
-        // });
         const emptyFields = requiredFields.filter(({ field }) => {
             const value = formData[field as keyof typeof formData];
 
@@ -327,6 +391,45 @@ export default function Index({
             });
             return;
         }
+
+        // Add validation for stage connections within same letter type
+        // In handleEdit function, replace the validation with:
+
+        // Add validation for stage connections within same letter type
+        // if (formData.to_stage_id && formData.to_stage_id !== "-1") {
+        //     const selectedStage = data.find(
+        //         (s) => s.id === parseInt(formData.to_stage_id)
+        //     );
+        //     if (
+        //         selectedStage &&
+        //         selectedStage.letter_id !== parseInt(formData.letter_id)
+        //     ) {
+        //         toast({
+        //             variant: "destructive",
+        //             title: "Error Validasi!",
+        //             description: "Next stage harus dari tipe surat yang sama",
+        //         });
+        //         return;
+        //     }
+        // }
+
+        // if (formData.rejected_id && formData.rejected_id !== "-1") {
+        //     const selectedStage = data.find(
+        //         (s) => s.id === parseInt(formData.rejected_id)
+        //     );
+        //     if (
+        //         selectedStage &&
+        //         selectedStage.letter_id !== parseInt(formData.letter_id)
+        //     ) {
+        //         toast({
+        //             variant: "destructive",
+        //             title: "Error Validasi!",
+        //             description:
+        //                 "Rejected stage harus dari tipe surat yang sama",
+        //         });
+        //         return;
+        //     }
+        // }
 
         console.log(formData);
         router.put("/admin/manajemen-tahapan-surat/" + id, formData, {
@@ -392,13 +495,28 @@ export default function Index({
         field: "to_stage_id" | "rejected_id";
         value: number;
     }) => {
+        // Update local state for immediate UI feedback
+        setStageConnections((prev) => ({
+            ...prev,
+            [id]: {
+                ...prev[id],
+                [field]: value,
+            },
+        }));
+
         setUpdateData((prevData) => {
             if (!prevData) {
                 return [
                     {
                         id: id,
-                        to_stage_id: field === "to_stage_id" ? value : -2,
-                        rejected_id: field === "rejected_id" ? value : -2,
+                        to_stage_id:
+                            field === "to_stage_id"
+                                ? value
+                                : stageConnections[id]?.to_stage_id || -1,
+                        rejected_id:
+                            field === "rejected_id"
+                                ? value
+                                : stageConnections[id]?.rejected_id || -1,
                     },
                 ];
             }
@@ -417,8 +535,14 @@ export default function Index({
                     ...prevData,
                     {
                         id: id,
-                        to_stage_id: field === "to_stage_id" ? value : -1,
-                        rejected_id: field === "rejected_id" ? value : -1,
+                        to_stage_id:
+                            field === "to_stage_id"
+                                ? value
+                                : stageConnections[id]?.to_stage_id || -1,
+                        rejected_id:
+                            field === "rejected_id"
+                                ? value
+                                : stageConnections[id]?.rejected_id || -1,
                     },
                 ];
             }
@@ -676,7 +800,7 @@ export default function Index({
                                         </div>
                                     </div>
 
-                                    {/* Next Stages */}
+                                    {/* Next Stages - Fixed to show only same letter type */}
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
                                             <label
@@ -694,7 +818,10 @@ export default function Index({
                                                 <option value="-1">
                                                     ❌ Tahapan Akhir
                                                 </option>
-                                                {data.map((stage: any) => (
+                                                {getAvailableStages(
+                                                    editingStage || undefined,
+                                                    formData.letter_id
+                                                ).map((stage: any) => (
                                                     <option
                                                         key={stage.id}
                                                         value={stage.id}
@@ -721,7 +848,10 @@ export default function Index({
                                                 <option value="-1">
                                                     ❌ Tahapan Akhir
                                                 </option>
-                                                {data.map((stage: any) => (
+                                                {getAvailableStages(
+                                                    editingStage || undefined,
+                                                    formData.letter_id
+                                                ).map((stage: any) => (
                                                     <option
                                                         key={stage.id}
                                                         value={stage.id}
@@ -1154,15 +1284,6 @@ export default function Index({
                                                                             >
                                                                                 <div className="grid md:grid-cols-2 gap-4">
                                                                                     <div>
-                                                                                        {/* <p>
-                                                                                            <span className="font-medium">
-                                                                                                Approver:
-                                                                                            </span>{" "}
-                                                                                            {stage
-                                                                                                .approver
-                                                                                                ?.role_name ||
-                                                                                                "Not Set"}
-                                                                                        </p> */}
                                                                                         <div className="mt-2">
                                                                                             <p>
                                                                                                 <span className="font-medium">
@@ -1434,7 +1555,7 @@ export default function Index({
                                                                                                 </div>
                                                                                             </div>
 
-                                                                                            {/* Next Stages */}
+                                                                                            {/* Next Stages - Fixed to show only same letter type */}
                                                                                             <div className="grid md:grid-cols-2 gap-4">
                                                                                                 <div>
                                                                                                     <label
@@ -1461,7 +1582,10 @@ export default function Index({
                                                                                                             Tahapan
                                                                                                             Akhir
                                                                                                         </option>
-                                                                                                        {data.map(
+                                                                                                        {getAvailableStages(
+                                                                                                            stage.id,
+                                                                                                            formData.letter_id
+                                                                                                        ).map(
                                                                                                             (
                                                                                                                 stageOption: any
                                                                                                             ) => (
@@ -1508,7 +1632,10 @@ export default function Index({
                                                                                                             Tahapan
                                                                                                             Akhir
                                                                                                         </option>
-                                                                                                        {data.map(
+                                                                                                        {getAvailableStages(
+                                                                                                            stage.id,
+                                                                                                            formData.letter_id
+                                                                                                        ).map(
                                                                                                             (
                                                                                                                 stageOption: any
                                                                                                             ) => (
@@ -1574,10 +1701,7 @@ export default function Index({
                                                                                                             />
                                                                                                             <span className="text-sm">
                                                                                                                 Dapat
-                                                                                                                Diperbaiki
-                                                                                                                (Tahapan
-                                                                                                                dapat
-                                                                                                                diperbaiki)
+                                                                                                                diperbaiki
                                                                                                             </span>
                                                                                                         </label>
 
@@ -1596,8 +1720,8 @@ export default function Index({
                                                                                                             />
                                                                                                             <span className="text-sm">
                                                                                                                 Butuh
-                                                                                                                Upload
-                                                                                                                File
+                                                                                                                upload
+                                                                                                                file
                                                                                                             </span>
                                                                                                         </label>
 
@@ -1616,14 +1740,7 @@ export default function Index({
                                                                                                             />
                                                                                                             <span className="text-sm">
                                                                                                                 Tahapan
-                                                                                                                bersifat
                                                                                                                 eksternal
-                                                                                                                (tahapan
-                                                                                                                berada
-                                                                                                                pada
-                                                                                                                sisi
-                                                                                                                penerima
-                                                                                                                surat)
                                                                                                             </span>
                                                                                                         </label>
                                                                                                     </div>
@@ -1658,9 +1775,7 @@ export default function Index({
                                                                                                             <span className="text-sm">
                                                                                                                 Notifikasi
                                                                                                                 ke
-                                                                                                                seluruh
-                                                                                                                pengguna
-                                                                                                                Internal
+                                                                                                                internal
                                                                                                             </span>
                                                                                                         </label>
 
@@ -1680,8 +1795,8 @@ export default function Index({
                                                                                                             <span className="text-sm">
                                                                                                                 Notifikasi
                                                                                                                 ke
-                                                                                                                Manajer
-                                                                                                                Internal
+                                                                                                                manajer
+                                                                                                                internal
                                                                                                             </span>
                                                                                                         </label>
 
@@ -1701,8 +1816,8 @@ export default function Index({
                                                                                                             <span className="text-sm">
                                                                                                                 Notifikasi
                                                                                                                 ke
-                                                                                                                Pegawai
-                                                                                                                Internal
+                                                                                                                pengguna
+                                                                                                                internal
                                                                                                             </span>
                                                                                                         </label>
                                                                                                     </div>
@@ -1728,8 +1843,6 @@ export default function Index({
                                                                                                             <span className="text-sm">
                                                                                                                 Notifikasi
                                                                                                                 ke
-                                                                                                                seluruh
-                                                                                                                pengguna
                                                                                                                 eksternal
                                                                                                             </span>
                                                                                                         </label>
@@ -1750,8 +1863,8 @@ export default function Index({
                                                                                                             <span className="text-sm">
                                                                                                                 Notifikasi
                                                                                                                 ke
-                                                                                                                Manajer
-                                                                                                                Eksternal
+                                                                                                                manajer
+                                                                                                                eksternal
                                                                                                             </span>
                                                                                                         </label>
 
@@ -1772,7 +1885,7 @@ export default function Index({
                                                                                                                 Notifikasi
                                                                                                                 ke
                                                                                                                 pengguna
-                                                                                                                Eksternal
+                                                                                                                eksternal
                                                                                                             </span>
                                                                                                         </label>
                                                                                                     </div>
@@ -1824,7 +1937,7 @@ export default function Index({
                                                                         </div>
                                                                     </div>
 
-                                                                    {/* Flow Controls - Available for ALL stages including rejected ones */}
+                                                                    {/* Flow Controls - Fixed with controlled components and consistent data */}
                                                                     <div
                                                                         className={`grid md:grid-cols-2 gap-4 mt-6 pt-4 border-t ${
                                                                             isRejectedFlow
@@ -1846,6 +1959,14 @@ export default function Index({
                                                                             </div>
                                                                             <select
                                                                                 className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                                                                                value={
+                                                                                    stageConnections[
+                                                                                        stage
+                                                                                            .id
+                                                                                    ]
+                                                                                        ?.to_stage_id ||
+                                                                                    -1
+                                                                                }
                                                                                 onChange={(
                                                                                     e
                                                                                 ) =>
@@ -1861,12 +1982,6 @@ export default function Index({
                                                                                         }
                                                                                     )
                                                                                 }
-                                                                                defaultValue={
-                                                                                    stage
-                                                                                        .request_approved
-                                                                                        ?.id ||
-                                                                                    -1
-                                                                                }
                                                                             >
                                                                                 <option
                                                                                     value={
@@ -1877,33 +1992,28 @@ export default function Index({
                                                                                     Tahapan
                                                                                     Akhir
                                                                                 </option>
-                                                                                {letterTypeData.stages
-                                                                                    .filter(
-                                                                                        (
-                                                                                            s
-                                                                                        ) =>
-                                                                                            s.id !==
-                                                                                            stage.id
+                                                                                {getAvailableStages(
+                                                                                    stage.id,
+                                                                                    stage.letter_id
+                                                                                ).map(
+                                                                                    (
+                                                                                        nextStage: any
+                                                                                    ) => (
+                                                                                        <option
+                                                                                            key={
+                                                                                                nextStage.id
+                                                                                            }
+                                                                                            value={
+                                                                                                nextStage.id
+                                                                                            }
+                                                                                        >
+                                                                                            ➡️{" "}
+                                                                                            {
+                                                                                                nextStage.stage_name
+                                                                                            }
+                                                                                        </option>
                                                                                     )
-                                                                                    .map(
-                                                                                        (
-                                                                                            nextStage: any
-                                                                                        ) => (
-                                                                                            <option
-                                                                                                key={
-                                                                                                    nextStage.id
-                                                                                                }
-                                                                                                value={
-                                                                                                    nextStage.id
-                                                                                                }
-                                                                                            >
-                                                                                                ➡️{" "}
-                                                                                                {
-                                                                                                    nextStage.stage_name
-                                                                                                }
-                                                                                            </option>
-                                                                                        )
-                                                                                    )}
+                                                                                )}
                                                                             </select>
                                                                         </div>
 
@@ -1921,6 +2031,14 @@ export default function Index({
                                                                             </div>
                                                                             <select
                                                                                 className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white"
+                                                                                value={
+                                                                                    stageConnections[
+                                                                                        stage
+                                                                                            .id
+                                                                                    ]
+                                                                                        ?.rejected_id ||
+                                                                                    -1
+                                                                                }
                                                                                 onChange={(
                                                                                     e
                                                                                 ) =>
@@ -1936,12 +2054,6 @@ export default function Index({
                                                                                         }
                                                                                     )
                                                                                 }
-                                                                                defaultValue={
-                                                                                    stage
-                                                                                        .request_rejected
-                                                                                        ?.id ||
-                                                                                    -1
-                                                                                }
                                                                             >
                                                                                 <option
                                                                                     value={
@@ -1952,33 +2064,28 @@ export default function Index({
                                                                                     Tahapan
                                                                                     Akhir
                                                                                 </option>
-                                                                                {letterTypeData.stages
-                                                                                    .filter(
-                                                                                        (
-                                                                                            s
-                                                                                        ) =>
-                                                                                            s.id !==
-                                                                                            stage.id
+                                                                                {getAvailableStages(
+                                                                                    stage.id,
+                                                                                    stage.letter_id
+                                                                                ).map(
+                                                                                    (
+                                                                                        nextStage: any
+                                                                                    ) => (
+                                                                                        <option
+                                                                                            key={
+                                                                                                nextStage.id
+                                                                                            }
+                                                                                            value={
+                                                                                                nextStage.id
+                                                                                            }
+                                                                                        >
+                                                                                            ↩️{" "}
+                                                                                            {
+                                                                                                nextStage.stage_name
+                                                                                            }
+                                                                                        </option>
                                                                                     )
-                                                                                    .map(
-                                                                                        (
-                                                                                            nextStage: any
-                                                                                        ) => (
-                                                                                            <option
-                                                                                                key={
-                                                                                                    nextStage.id
-                                                                                                }
-                                                                                                value={
-                                                                                                    nextStage.id
-                                                                                                }
-                                                                                            >
-                                                                                                ↩️{" "}
-                                                                                                {
-                                                                                                    nextStage.stage_name
-                                                                                                }
-                                                                                            </option>
-                                                                                        )
-                                                                                    )}
+                                                                                )}
                                                                             </select>
                                                                         </div>
                                                                     </div>
