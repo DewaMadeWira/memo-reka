@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Resources\RequestLetterResource;
 use App\Jobs\SendMemoNotification;
 use App\Models\Division;
 use App\Models\LetterNumberCounter;
@@ -42,7 +43,7 @@ class MemoService
                 })->get();
 
                 $memo->each(function ($requestLetter) {
-                    dd($requestLetter->toArray());
+                    // dd($requestLetter->toArray());
                     // Parse to_stages mapping
                     $toStagesMap = [];
                     if (!empty($requestLetter->to_stages)) {
@@ -102,23 +103,23 @@ class MemoService
                     // if ($requestLetter->stages) {
                     //     $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
                     // }
-                    if (!empty($requestLetter->stages) && !empty($requestLetter->stages->id)) {
-                        $stageId = $requestLetter->stages->id;
+                    // if (!empty($requestLetter->stages) && !empty($requestLetter->stages->id)) {
+                    //     $stageId = $requestLetter->stages->id;
 
-                        $requestLetter->stages->to_stage_id = $toStagesMap[$stageId] ?? null;
-                        $requestLetter->stages->rejected_id = $rejectedStagesMap[$stageId] ?? null;
+                    //     $requestLetter->stages->to_stage_id = $toStagesMap[$stageId] ?? null;
+                    //     $requestLetter->stages->rejected_id = $rejectedStagesMap[$stageId] ?? null;
 
-                        // Now log AFTER mapping applied
-                        FacadesLog::info('memo service', [
-                            "Request Name" => $requestLetter->request_name,
-                            "Memo ID" => $requestLetter->memo->id,
-                            "Stages ID" => $stageId,
-                            "To Stages Map" => $toStagesMap,
-                            "Rejected Map" => $rejectedStagesMap,
-                            "To Stage" => $requestLetter->stages->to_stage_id,
-                            "Rejected Stage" => $requestLetter->stages->rejected_id
-                        ]);
-                    }
+                    //     // Now log AFTER mapping applied
+                    //     FacadesLog::info('memo service', [
+                    //         "Request Name" => $requestLetter->request_name,
+                    //         "Memo ID" => $requestLetter->memo->id,
+                    //         "Stages ID" => $stageId,
+                    //         "To Stages Map" => $toStagesMap,
+                    //         "Rejected Map" => $rejectedStagesMap,
+                    //         "To Stage" => $requestLetter->stages->to_stage_id,
+                    //         "Rejected Stage" => $requestLetter->stages->rejected_id
+                    //     ]);
+                    // }
 
 
                     // Handle progress_stages as before
@@ -147,7 +148,18 @@ class MemoService
                     }
                 });
 
-                return $memo;
+                // return RequestLetterResource::collection($memo);
+                // $resource = RequestLetterResource::collection($memo);
+                // return $resource->resolve();
+                $resource = $memo->map(function ($item) {
+                    return [
+                        ...(new RequestLetterResource($item))->toArray(request()),
+                        'progress' => $item->progress, // manually add progress here
+                    ];
+                });
+
+                return $resource;
+                // return $memo;
 
             case 'memo.internal':
                 $memo = RequestLetter::with(['user', 'stages' => function ($query) {

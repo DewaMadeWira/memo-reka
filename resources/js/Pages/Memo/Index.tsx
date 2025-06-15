@@ -230,6 +230,7 @@ export default function Index({
     const { user } = usePage().props.auth as { user: User };
     console.log(user);
     console.log(request);
+    console.log(request.data);
     const validateMemoFormData = () => {
         const errors: string[] = [];
 
