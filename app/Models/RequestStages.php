@@ -13,6 +13,7 @@ class RequestStages extends Model
     //
     use SoftDeletes;
     protected $primaryKey = 'id';
+    protected $appends = ['dynamic_to_stage_id', 'dynamic_rejected_id'];
     protected $fillable = [
         'stage_name',
         'sequence',
@@ -57,5 +58,25 @@ class RequestStages extends Model
     public function request_rejected(): HasOne
     {
         return $this->hasOne(RequestStages::class, 'id', 'rejected_id');
+    }
+    // public function getDynamicToStageIdAttribute()
+    // {
+    //     // This will be set by the service
+    //     return $this->attributes['dynamic_to_stage_id'] ?? $this->to_stage_id;
+    // }
+
+    // public function getDynamicRejectedIdAttribute()
+    // {
+    //     // This will be set by the service
+    //     return $this->attributes['dynamic_rejected_id'] ?? $this->rejected_id;
+    // }
+    public function getDynamicToStageIdAttribute()
+    {
+        return $this->attributes['dynamic_to_stage_id'] ?? null;
+    }
+
+    public function getDynamicRejectedIdAttribute()
+    {
+        return $this->attributes['dynamic_rejected_id'] ?? null;
     }
 }

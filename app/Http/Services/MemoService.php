@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log as FacadesLog;
 
 class MemoService
 {
@@ -41,25 +42,84 @@ class MemoService
                 })->get();
 
                 $memo->each(function ($requestLetter) {
+                    dd($requestLetter->toArray());
                     // Parse to_stages mapping
                     $toStagesMap = [];
                     if (!empty($requestLetter->to_stages)) {
                         $toStagesMap = json_decode($requestLetter->to_stages, true) ?? [];
                     }
                     $rejectedStagesMap = [];
-                    if (!empty($requestLetter->to_stages)) {
+                    if (!empty($requestLetter->rejected_stages)) {
                         $rejectedStagesMap = json_decode($requestLetter->rejected_stages, true) ?? [];
                     }
 
                     // dd($toStagesMap, $requestLetter, $rejectedStagesMap);
+                    // if ($requestLetter->memo->id == 0) {
+                    //     dump("Stages ID :", $requestLetter->stages->id, "To Stages Map", $toStagesMap, "Rejected Map", $rejectedStagesMap, "To Stage", $toStagesMap[$requestLetter->stages->id] ?? null, "Rejected Stage :", $rejectedStagesMap[$requestLetter->stages->id] ?? null);
+                    // }
+                    // FacadesLog::info('memo service', ["Request Name", $requestLetter->request_name, "Memo ID", $requestLetter->memo->id, "Stages ID :", $requestLetter->stages->id, "To Stages Map", $toStagesMap, "Rejected Map", $rejectedStagesMap, "To Stage", $toStagesMap[$requestLetter->stages->id] ?? null, "Rejected Stage :", $rejectedStagesMap[$requestLetter->stages->id] ?? null]);
+
 
                     // Always override the to_stage_id using the mapping (or set to null if no mapping)
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
+                    // if ($requestLetter->stages) {
+                    //     $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
+                    //     $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
+                    // }
+                    // if ($requestLetter->stages) {
+                    //     $stageId = $requestLetter->stages->id;
+
+                    //     // Get current attributes
+                    //     $currentAttributes = $requestLetter->stages->getAttributes();
+
+                    //     // Modify the attributes
+                    //     $currentAttributes['to_stage_id'] = $toStagesMap[$stageId] ?? null;
+                    //     $currentAttributes['rejected_id'] = $rejectedStagesMap[$stageId] ?? null;
+
+                    //     // Set the modified attributes back
+                    //     $requestLetter->stages->setRawAttributes($currentAttributes);
+                    // }
+
+                    // if ($requestLetter->stages) {
+                    //     $stageId = $requestLetter->stages->id;
+                    //     // $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id] ?? null;
+                    //     // $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
+                    //     // FacadesLog::info('stage-assign', [$requestLetter->stages->id, $toStagesMap[$stageId] ?? null]);
+                    //     $requestLetter->stages->dynamic_to_stage_id = $toStagesMap[$stageId] ?? null;
+                    //     // FacadesLog::info('dynamic-tostage', [$requestLetter->stages->dynamic_to_stage_id]);
+                    //     // $requestLetter->stages->dynamic_to_stage_id = 5;
+                    //     $requestLetter->stages->dynamic_rejected_id = $rejectedStagesMap[$stageId] ?? null;
+                    //     FacadesLog::info('final-stage-data', [
+                    //         'id' => $requestLetter->stages->id,
+                    //         'dynamic_to_stage_id' => $requestLetter->stages->dynamic_to_stage_id,
+                    //         'dynamic_rejected_id' => $requestLetter->stages->dynamic_rejected_id
+                    //     ]);
+                    //     $requestLetter->stages->makeVisible(['dynamic_to_stage_id', 'dynamic_rejected_id']);
+                    //     $requestLetter->stages->append(['dynamic_to_stage_id', 'dynamic_rejected_id']);
+                    // }
+
+
+
+                    // if ($requestLetter->stages) {
+                    //     $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
+                    // }
+                    if (!empty($requestLetter->stages) && !empty($requestLetter->stages->id)) {
+                        $stageId = $requestLetter->stages->id;
+
+                        $requestLetter->stages->to_stage_id = $toStagesMap[$stageId] ?? null;
+                        $requestLetter->stages->rejected_id = $rejectedStagesMap[$stageId] ?? null;
+
+                        // Now log AFTER mapping applied
+                        FacadesLog::info('memo service', [
+                            "Request Name" => $requestLetter->request_name,
+                            "Memo ID" => $requestLetter->memo->id,
+                            "Stages ID" => $stageId,
+                            "To Stages Map" => $toStagesMap,
+                            "Rejected Map" => $rejectedStagesMap,
+                            "To Stage" => $requestLetter->stages->to_stage_id,
+                            "Rejected Stage" => $requestLetter->stages->rejected_id
+                        ]);
                     }
-                    if ($requestLetter->stages) {
-                        $requestLetter->stages->rejected_id = $rejectedStagesMap[$requestLetter->stages->id] ?? null;
-                    }
+
 
                     // Handle progress_stages as before
                     $progressStages = [];
@@ -245,18 +305,34 @@ class MemoService
         }
 
         $connectedMap = [];
-        $firstStageId = array_key_first($fullMap);
-        $currentStageId = $firstStageId;
+        $processedStages = [];
 
-        while ($currentStageId !== null && array_key_exists($currentStageId, $fullMap)) {
-            $nextStageId = $fullMap[$currentStageId];
+        // Process all stages to capture all connected chains
+        foreach ($fullMap as $stageId => $nextStageId) {
+            // Skip if already processed or if next stage is null
+            if (in_array($stageId, $processedStages) || $nextStageId === null) {
+                continue;
+            }
 
-            if ($nextStageId !== null) {
-                $connectedMap[$currentStageId] = $nextStageId;
-                $currentStageId = $nextStageId;
-            } else {
-                // Hit null - this is a final stage, don't add it to the map
-                break;
+            // Follow the chain starting from this stage
+            $currentStageId = $stageId;
+
+            while (
+                $currentStageId !== null &&
+                array_key_exists($currentStageId, $fullMap) &&
+                !in_array($currentStageId, $processedStages)
+            ) {
+
+                $nextStageId = $fullMap[$currentStageId];
+                $processedStages[] = $currentStageId;
+
+                if ($nextStageId !== null) {
+                    $connectedMap[$currentStageId] = $nextStageId;
+                    $currentStageId = $nextStageId;
+                } else {
+                    // Hit null - this is a final stage, don't add it to the map
+                    break;
+                }
             }
         }
 
