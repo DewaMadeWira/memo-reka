@@ -283,10 +283,51 @@ class MemoService
             'related_request_id' => $requestLetter->id,
         ]);
     }
+    public function extract_progress_stage($to_stages)
+    {
+        $result = [];
+        if (empty($to_stages)) {
+            return $result;
+        }
+
+        // Find the starting stage (the one that is not referenced by any other stage)
+        $referencedStages = array_values($to_stages);
+        $startingStage = null;
+
+        foreach (array_keys($to_stages) as $stageId) {
+            if (!in_array($stageId, $referencedStages)) {
+                $startingStage = $stageId;
+                break;
+            }
+        }
+
+        // If no starting stage found, fall back to the first key
+        if ($startingStage === null) {
+            $startingStage = array_key_first($to_stages);
+        }
+
+        $visited = [];
+        $currentKey = (string) $startingStage;
+
+        while ($currentKey !== null && isset($to_stages[$currentKey]) && !in_array($currentKey, $visited)) {
+            $visited[] = $currentKey;
+            $result[] = (int) $currentKey;
+            $currentKey = (string) $to_stages[$currentKey];
+        }
+
+        if ($currentKey !== null && !in_array((int) $currentKey, $result)) {
+            $result[] = (int) $currentKey;
+        }
+
+        error_log('Invitation progress stages order: ' . json_encode($result));
+        return $result;
+    }
+
     private function buildConnectedStageMap($stages, $fieldName)
     {
-        // Don't filter out nulls initially - we need to see the structure
-        $fullMap = $stages->pluck($fieldName, 'id')->toArray();
+        // Sort stages by sequence first to ensure proper order
+        $sortedStages = $stages->sortBy('sequence');
+        $fullMap = $sortedStages->pluck($fieldName, 'id')->toArray();
 
         if (empty($fullMap)) {
             return [];
@@ -295,14 +336,15 @@ class MemoService
         $connectedMap = [];
         $processedStages = [];
 
-        // Process all stages to capture all connected chains
-        foreach ($fullMap as $stageId => $nextStageId) {
-            // Skip if already processed or if next stage is null
+        // Process stages in sequence order
+        foreach ($sortedStages as $stage) {
+            $stageId = $stage->id;
+            $nextStageId = $fullMap[$stageId];
+
             if (in_array($stageId, $processedStages) || $nextStageId === null) {
                 continue;
             }
 
-            // Follow the chain starting from this stage
             $currentStageId = $stageId;
 
             while (
@@ -310,7 +352,6 @@ class MemoService
                 array_key_exists($currentStageId, $fullMap) &&
                 !in_array($currentStageId, $processedStages)
             ) {
-
                 $nextStageId = $fullMap[$currentStageId];
                 $processedStages[] = $currentStageId;
 
@@ -318,7 +359,6 @@ class MemoService
                     $connectedMap[$currentStageId] = $nextStageId;
                     $currentStageId = $nextStageId;
                 } else {
-                    // Hit null - this is a final stage, don't add it to the map
                     break;
                 }
             }
@@ -327,43 +367,6 @@ class MemoService
         return $connectedMap;
     }
 
-    public function extract_progress_stage($to_stages)
-    {
-
-        $result = [];
-        if (empty($to_stages)) {
-            return $result;
-        }
-        $visited = [];
-        $currentKey = array_key_first($to_stages); // Start from the first key
-
-
-        // while ($currentKey !== null && isset($to_stages[$currentKey]) && !in_array($currentKey, $visited)) {
-        //     $visited[] = $currentKey; // Avoid infinite loops
-        //     $result[] = (int) $currentKey; // Store the current key (stage ID)
-        //     $nextKey = (string) $to_stages[$currentKey]; // Move to the next reference
-
-        //     if (!in_array($nextKey, $result)) {
-        //         $result[] = (int) $nextKey; // Store the next stage ID
-        //     }
-
-        //     $currentKey = $nextKey;
-        // }
-        while ($currentKey !== null && isset($to_stages[$currentKey]) && !in_array($currentKey, $visited)) {
-            $visited[] = $currentKey; // Avoid infinite loops
-            $result[] = (int) $currentKey; // Store the current key (stage ID)
-            $currentKey = (string) $to_stages[$currentKey]; // Move to the next reference
-        }
-
-        // Add the last referenced stage ID only if it's not already in the result
-        if ($currentKey !== null && !in_array((int) $currentKey, $result)) {
-            $result[] = (int) $currentKey;
-        }
-
-        error_log(json_encode($result));
-        // dd($result);
-        return $result;
-    }
     public function generateNomorSuratDivision($user, $official)
     {
         $number = LetterNumberCounter::with(['division'])->where('division_id', $user->division->id)->where('letter_type_id', 1)->first();
