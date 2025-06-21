@@ -217,13 +217,10 @@ class MemoService
 
     public function create($request)
     {
-
         if (Gate::allows('admin')) {
             abort(403);
         }
 
-        // $division = $this->authService->userDivision();
-        // $user = $this->authService->index();
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
         $official = Official::where("id", $request->official)->first();
@@ -231,9 +228,7 @@ class MemoService
             $q->where('role_name', "admin");
         })->first();
 
-        // dd($this->generateNomorSurat($user, $official)->memo_number);
         $memo = MemoLetter::create([
-            // 'memo_number' => '1234/MemoNumber/Test',
             'perihal' => $request->perihal,
             'content' => $request->content,
             'signatory' => $manager->id,
@@ -243,7 +238,6 @@ class MemoService
             'to_division' => $request->to_division,
             'previous_memo' => $request->previous_memo,
         ]);
-        // $generatedMemoData = $this->generateNomorSurat($user, $official);
         $generatedMemoData = $this->generateNomorSuratDivision($user, $official);
         $letter_number = LetterNumberCounter::where('division_id', $user->division->id)->where('letter_type_id', 1)->first();
         $letter_number->update([
@@ -252,21 +246,16 @@ class MemoService
         ]);
         $memo->update([
             "memo_number" => $generatedMemoData["memo_number"],
-            // "monthly_counter" => $generatedMemoData["monthly_counter"],
-            // "yearly_counter" => $generatedMemoData["yearly_counter"],
         ]);
         $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
         $nextStageMap = $this->buildConnectedStageMap($stages, 'to_stage_id');
         $rejectedStageMap = $this->buildConnectedStageMap($stages, 'rejected_id');
         $progressStageMap = $this->extract_progress_stage($nextStageMap);
 
-        // dd($nextStageMap);
-        // dd($progressStageMap);
 
         $requestLetter = RequestLetter::create([
             "request_name" => $request->request_name,
             "user_id" => $user->id,
-            // "status_id" => $stages->letter->request_stages[0]->status_id,
             "stages_id" => $stages->where('sequence', 1)->first()->id,
             "letter_type_id" => $memo->letter_id,
             "memo_id" => $memo->id,

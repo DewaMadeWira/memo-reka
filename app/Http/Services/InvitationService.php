@@ -81,13 +81,6 @@ class InvitationService
                     }
                 });
 
-                // $resource = $invite->map(function ($item) {
-                //     return [
-                //         ...(new RequestLetterResource($item))->toArray(request()),
-                //         'progress' => $item->progress, // manually add progress here
-                //     ];
-                // });
-                // dd("mamamia");
                 $resource = $invite->map(function ($item) {
                     return [
                         ...(new RequestLetterResource($item))->toArray(request()),
@@ -229,10 +222,8 @@ class InvitationService
             $q->where('role_name', "admin");
         })->first();
 
-        // dd($request->content);
 
         $invite = InvitationLetter::create([
-            // 'invitation_name' => "Test Invitation",
             'invitation_number' => "1234",
             'perihal' => $request->perihal,
             'content' => $request->content,
@@ -263,31 +254,11 @@ class InvitationService
             "invitation_number" => $generatedInviteData["invitation_number"],
         ]);
 
-        // $stages = InvitationLetter::with('letter', 'letter.request_stages', 'letter.request_stages.status')->first();
 
         $stages = RequestStages::where('letter_id', $invite->letter_id)->get();
         $nextStageMap = $this->buildConnectedStageMap($stages, 'to_stage_id');
         $rejectedStageMap = $this->buildConnectedStageMap($stages, 'rejected_id');
         $progressStageMap = $this->extract_progress_stage($nextStageMap);
-        // $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
-        // $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
-        // $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
-        // return $stages;
-        // $stages_id = $stages->letter->request_stages->where('sequence', 1)->first()->id;
-        // $stages_id = $stages->letter->request_stages;
-
-        // $request = RequestLetter::create([
-        //     "request_name" => "Test Request Baru Invitation",
-        //     "user_id" => $user->id,
-        //     // "status_id" => $stages->letter->request_stages[0]->status_id,
-        //     "stages_id" => $stages->letter->request_stages->where('sequence', 1)->first()->id,
-        //     "letter_type_id" => $invite->letter_id,
-        //     "invitation_id" => $invite->id,
-        // ]);
-        // $stages = RequestStages::where('letter_id', $invite->letter_id)->get();
-        // $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
-        // $rejectedStageMap = $stages->pluck('rejected_id', 'id')->filter();
-        // $progressStageMap = $this->extract_progress_stage($nextStageMap->toArray());
 
         $request_letter = RequestLetter::create([
             "request_name" => $request->request_name,
@@ -300,8 +271,8 @@ class InvitationService
             "rejected_stages" => json_encode($rejectedStageMap),
             "progress_stages" => json_encode($progressStageMap),
         ]);
+
         $toDivision = Division::where('id', $invite->to_division)->first();
-        // dd($toDivision);
         $toDivisionName = $toDivision->division_code;
         Notification::create([
             'user_id' => $manager->id,
