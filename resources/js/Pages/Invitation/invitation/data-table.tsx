@@ -109,7 +109,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
         perihal: string;
         content: string;
         official: string;
-        to_division: null;
+        to_division: string | null;
         hari_tanggal: string;
         waktu: string;
         tempat: string;
@@ -122,7 +122,7 @@ interface DataTableProps<TData extends RequestLetter, TValue> {
             content: string;
             request_name: string;
             official: string;
-            to_division: null;
+            to_division: string | null;
             hari_tanggal: string;
             waktu: string;
             tempat: string;

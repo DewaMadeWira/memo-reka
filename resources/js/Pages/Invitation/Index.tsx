@@ -39,7 +39,6 @@ export default function Index({
     division,
     userData,
     all_user,
-    
 }: {
     request: any;
     official: Official[];
@@ -175,7 +174,7 @@ export default function Index({
         waktu: "",
         tempat: "",
         agenda: "",
-        to_division: null,
+        to_division: null as string | null,
         invited_users: [] as string[],
     });
 
@@ -183,17 +182,49 @@ export default function Index({
     const [visibleUsers, setVisibleUsers] = useState(2);
     const [filteredUsers, setFilteredUsers] = useState<UserWithDivision[]>([]);
 
+    // useEffect(() => {
+    //     // First filter users based on search query
+    //     let filtered = all_user.filter(
+    //         (user: any) =>
+    //             user.nama_pengguna
+    //                 .toLowerCase()
+    //                 .includes(searchQuery.toLowerCase()) ||
+    //             user.division.division_code
+    //                 .toLowerCase()
+    //                 .includes(searchQuery.toLowerCase())
+    //     );
+
+    //     // Then sort the filtered list to put selected users at the top
+    //     filtered = [...filtered].sort((a, b) => {
+    //         const aSelected = formData.invited_users.includes(a.id.toString());
+    //         const bSelected = formData.invited_users.includes(b.id.toString());
+
+    //         if (aSelected && !bSelected) return -1;
+    //         if (!aSelected && bSelected) return 1;
+    //         return 0;
+    //     });
+
+    //     setFilteredUsers(filtered);
+    // }, [searchQuery, all_user, formData.invited_users]);
     useEffect(() => {
-        // First filter users based on search query
-        let filtered = all_user.filter(
-            (user: any) =>
+        // First filter users based on search query and division
+        let filtered = all_user.filter((user: any) => {
+            // Search query filter
+            const matchesSearch =
                 user.nama_pengguna
                     .toLowerCase()
                     .includes(searchQuery.toLowerCase()) ||
                 user.division.division_code
                     .toLowerCase()
-                    .includes(searchQuery.toLowerCase())
-        );
+                    .includes(searchQuery.toLowerCase());
+
+            // Division filter - if no division selected, show all users
+            const matchesDivision =
+                !formData.to_division ||
+                user.division.id.toString() === formData.to_division.toString();
+
+            return matchesSearch && matchesDivision;
+        });
 
         // Then sort the filtered list to put selected users at the top
         filtered = [...filtered].sort((a, b) => {
@@ -206,7 +237,7 @@ export default function Index({
         });
 
         setFilteredUsers(filtered);
-    }, [searchQuery, all_user, formData.invited_users]);
+    }, [searchQuery, all_user, formData.invited_users, formData.to_division]);
 
     const handleChange = (
         e: React.ChangeEvent<
