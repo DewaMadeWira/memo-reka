@@ -79,6 +79,7 @@ import {
 import { Textarea } from "@/Components/ui/textarea";
 import { ImagePreview } from "../PreviewImage";
 import { ScrollArea } from "@/Components/ui/scroll-area";
+import { StageProgressBar } from "../ProgressBar";
 export interface FileUploadData {
     files: File[];
     memo_id: number;
@@ -317,7 +318,7 @@ DataTableProps<TData, TValue>) {
                                                                 .stage_name
                                                         }
                                                     </h4>
-                                                    <Menubar className="h-fit border-none shadow-none">
+                                                    {/* <Menubar className="h-fit border-none shadow-none">
                                                         {row.original.progress.map(
                                                             (
                                                                 prog: any,
@@ -466,7 +467,10 @@ DataTableProps<TData, TValue>) {
                                                                 );
                                                             }
                                                         )}
-                                                    </Menubar>
+                                                    </Menubar> */}
+                                                    <StageProgressBar
+                                                        row={row as any}
+                                                    ></StageProgressBar>
                                                 </div>
                                             </PopoverContent>
                                         </Popover>

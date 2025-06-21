@@ -29,15 +29,20 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    // return Inertia::render('Welcome', [
-    //     'canLogin' => Route::has('login'),
-    //     'canRegister' => Route::has('register'),
-    //     'laravelVersion' => Application::VERSION,
-    //     'phpVersion' => PHP_VERSION,
+route::get('/', function () {
+    // return inertia::render('welcome', [
+    //     'canlogin' => route::has('login'),
+    //     'canregister' => route::has('register'),
+    //     'laravelversion' => application::version,
+    //     'phpversion' => php_version,
     // ]);
     return redirect()->route('login');
 });
+route::get('/prototype', function () {
+    // return Inertia::render('Prototype');
+    return Inertia::render('Prototype');
+});
+
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
