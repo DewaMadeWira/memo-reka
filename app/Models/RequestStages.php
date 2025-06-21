@@ -20,6 +20,7 @@ class RequestStages extends Model
         'to_stage_id',
         'rejected_id',
         // 'conditions',
+        'description',
         'letter_id',
         'approver_id',
         'status_id',

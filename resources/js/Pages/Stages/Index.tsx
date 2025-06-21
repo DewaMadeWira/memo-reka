@@ -75,6 +75,7 @@ export default function Index({
     const { toast } = useToast();
     const [formData, setFormData] = useState({
         stage_name: "",
+        description: "",
         sequence: "",
         to_stage_id: "",
         rejected_id: "",
@@ -473,7 +474,9 @@ export default function Index({
     }
 
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
     ) => {
         const { name, value, type } = e.target;
 
@@ -582,6 +585,7 @@ export default function Index({
     const populateEditForm = (stage: any) => {
         setFormData({
             stage_name: stage.stage_name || "",
+            description: stage.description || "",
             sequence: stage.sequence || "",
             to_stage_id: stage.to_stage_id || "",
             rejected_id: stage.rejected_id || "",
@@ -604,6 +608,7 @@ export default function Index({
     const resetForm = () => {
         setFormData({
             stage_name: "",
+            description: "",
             sequence: "",
             to_stage_id: "",
             rejected_id: "",
@@ -679,6 +684,22 @@ export default function Index({
                                             onChange={handleChange}
                                             className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="Enter stage name"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="description"
+                                            className="block mb-2 text-sm font-medium"
+                                        >
+                                            Description
+                                        </label>
+                                        <textarea
+                                            value={formData.description}
+                                            name="description"
+                                            onChange={handleChange}
+                                            rows={3}
+                                            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Enter stage description (optional)"
                                         />
                                     </div>
 
@@ -1373,6 +1394,28 @@ export default function Index({
                                                                                                     }
                                                                                                     className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                                                                     placeholder="Enter stage name"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <label
+                                                                                                    htmlFor="description"
+                                                                                                    className="block mb-2 text-sm font-medium"
+                                                                                                >
+                                                                                                    Description
+                                                                                                </label>
+                                                                                                <textarea
+                                                                                                    value={
+                                                                                                        formData.description
+                                                                                                    }
+                                                                                                    name="description"
+                                                                                                    onChange={
+                                                                                                        handleChange
+                                                                                                    }
+                                                                                                    rows={
+                                                                                                        3
+                                                                                                    }
+                                                                                                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                                                                    placeholder="Enter stage description (optional)"
                                                                                                 />
                                                                                             </div>
 
