@@ -39,8 +39,14 @@ class AppServiceProvider extends ServiceProvider
 
 
         Gate::define('admin-privilege', function (User $user) {
-            return $user->hasRole(1);
+            return $user->hasRole(3);
         });
+        Gate::define('non-admin-privilege', function (User $user) {
+            // Dynamically check if user's role is NOT 3
+            $userWithRole = User::with('role')->find($user->id);
+            return $userWithRole->role && $userWithRole->role->id !== 3;
+        });
+
 
         // Gate::after(function ($result, $user, $ability) {
         //     if (!$result) {

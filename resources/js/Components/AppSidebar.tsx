@@ -159,7 +159,7 @@ export function AppSidebar() {
             company_code: "MR",
         },
     } = usePage().props;
-    
+
     // console.log(open);
     return (
         <Sidebar collapsible="icon" className="w-1/6 ">
@@ -193,21 +193,74 @@ export function AppSidebar() {
                 </SidebarGroupLabel>
                 <SidebarGroupContent className="ml-1 w-[90%]">
                     <SidebarMenu>
-                        {items.map((item, index) => (
-                            <SidebarMenuItem
-                                key={item.title}
-                                className={`mt-1 ${
-                                    item.title === "Manajemen" &&
-                                    user.role_id !== 1
-                                        ? "hidden"
-                                        : ""
-                                }`}
-                            >
-                                {item.subItems.length > 0 ? (
-                                    <Collapsible className="group/collapsible">
+                        {items.map((item, index) => {
+                            const shouldHideItem =
+                                user.role_id === 3
+                                    ? item.title !== "Manajemen" // For role 3: hide everything except Manajemen
+                                    : item.title === "Manajemen"; // For other roles: hide only Manajemen
+
+                            return (
+                                <SidebarMenuItem
+                                    key={item.title}
+                                    // className={`mt-1 ${
+                                    //     item.title === "Manajemen" &&
+                                    //     user.role_id !== 3
+                                    //         ? "hidden"
+                                    //         : ""
+                                    // }`}
+                                    className={`mt-1 ${
+                                        shouldHideItem ? "hidden" : ""
+                                    }`}
+                                >
+                                    {item.subItems.length > 0 ? (
+                                        <Collapsible className="group/collapsible">
+                                            <SidebarMenuButton asChild>
+                                                <CollapsibleTrigger
+                                                    className={`flex w-full items-center font-medium p-2 rounded-md
+                                                hover:bg-violet-300 hover:text-violet-800
+                                                ${
+                                                    url.startsWith(item.url)
+                                                        ? "bg-violet-300 text-violet-800"
+                                                        : ""
+                                                }`}
+                                                >
+                                                    <div className="w-10 flex justify-center items-center">
+                                                        <item.icon size={20} />
+                                                    </div>
+                                                    <span className="text-sm">
+                                                        {item.title}
+                                                    </span>
+                                                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
+                                                </CollapsibleTrigger>
+                                            </SidebarMenuButton>
+
+                                            <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
+                                                {item.subItems.map((subItem) =>
+                                                    subItem.type ===
+                                                    "separator" ? (
+                                                        <div
+                                                            key={subItem.title}
+                                                            className="text-sm font-medium text-gray-500 mt-3 mb-1 px-2 sidebar-text"
+                                                        >
+                                                            {subItem.title}
+                                                        </div>
+                                                    ) : (
+                                                        <Link
+                                                            key={subItem.title}
+                                                            className="mt-1 pl-5 p-2 hover:bg-gray-200 rounded-md text-xs sidebar-text"
+                                                            href={subItem.url!}
+                                                        >
+                                                            {subItem.title}
+                                                        </Link>
+                                                    )
+                                                )}
+                                            </CollapsibleContent>
+                                        </Collapsible>
+                                    ) : (
                                         <SidebarMenuButton asChild>
-                                            <CollapsibleTrigger
-                                                className={`flex w-full items-center font-medium p-2 rounded-md
+                                            <a
+                                                href={item.url}
+                                                className={`flex w-full items-center font-medium px-2 py-5 rounded-md
                                                 hover:bg-violet-300 hover:text-violet-800
                                                 ${
                                                     url.startsWith(item.url)
@@ -215,60 +268,18 @@ export function AppSidebar() {
                                                         : ""
                                                 }`}
                                             >
-                                                <div className="w-10 flex justify-center items-center">
+                                                <div className="w-7 ml-1 flex justify-center items-center">
                                                     <item.icon size={20} />
                                                 </div>
-                                                <span className="text-sm">
+                                                <span className=" text-sm">
                                                     {item.title}
                                                 </span>
-                                                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-4" />
-                                            </CollapsibleTrigger>
+                                            </a>
                                         </SidebarMenuButton>
-
-                                        <CollapsibleContent className="flex flex-col gap-[0.5] ml-10">
-                                            {item.subItems.map((subItem) =>
-                                                subItem.type === "separator" ? (
-                                                    <div
-                                                        key={subItem.title}
-                                                        className="text-sm font-medium text-gray-500 mt-3 mb-1 px-2 sidebar-text"
-                                                    >
-                                                        {subItem.title}
-                                                    </div>
-                                                ) : (
-                                                    <Link
-                                                        key={subItem.title}
-                                                        className="mt-1 pl-5 p-2 hover:bg-gray-200 rounded-md text-xs sidebar-text"
-                                                        href={subItem.url!}
-                                                    >
-                                                        {subItem.title}
-                                                    </Link>
-                                                )
-                                            )}
-                                        </CollapsibleContent>
-                                    </Collapsible>
-                                ) : (
-                                    <SidebarMenuButton asChild>
-                                        <a
-                                            href={item.url}
-                                            className={`flex w-full items-center font-medium px-2 py-5 rounded-md
-                                                hover:bg-violet-300 hover:text-violet-800
-                                                ${
-                                                    url.startsWith(item.url)
-                                                        ? "bg-violet-300 text-violet-800"
-                                                        : ""
-                                                }`}
-                                        >
-                                            <div className="w-7 ml-1 flex justify-center items-center">
-                                                <item.icon size={20} />
-                                            </div>
-                                            <span className=" text-sm">
-                                                {item.title}
-                                            </span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                )}
-                            </SidebarMenuItem>
-                        ))}
+                                    )}
+                                </SidebarMenuItem>
+                            );
+                        })}
                     </SidebarMenu>
                 </SidebarGroupContent>
                 <SidebarGroup />

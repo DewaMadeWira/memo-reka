@@ -30,12 +30,13 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
+    return redirect()->route('login');
 });
 
 // Route::get('/dashboard', function () {
@@ -142,11 +143,13 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::resource('memo', MemoController::class);
-    Route::resource('undangan-rapat', InvitationController::class);
-    Route::resource('risalah-rapat', SummaryController::class);
-    Route::get('/memo-file/{filename}', [ServeImageController::class, 'show'])->name('memo.file');
-    Route::get('/risalah-file/{filename}', [ServeImageController::class, 'show_pdf'])->name('risalah-rapat.file');
+    Route::middleware('can:non-admin-privilege')->group(function () {
+        Route::resource('memo', MemoController::class);
+        Route::resource('undangan-rapat', InvitationController::class);
+        Route::resource('risalah-rapat', SummaryController::class);
+        Route::get('/memo-file/{filename}', [ServeImageController::class, 'show'])->name('memo.file');
+        Route::get('/risalah-file/{filename}', [ServeImageController::class, 'show_pdf'])->name('risalah-rapat.file');
+    });
 });
 
 // Route::get('/request', [RequestController::class, 'index'])->name('request.index');
