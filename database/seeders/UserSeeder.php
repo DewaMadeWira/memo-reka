@@ -18,6 +18,14 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             [
 
+                'name' => "Super Admin",
+                'email' => "superadmin@gmail.com",
+                "password" => Hash::make("password123"),
+                'role_id' => 3,
+                'division_id' => 1,
+            ],
+            [
+
                 'name' => "Manager QMSHETI",
                 'email' => "mqmsheti@gmail.com",
                 "password" => Hash::make("password123"),
