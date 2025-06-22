@@ -52,7 +52,7 @@ function buildStageSequence(startId: number) {
     return sequence;
 }
 
-export default function StageProgressBar() {
+export default function StageProgressBarPrototype() {
     const stages = buildStageSequence(1);
 
     return (
