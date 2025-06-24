@@ -84,6 +84,7 @@ import { Division } from "@/types/DivisionType";
 import { UserWithDivision } from "../Index";
 
 import { format, parseISO } from "date-fns";
+import { StageProgressBar } from "../ProgressBar";
 
 interface DataTableProps<TData extends RequestLetter, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -322,7 +323,7 @@ DataTableProps<TData, TValue>) {
                                                                 .stage_name
                                                         }
                                                     </h4>
-                                                    <Menubar className="h-fit border-none shadow-none">
+                                                    {/* <Menubar className="h-fit border-none shadow-none">
                                                         {row.original.progress.map(
                                                             (
                                                                 prog: any,
@@ -471,7 +472,10 @@ DataTableProps<TData, TValue>) {
                                                                 );
                                                             }
                                                         )}
-                                                    </Menubar>
+                                                    </Menubar> */}
+                                                    <StageProgressBar
+                                                        row={row as any}
+                                                    ></StageProgressBar>
                                                 </div>
                                             </PopoverContent>
                                         </Popover>

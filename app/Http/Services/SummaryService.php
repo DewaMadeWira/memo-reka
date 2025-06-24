@@ -56,7 +56,7 @@ class SummaryService
                         $rejectedStagesMap = json_decode($requestLetter->rejected_stages, true) ?? [];
                     }
 
-                    // Handle progress_stages with proper ordering
+                    // Handle progress_stages as before
                     $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
@@ -69,6 +69,7 @@ class SummaryService
                         }
                     }
 
+                    // Get actual stage records for progress_stages
                     if (!empty($progressStages)) {
                         $requestLetter->progress = RequestStages::withTrashed()
                             ->with("request_rejected")
@@ -80,14 +81,91 @@ class SummaryService
                     } else {
                         $requestLetter->progress = collect();
                     }
+
+                    // Get all unique stage IDs from to_stages (both keys and values)
+                    $allToStageIds = array_unique(array_merge(
+                        array_keys($toStagesMap),
+                        array_filter(array_values($toStagesMap)) // filter out null values
+                    ));
+
+                    // Get all unique stage IDs from rejected_stages (both keys and values)  
+                    $allRejectedStageIds = array_unique(array_merge(
+                        array_keys($rejectedStagesMap),
+                        array_filter(array_values($rejectedStagesMap)) // filter out null values
+                    ));
+
+                    // Fetch stage records for to_stages
+                    $toStageRecords = RequestStages::withTrashed()
+                        ->whereIn('id', $allToStageIds)
+                        ->get()
+                        ->keyBy('id');
+
+                    // Fetch stage records for rejected_stages
+                    $rejectedStageRecords = RequestStages::withTrashed()
+                        ->whereIn('id', $allRejectedStageIds)
+                        ->get()
+                        ->keyBy('id');
+
+                    // Build to_stages with actual stage records - BUILD ARRAY FIRST, THEN ASSIGN
+                    $toStagesWithRecords = [];
+                    foreach ($toStagesMap as $fromStageId => $toStageId) {
+                        $toStagesWithRecords[] = [
+                            'from_stage_id' => $fromStageId,
+                            'to_stage_id' => $toStageId,
+                            'from_stage' => $toStageRecords->get($fromStageId),
+                            'to_stage' => $toStageId ? $toStageRecords->get($toStageId) : null,
+                        ];
+                    }
+                    $requestLetter->to_stages_with_records = $toStagesWithRecords;
+
+                    // Build rejected_stages with actual stage records - BUILD ARRAY FIRST, THEN ASSIGN
+                    $rejectedStagesWithRecords = [];
+                    foreach ($rejectedStagesMap as $fromStageId => $rejectedStageId) {
+                        $rejectedStagesWithRecords[] = [
+                            'from_stage_id' => $fromStageId,
+                            'rejected_stage_id' => $rejectedStageId,
+                            'from_stage' => $rejectedStageRecords->get($fromStageId),
+                            'rejected_stage' => $rejectedStageId ? $rejectedStageRecords->get($rejectedStageId) : null,
+                        ];
+                    }
+                    $requestLetter->rejected_stages_with_records = $rejectedStagesWithRecords;
+
+                    // Store all stage records for easy lookup
+                    $requestLetter->all_to_stage_records = $toStageRecords;
+                    $requestLetter->all_rejected_stage_records = $rejectedStageRecords;
+
+                    // Store decoded values for later use
+                    $requestLetter->decoded_to_stages = $toStagesMap;
+                    $requestLetter->decoded_rejected_stages = $rejectedStagesMap;
+                    $requestLetter->decoded_progress_stages = $progressStages;
                 });
 
                 $resource = $summary->map(function ($item) {
                     return [
                         ...(new RequestLetterResource($item))->toArray(request()),
-                        'progress' => $item->progress,
+                        'progress' => $item->progress, // Already includes actual stage records in order
+
+                        // Raw JSON values
+                        'raw_to_stages' => $item->to_stages,
+                        'raw_rejected_stages' => $item->rejected_stages,
+                        'raw_progress_stages' => $item->progress_stages,
+
+                        // Decoded values (arrays/objects)
+                        'decoded_to_stages' => $item->decoded_to_stages,
+                        'decoded_rejected_stages' => $item->decoded_rejected_stages,
+                        'decoded_progress_stages' => $item->decoded_progress_stages,
+
+                        // Stage records with relationships (both key and value data)
+                        'to_stages_with_records' => $item->to_stages_with_records,
+                        'rejected_stages_with_records' => $item->rejected_stages_with_records,
+
+                        // All stage records for easy lookup
+                        'all_to_stage_records' => $item->all_to_stage_records,
+                        'all_rejected_stage_records' => $item->all_rejected_stage_records,
                     ];
-                })->values()->toArray();
+                });
+
+
 
                 return $resource;
 
@@ -109,12 +187,7 @@ class SummaryService
                         $rejectedStagesMap = json_decode($requestLetter->rejected_stages, true) ?? [];
                     }
 
-                    // Override the to_stage_id using the mapping
-                    if ($requestLetter->stages && isset($toStagesMap[$requestLetter->stages->id])) {
-                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id];
-                    }
-
-                    // Handle progress_stages with proper ordering
+                    // Handle progress_stages as before
                     $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
@@ -127,6 +200,7 @@ class SummaryService
                         }
                     }
 
+                    // Get actual stage records for progress_stages
                     if (!empty($progressStages)) {
                         $requestLetter->progress = RequestStages::withTrashed()
                             ->with("request_rejected")
@@ -138,14 +212,91 @@ class SummaryService
                     } else {
                         $requestLetter->progress = collect();
                     }
+
+                    // Get all unique stage IDs from to_stages (both keys and values)
+                    $allToStageIds = array_unique(array_merge(
+                        array_keys($toStagesMap),
+                        array_filter(array_values($toStagesMap)) // filter out null values
+                    ));
+
+                    // Get all unique stage IDs from rejected_stages (both keys and values)  
+                    $allRejectedStageIds = array_unique(array_merge(
+                        array_keys($rejectedStagesMap),
+                        array_filter(array_values($rejectedStagesMap)) // filter out null values
+                    ));
+
+                    // Fetch stage records for to_stages
+                    $toStageRecords = RequestStages::withTrashed()
+                        ->whereIn('id', $allToStageIds)
+                        ->get()
+                        ->keyBy('id');
+
+                    // Fetch stage records for rejected_stages
+                    $rejectedStageRecords = RequestStages::withTrashed()
+                        ->whereIn('id', $allRejectedStageIds)
+                        ->get()
+                        ->keyBy('id');
+
+                    // Build to_stages with actual stage records - BUILD ARRAY FIRST, THEN ASSIGN
+                    $toStagesWithRecords = [];
+                    foreach ($toStagesMap as $fromStageId => $toStageId) {
+                        $toStagesWithRecords[] = [
+                            'from_stage_id' => $fromStageId,
+                            'to_stage_id' => $toStageId,
+                            'from_stage' => $toStageRecords->get($fromStageId),
+                            'to_stage' => $toStageId ? $toStageRecords->get($toStageId) : null,
+                        ];
+                    }
+                    $requestLetter->to_stages_with_records = $toStagesWithRecords;
+
+                    // Build rejected_stages with actual stage records - BUILD ARRAY FIRST, THEN ASSIGN
+                    $rejectedStagesWithRecords = [];
+                    foreach ($rejectedStagesMap as $fromStageId => $rejectedStageId) {
+                        $rejectedStagesWithRecords[] = [
+                            'from_stage_id' => $fromStageId,
+                            'rejected_stage_id' => $rejectedStageId,
+                            'from_stage' => $rejectedStageRecords->get($fromStageId),
+                            'rejected_stage' => $rejectedStageId ? $rejectedStageRecords->get($rejectedStageId) : null,
+                        ];
+                    }
+                    $requestLetter->rejected_stages_with_records = $rejectedStagesWithRecords;
+
+                    // Store all stage records for easy lookup
+                    $requestLetter->all_to_stage_records = $toStageRecords;
+                    $requestLetter->all_rejected_stage_records = $rejectedStageRecords;
+
+                    // Store decoded values for later use
+                    $requestLetter->decoded_to_stages = $toStagesMap;
+                    $requestLetter->decoded_rejected_stages = $rejectedStagesMap;
+                    $requestLetter->decoded_progress_stages = $progressStages;
                 });
 
                 $resource = $summary->map(function ($item) {
                     return [
                         ...(new RequestLetterResource($item))->toArray(request()),
-                        'progress' => $item->progress,
+                        'progress' => $item->progress, // Already includes actual stage records in order
+
+                        // Raw JSON values
+                        'raw_to_stages' => $item->to_stages,
+                        'raw_rejected_stages' => $item->rejected_stages,
+                        'raw_progress_stages' => $item->progress_stages,
+
+                        // Decoded values (arrays/objects)
+                        'decoded_to_stages' => $item->decoded_to_stages,
+                        'decoded_rejected_stages' => $item->decoded_rejected_stages,
+                        'decoded_progress_stages' => $item->decoded_progress_stages,
+
+                        // Stage records with relationships (both key and value data)
+                        'to_stages_with_records' => $item->to_stages_with_records,
+                        'rejected_stages_with_records' => $item->rejected_stages_with_records,
+
+                        // All stage records for easy lookup
+                        'all_to_stage_records' => $item->all_to_stage_records,
+                        'all_rejected_stage_records' => $item->all_rejected_stage_records,
                     ];
                 });
+
+
 
                 return $resource;
 
@@ -167,12 +318,7 @@ class SummaryService
                         $rejectedStagesMap = json_decode($requestLetter->rejected_stages, true) ?? [];
                     }
 
-                    // Override the to_stage_id using the mapping
-                    if ($requestLetter->stages && isset($toStagesMap[$requestLetter->stages->id])) {
-                        $requestLetter->stages->to_stage_id = $toStagesMap[$requestLetter->stages->id];
-                    }
-
-                    // Handle progress_stages with proper ordering
+                    // Handle progress_stages as before
                     $progressStages = [];
                     if (isset($requestLetter->progress_stages)) {
                         if (is_string($requestLetter->progress_stages)) {
@@ -185,6 +331,7 @@ class SummaryService
                         }
                     }
 
+                    // Get actual stage records for progress_stages
                     if (!empty($progressStages)) {
                         $requestLetter->progress = RequestStages::withTrashed()
                             ->with("request_rejected")
@@ -196,12 +343,87 @@ class SummaryService
                     } else {
                         $requestLetter->progress = collect();
                     }
+
+                    // Get all unique stage IDs from to_stages (both keys and values)
+                    $allToStageIds = array_unique(array_merge(
+                        array_keys($toStagesMap),
+                        array_filter(array_values($toStagesMap)) // filter out null values
+                    ));
+
+                    // Get all unique stage IDs from rejected_stages (both keys and values)  
+                    $allRejectedStageIds = array_unique(array_merge(
+                        array_keys($rejectedStagesMap),
+                        array_filter(array_values($rejectedStagesMap)) // filter out null values
+                    ));
+
+                    // Fetch stage records for to_stages
+                    $toStageRecords = RequestStages::withTrashed()
+                        ->whereIn('id', $allToStageIds)
+                        ->get()
+                        ->keyBy('id');
+
+                    // Fetch stage records for rejected_stages
+                    $rejectedStageRecords = RequestStages::withTrashed()
+                        ->whereIn('id', $allRejectedStageIds)
+                        ->get()
+                        ->keyBy('id');
+
+                    // Build to_stages with actual stage records - BUILD ARRAY FIRST, THEN ASSIGN
+                    $toStagesWithRecords = [];
+                    foreach ($toStagesMap as $fromStageId => $toStageId) {
+                        $toStagesWithRecords[] = [
+                            'from_stage_id' => $fromStageId,
+                            'to_stage_id' => $toStageId,
+                            'from_stage' => $toStageRecords->get($fromStageId),
+                            'to_stage' => $toStageId ? $toStageRecords->get($toStageId) : null,
+                        ];
+                    }
+                    $requestLetter->to_stages_with_records = $toStagesWithRecords;
+
+                    // Build rejected_stages with actual stage records - BUILD ARRAY FIRST, THEN ASSIGN
+                    $rejectedStagesWithRecords = [];
+                    foreach ($rejectedStagesMap as $fromStageId => $rejectedStageId) {
+                        $rejectedStagesWithRecords[] = [
+                            'from_stage_id' => $fromStageId,
+                            'rejected_stage_id' => $rejectedStageId,
+                            'from_stage' => $rejectedStageRecords->get($fromStageId),
+                            'rejected_stage' => $rejectedStageId ? $rejectedStageRecords->get($rejectedStageId) : null,
+                        ];
+                    }
+                    $requestLetter->rejected_stages_with_records = $rejectedStagesWithRecords;
+
+                    // Store all stage records for easy lookup
+                    $requestLetter->all_to_stage_records = $toStageRecords;
+                    $requestLetter->all_rejected_stage_records = $rejectedStageRecords;
+
+                    // Store decoded values for later use
+                    $requestLetter->decoded_to_stages = $toStagesMap;
+                    $requestLetter->decoded_rejected_stages = $rejectedStagesMap;
+                    $requestLetter->decoded_progress_stages = $progressStages;
                 });
 
                 $resource = $summary->map(function ($item) {
                     return [
                         ...(new RequestLetterResource($item))->toArray(request()),
-                        'progress' => $item->progress,
+                        'progress' => $item->progress, // Already includes actual stage records in order
+
+                        // Raw JSON values
+                        'raw_to_stages' => $item->to_stages,
+                        'raw_rejected_stages' => $item->rejected_stages,
+                        'raw_progress_stages' => $item->progress_stages,
+
+                        // Decoded values (arrays/objects)
+                        'decoded_to_stages' => $item->decoded_to_stages,
+                        'decoded_rejected_stages' => $item->decoded_rejected_stages,
+                        'decoded_progress_stages' => $item->decoded_progress_stages,
+
+                        // Stage records with relationships (both key and value data)
+                        'to_stages_with_records' => $item->to_stages_with_records,
+                        'rejected_stages_with_records' => $item->rejected_stages_with_records,
+
+                        // All stage records for easy lookup
+                        'all_to_stage_records' => $item->all_to_stage_records,
+                        'all_rejected_stage_records' => $item->all_rejected_stage_records,
                     ];
                 });
 
