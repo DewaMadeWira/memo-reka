@@ -4,7 +4,7 @@ import {
     MenubarTrigger,
     MenubarContent,
     MenubarItem,
-} from "@/components/ui/menubar";
+} from "@/Components/ui/menubar";
 
 const approvedPaths = {
     "1": 3,
