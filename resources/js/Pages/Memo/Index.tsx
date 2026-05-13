@@ -45,16 +45,19 @@ import SidebarAuthenticated from "@/Layouts/SidebarAuthenticated";
 import { DataTable } from "./memo/data-table";
 import { columns } from "./memo/columns";
 import { User } from "@/types/UserType";
+import { Official } from "@/types/OfficialType";
 
 export default function Index({
     request,
     division,
     userData,
+    official,
 }: // stages,
 {
     request: any;
     division: any;
     userData: any;
+    official: Official[];
     // stages: any;
 }) {
     console.log(userData);
@@ -64,6 +67,7 @@ export default function Index({
         request_name: "",
         perihal: "",
         content: "",
+        official: "",
         to_division: null,
     });
     const { user } = usePage().props.auth as { user: User };
@@ -90,6 +94,7 @@ export default function Index({
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+    console.log(official);
 
     return (
         <SidebarAuthenticated>
@@ -165,6 +170,25 @@ export default function Index({
                                         id=""
                                         className="w-full p-2 border rounded-lg"
                                     />
+                                    <label
+                                        htmlFor="official"
+                                        className="block mb-2"
+                                    >
+                                        Pejabat
+                                    </label>
+                                    <select
+                                        name="official"
+                                        id=""
+                                        onChange={handleChange}
+                                        className="w-full p-2 border rounded-lg"
+                                    >
+                                        <option value="">Pilih Pejabat</option>
+                                        {official.map((offi) => (
+                                            <option value={offi.id}>
+                                                {offi.official_name}
+                                            </option>
+                                        ))}
+                                    </select>
                                     <label
                                         htmlFor="to_division"
                                         className="block mb-2"

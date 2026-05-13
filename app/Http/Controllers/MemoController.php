@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\MemoService;
 use App\Models\Division;
 use App\Models\MemoLetter;
+use App\Models\Official;
 use App\Models\RequestLetter;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -84,6 +85,7 @@ class MemoController extends Controller
         // $stages = json_encode($referenced);
 
         $division = Division::get();
+        $official = Official::get();
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
         // return $user;
@@ -92,7 +94,7 @@ class MemoController extends Controller
             'userData' => $user,
             'request' => $data,
             'division' => $division,
-            // 'stages' => $stages,
+            'official' => $official,
         ]);
     }
 
@@ -121,12 +123,14 @@ class MemoController extends Controller
         $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
             $q->where('role_name', "admin");
         })->first();
+        // dd($request->official);
         $memo = MemoLetter::create([
             'memo_number' => '1234/MemoNumber/Test',
             'perihal' => $request->perihal,
             'content' => $request->content,
             'signatory' => $manager->id,
             'letter_id' => 1,
+            'official_id' => $request->official,
             'from_division' => $user->division->id,
             'to_division' => $request->to_division,
         ]);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::create('memo_letters', function (Blueprint $table) {
             $table->id();
-            $table->string("memo_number");
+            $table->string("memo_number")->nullable();
             $table->integer("monthly_counter")->nullable();
             $table->integer("yearly_counter")->nullable();
             $table->string("perihal");

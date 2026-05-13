@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\MemoLetter;
+use App\Models\Official;
 use App\Models\RequestLetter;
 use App\Models\RequestStages;
 use App\Models\User;
@@ -145,9 +146,9 @@ class MemoService
                 // $lastMonth = '04'; // format 2 digit
                 $lastMonthlyCounter = 27;
 
-                $result = $this->generateNomorSurat($year, $lastYearlyCounter, $month, $lastMonthlyCounter);
+                // $result = $this->generateNomorSurat($year, $lastYearlyCounter, $month, $lastMonthlyCounter);
 
-                dd($result);
+                // dd($result);
                 // return ("number");
 
             default:
@@ -170,39 +171,6 @@ class MemoService
         // return $memo;
     }
 
-    public function generateNomorSurat($lastYear, $lastYearlyCounter, $lastMonth, $lastMonthlyCounter)
-    {
-        $currentYear = date("Y");
-        $currentMonth = date("m");
-
-        if ($lastYear != $currentYear) {
-            $newYear = $currentYear;
-            $newYearlyCounter = 1;
-        } else {
-            $newYear = $lastYear;
-            $newYearlyCounter = $lastYearlyCounter + 1;
-        }
-
-        if ($lastMonth != $currentMonth || $lastYear != $currentYear) {
-            $newMonth = $currentMonth;
-            $newMonthlyCounter = 1;
-        } else {
-            $newMonth = $lastMonth;
-            $newMonthlyCounter = $lastMonthlyCounter + 1;
-        }
-
-        $nomorBulanan = sprintf("%03d/%s/%s", $newMonthlyCounter, $newMonth, $newYear);
-        $nomorTahunan = sprintf("%03d/%s", $newYearlyCounter, $newYear);
-
-        return [
-            'nomor_bulanan' => $nomorBulanan,
-            'nomor_tahunan' => $nomorTahunan,
-            'year' => $newYear,
-            'month' => $newMonth,
-            'counter_year' => $newYearlyCounter,
-            'counter_month' => $newMonthlyCounter
-        ];
-    }
 
     public function create($request)
     {
@@ -215,17 +183,27 @@ class MemoService
         // $user = $this->authService->index();
         $user = Auth::user();
         $user = User::with('role')->with('division')->where("id", $user->id)->first();
+        $official = Official::where("id", $request->official)->first();
         $manager = User::with('role', 'division')->where("division_id", $user->division_id)->whereHas("role", function ($q) {
             $q->where('role_name', "admin");
         })->first();
+
+        // dd($this->generateNomorSurat($user, $official)->memo_number);
         $memo = MemoLetter::create([
-            'memo_number' => '1234/MemoNumber/Test',
+            // 'memo_number' => '1234/MemoNumber/Test',
             'perihal' => $request->perihal,
             'content' => $request->content,
             'signatory' => $manager->id,
+            'official_id' => $request->official,
             'letter_id' => 1,
             'from_division' => $user->division->id,
             'to_division' => $request->to_division,
+        ]);
+        $generatedMemoData = $this->generateNomorSurat($user, $official);
+        $memo->update([
+            "memo_number" => $generatedMemoData["memo_number"],
+            "monthly_counter" => $generatedMemoData["monthly_counter"],
+            "yearly_counter" => $generatedMemoData["yearly_counter"],
         ]);
         $stages = RequestStages::where('letter_id', $memo->letter_id)->get();
         $nextStageMap = $stages->pluck('to_stage_id', 'id')->filter();
@@ -282,6 +260,86 @@ class MemoService
 
         // dd($result);
         return $result;
+    }
+    public function generateNomorSurat($user, $official)
+    {
+
+        // dd($user);
+
+        $memo = RequestLetter::with(['user', 'stages' => function ($query) {
+            $query->withTrashed();
+        }, 'stages.status', 'memo', 'memo.to_division', 'memo.from_division', 'memo.signatory'])->whereHas('memo', function ($q) use ($user) {
+            $q->where('from_division', $user->division->id);
+        })->latest()->first();
+
+        // dd($memo);
+
+        $currentYear = date("Y");
+        $currentMonth = date("m");
+
+        if (empty($memo)) {
+            $newYearlyCounter = 1;
+            $newMonthlyCounter = 1;
+        } else {
+
+            $lastYear = $memo->created_at->format('Y');
+            $lastYearlyCounter = $memo->memo->yearly_counter;
+            $lastMonth = $memo->created_at->format('m');
+            $lastMonthlyCounter = $memo->memo->monthly_counter;
+            // dd($lastMonthlyCounter)
+            if ($lastYear != $currentYear) {
+                // $newYear = $currentYear;
+                $newYearlyCounter = 1;
+            } else {
+                // $newYear = $lastYear;
+                $newYearlyCounter = $lastYearlyCounter + 1;
+
+                // dd($newYearlyCounter, $lastYearlyCounter);
+            }
+
+            if ($lastMonth != $currentMonth || $lastYear != $currentYear) {
+                $newMonth = $currentMonth;
+                $newMonthlyCounter = 1;
+            } else {
+                $newMonth = $lastMonth;
+                $newMonthlyCounter = $lastMonthlyCounter + 1;
+            }
+        }
+
+        // $nomorBulanan = sprintf("%03d/%s/%s", $newMonthlyCounter, $newMonth, $newYear);
+        // $nomorTahunan = sprintf("%03d/%s", $newYearlyCounter, $newYear);
+
+        $memoNumber = "$newYearlyCounter.$newMonthlyCounter/REKA/$official->official_code/GEN/{$user->division->division_code}/{$this->convertToRoman($currentMonth)}/$currentYear";
+
+        // dd($memoNumber);
+        return [
+            // 'nomor_bulanan' => $nomorBulanan,
+            // 'nomor_tahunan' => $nomorTahunan,
+            // 'year' => $newYear,
+            // 'month' => $newMonth,
+            'memo_number' => $memoNumber,
+            'yearly_counter' => $newYearlyCounter,
+            'monthly_counter' => $newMonthlyCounter
+        ];
+    }
+    private function convertToRoman($number)
+    {
+        $map = [
+            '01' => 'I',
+            '02' => 'II',
+            '03' => 'III',
+            '04' => 'IV',
+            '05' => 'V',
+            '06' => 'VI',
+            '07' => 'VII',
+            '08' => 'VIII',
+            '09' => 'IX',
+            '10' => 'X',
+            '11' => 'XI',
+            '12' => 'XII'
+        ];
+
+        return $map[$number] ?? $number;
     }
     public function approve($id)
     {
